@@ -1,0 +1,16 @@
+.vercel/
+node_modules/
+dist/
+*.tsbuildinfo
+.DS_Store
+.env
+.env.*
+!.env.example
+# Local research notes include private repository names and personal source paths.
+docs/
+docs/github-inventory.md
+docs/local-project-inventory.md
+docs/experience-inventory.md
+docs/vercel-setup.md
+.vercel
+.env*
