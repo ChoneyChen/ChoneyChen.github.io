@@ -1,0 +1,13 @@
+{
+  "source": "https://github.com/ChoneyChen/XJTLU_MEC202_25-26_IND3G2_Vision-Model-Based-Intelligent-Phototherapy-Mask-System/blob/main/3d_model/Mask/phototherapy_mask_shell_v4_0_thin.stl",
+  "method": "Original orthographic source-mesh previews from binary STL, triangle depth sorting and flat normal lighting. Geometry unmodified.",
+  "dimensions": [
+    1600,
+    1200
+  ],
+  "outputs": [
+    "mask-shell-front.png",
+    "mask-shell-three-quarter.png",
+    "mask-shell-inner.png"
+  ]
+}
