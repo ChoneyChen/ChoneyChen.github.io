@@ -2,6 +2,8 @@
 
 个人主页的源代码。以可探索的物件呈现研究、软件与软硬件项目，让像素、玻璃、形变和文字在同一次交互中相互转换。
 
+访问：[Vercel](https://choney-between-states.vercel.app) · [GitHub Pages](https://choneychen.github.io/)
+
 网站使用 Vite、React、Three.js 与 Motion 免费核心构建。Three.js 负责原创场景及材质，Motion 负责界面转换；图标和字体的完整许可见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。同一份许可随静态网站分发到 `/project-assets/third-party-notices.txt`。
 
 ## 本地开发
@@ -31,6 +33,8 @@ npm run preview
 更新项目介绍时保留本人角色、团队背景、工作状态和可公开来源。公开资源目录只放已选用的展示素材。
 
 ## Vercel 部署
+
+当前项目已通过 Vercel CLI 发布。更新时执行 `vercel deploy --prod`；生产主域名公开，预览部署保留身份验证。Vercel 账户的 GitHub 登录连接尚未完成，因此当前 main 推送不会自动触发 Vercel 部署。
 
 在 Vercel 导入 [ChoneyChen/ChoneyChen.github.io](https://github.com/ChoneyChen/ChoneyChen.github.io)，使用以下设置：
 
