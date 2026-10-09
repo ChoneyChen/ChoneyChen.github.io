@@ -104,7 +104,7 @@ export function SteampunkWork({ quiet = false }: HistoryDetailProps) {
   const reduced = quiet || Boolean(systemQuiet);
   const [selected, setSelected] = useState(0);
   const consoleRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(consoleRef, { once: true, amount: 0.25 });
+  const inView = useInView(consoleRef, { once: false, amount: 0.25 });
   const installed = reduced || inView;
   const duty = workDuties[selected];
   const experience = experienceTimeline.find((item) => item.id === "kaiding")!;
@@ -233,7 +233,7 @@ export function RomanEducation({ quiet = false }: HistoryDetailProps) {
   const systemQuiet = useReducedMotion();
   const reduced = quiet || Boolean(systemQuiet);
   const columnRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(columnRef, { once: true, amount: 0.25 });
+  const inView = useInView(columnRef, { once: false, amount: 0.25 });
   const formed = reduced || inView;
 
   return (

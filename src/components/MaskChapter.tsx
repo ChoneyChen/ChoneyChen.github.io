@@ -1,3 +1,4 @@
+import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
 import { useRef, useState } from "react";
 import {
   AnimatePresence,
@@ -28,14 +29,14 @@ const makeStages = (t: Translate) => [
   {
     number: "01",
     title: t(
-      "先把视觉，变成参数。",
-      "First, turn visual analysis into parameters.",
+      "视觉，进入控制链路。",
+      "Vision into control.",
     ),
     short: t("视觉与软件", "Vision & software"),
     icon: ScanLine,
     text: t(
-      "我参与视觉分析到结构化控制参数的转换，把模型建议接到界面、后端与本地控制。系统不仅要能给出建议，还要能清楚地传递它。",
-      "I helped convert visual analysis into structured control parameters, connecting model recommendations to the interface, backend and local control. A recommendation also needs a clear route through the system.",
+      "我参与将视觉分析转换为结构化控制参数，连接模型建议、软件界面、后端与本地控制。",
+      "I helped turn visual analysis into structured control parameters, connecting model recommendations, the interface, backend and local control.",
     ),
     detail: t(
       "我的工作：软件开发、参数转换与接口整合。",
@@ -45,12 +46,12 @@ const makeStages = (t: Translate) => [
   },
   {
     number: "02",
-    title: t("再让软件，接上硬件。", "Then, connect software to hardware."),
+    title: t("软件，接上硬件。", "Software meets hardware."),
     short: t("无线与嵌入式", "Wireless & embedded"),
     icon: Radio,
     text: t(
-      "我参与 Raspberry Pi、ESP32-S3 与 LED、加热模块的联调，让软件参数进入实际的控制链路。不同模块的接口，是需要一起解决的工程问题。",
-      "I helped test and integrate Raspberry Pi, ESP32-S3, LED and heating modules, bringing software parameters into the physical control chain. The interfaces between modules required shared engineering work.",
+      "我参与 Raspberry Pi、ESP32-S3、LED 与加热模块的联调，让软件参数进入实际控制链路。",
+      "I helped integrate Raspberry Pi, ESP32-S3, LED and heating modules, bringing software parameters into the physical control chain.",
     ),
     detail: t(
       "我的工作：跨模块调试与嵌入式整合。",
@@ -61,14 +62,14 @@ const makeStages = (t: Translate) => [
   {
     number: "03",
     title: t(
-      "让反馈，也成为系统的一部分。",
-      "Make feedback part of the system.",
+      "反馈，闭合控制回路。",
+      "Feedback closes the loop.",
     ),
     short: t("控制与反馈", "Control & feedback"),
     icon: Thermometer,
     text: t(
-      "距离、温度和设备状态不能留在系统之外。我参与传感器与控制模块的测试和联调，关注反馈如何回来、异常怎样被发现，以及系统何时应当停止。",
-      "Distance, temperature and device status belong in the control loop. I helped test sensors and control modules, checking how feedback returns, how faults are detected and when the system should stop.",
+      "我参与距离、温度与设备状态的传感联调，检查反馈、异常检测与停止条件。",
+      "I helped test distance, temperature and device-status feedback, including fault detection and stopping conditions.",
     ),
     detail: t(
       "我的工作：传感器联调、阶段测试与系统验证。",
@@ -78,12 +79,12 @@ const makeStages = (t: Translate) => [
   },
   {
     number: "04",
-    title: t("最后，把团队的工作拼在一起。", "Bring the team’s work together."),
+    title: t("团队，共同交付原型。", "The team’s working prototype."),
     short: t("统筹与交付", "Coordination & delivery"),
     icon: Workflow,
     text: t(
-      "作为团队组长，我统筹分工、进度、系统整合与交付，也参与原型建模和装配。课程结束后，我们继续完善原型，把它带到创客大赛。",
-      "As team leader, I coordinated responsibilities, progress, system integration and delivery, and contributed to prototype modelling and assembly. After the course, we continued refining the prototype for a maker competition.",
+      "作为组长，我统筹分工、进度、整合与交付，并参与原型建模和装配。课程后，团队继续完善原型并参加创客大赛。",
+      "I led responsibilities, progress, integration and delivery, and contributed to prototype modelling and assembly. The team later refined the prototype for a maker competition.",
     ),
     detail: t(
       "我的工作：团队协调、原型整合与竞赛准备。",
@@ -145,9 +146,10 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
   const prefersQuiet = useReducedMotion();
   const lowMotion = quiet || Boolean(prefersQuiet);
   const storyRef = useRef<HTMLDivElement>(null);
-  const entered = useInView(storyRef, { once: true, amount: 0.12 });
+  const entered = useInView(storyRef, { once: false, amount: "some" });
   const [active, setActive] = useState(0);
   const [expanded, setExpanded] = useState(false);
+  useCollapseOnLeave("mask", () => setExpanded(false));
   const { scrollYProgress } = useScroll({
     target: storyRef,
     offset: ["start 70%", "end 65%"],
@@ -155,6 +157,7 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
   const y = useTransform(scrollYProgress, [0, 1], [7, -7]);
 
   useMotionValueEvent(scrollYProgress, "change", (value) => {
+    if (expanded) return;
     const next = Math.max(
       0,
       Math.min(stages.length - 1, Math.floor(value * stages.length)),
@@ -180,28 +183,23 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
     >
       <div className="chapter-inner mask-inner">
         <header className="mask-heading">
-          <p className="chapter-kicker">06 / BUILDING A SYSTEM</p>
+          <p className="chapter-kicker">{t("06 / 从模块到系统", "06 / BUILDING A SYSTEM")}</p>
           <p className="mask-eyebrow">
             {t(
-              "智能光疗面罩 · MEC202 · 2026",
-              "Intelligent phototherapy mask · MEC202 · 2026",
+              "工程原型 · MEC202 · 2026",
+              "ENGINEERING PROTOTYPE · MEC202 · 2026",
             )}
           </p>
           <h2 id="mask-title">
-            {t("我把它们，", "I brought it all")}
+            {t("智能光疗", "Intelligent")}
             <br />
-            <span>{t("做成一个系统。", "into one system.")}</span>
+            <span>{t("面罩系统", "Phototherapy Mask")}</span>
           </h2>
           <div className="mask-introduction">
             <p>
               {t(
-                "从视觉分析到无线控制，从一段代码到可以演示的原型。",
-                "From visual analysis to wireless control; from code to a working prototype. ",
-              )}
-              <br className="mask-desktop-break" />
-              {t(
-                "我在这个团队里，既是组长，也是参与软件与嵌入式联调的人。",
-                "I led the team and contributed to software and embedded system integration.",
+                "我带领团队，把视觉分析、无线控制与传感反馈整合成可演示的原型。",
+                "I led a team that connected visual analysis, wireless control and sensor feedback in a working prototype.",
               )}
             </p>
             <span className="mask-role-mark">
@@ -211,13 +209,13 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
           </div>
         </header>
 
-        <div className="mask-story-layout" ref={storyRef}>
+        <div className="mask-story-layout" ref={storyRef} data-entry-state={drawn ? "connected" : "reset"}>
           <div className="mask-product-column">
             <div
               className={`mask-product-stage${expanded ? " is-expanded" : ""}`}
             >
               <div className="mask-stage-topline">
-                <span>SYSTEM CONNECTIONS</span>
+                <span>{t("系统连接", "SYSTEM CONNECTIONS")}</span>
                 <span>2026.03 — 2026.07</span>
               </div>
               <div className="mask-connection-visual">
@@ -265,8 +263,8 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
                           opacity: drawn ? 1 : 0,
                         }}
                         transition={{
-                          duration: lowMotion ? 0 : 0.8,
-                          delay: lowMotion ? 0 : index * 0.07,
+                          duration: lowMotion ? 0 : drawn ? 0.55 : 0.4,
+                          delay: lowMotion ? 0 : drawn ? index * 0.06 : (5 - index) * 0.055,
                           ease: "easeInOut",
                         }}
                       />
@@ -315,8 +313,8 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
                           : "inset(0 0 80% 0)",
                       }}
                       transition={{
-                        duration: lowMotion ? 0 : 0.65,
-                        delay: lowMotion ? 0 : index * 0.085,
+                        duration: lowMotion ? 0 : drawn ? 0.55 : 0.42,
+                        delay: lowMotion ? 0 : drawn ? index * 0.06 : 0.04 + (connections.length - 1 - index) * 0.035,
                         ease: [0.22, 1, 0.36, 1],
                       }}
                       aria-label={`${connection.name}: ${t("查看我参与的工作", "read about my contribution")}`}
@@ -369,7 +367,7 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: lowMotion ? 0 : 0.35 }}
+                    transition={{ duration: lowMotion ? 0 : 0.5, ease: [0.22, 1, 0.36, 1] }}
                   >
                     <p className="mask-chain-caption">
                       <Layers3 size={14} />
@@ -416,15 +414,22 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
               </span>
             </div>
             {stages.map((stage, index) => (
-              <article
+              <button
+                type="button"
                 className={`mask-story-step${active === index ? " is-current" : ""}`}
                 key={stage.number}
+                aria-expanded={expanded && active === index}
+                aria-controls="mask-system-chain"
+                onClick={() => {
+                  setActive(index);
+                  setExpanded((current) => active === index ? !current : true);
+                }}
               >
                 <span className="mask-step-number">{stage.number}</span>
-                <h3>{stage.title}</h3>
-                <p>{stage.text}</p>
+                <strong className="mask-step-title">{stage.title}</strong>
                 <div className="mask-step-label">{stage.label}</div>
-              </article>
+                <span className="mask-step-action">{expanded && active === index ? t("收起", "Close") : t("我的工作", "My work")} <ArrowUpRight size={13} /></span>
+              </button>
             ))}
           </div>
         </div>
@@ -454,23 +459,22 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
             </p>
           </div>
           <div className="mask-outcome-reflection">
-            <span>
-              {t("我从这次经历里带走的", "WHAT I TOOK FROM THIS EXPERIENCE")}
-            </span>
+            <span>{t("本人贡献", "MY CONTRIBUTION")}</span>
             <p>
-              {t("做好一个模块，", "Build a good module,")}
+              {t("统筹团队，", "Lead the team.")}
               <br />
               {t(
-                "还要让它与其他模块一起工作。",
-                "then make it work with the others.",
+                "也亲自连接系统。",
+                "Connect the system.",
               )}
             </p>
-            <small>
-              {t(
-                "这是团队工程原型，展示系统集成与控制思路；不作临床疗效或医疗认证声明。",
-                "A team engineering prototype demonstrating system integration and control ideas, without claims of clinical efficacy or medical certification.",
-              )}
-            </small>
+            <details className="mask-project-scope">
+              <summary>{t("原型范围", "Prototype scope")}</summary>
+              <p>{t(
+                "团队工程原型，用于展示系统集成与控制思路；无临床疗效或医疗认证声明。",
+                "A team engineering prototype for system integration and control, without claims of clinical efficacy or medical certification.",
+              )}</p>
+            </details>
           </div>
         </div>
         <footer className="mask-footer">

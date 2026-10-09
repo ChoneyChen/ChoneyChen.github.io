@@ -425,3 +425,27 @@
     font-size: 8px;
   }
 }
+
+.methods-reading { overflow: hidden; }
+.methods-inner { padding-top: 42px; padding-bottom: 40px; }
+.methods-heading { margin-bottom: 22px; }
+.methods-heading .chapter-kicker { margin-bottom: 12px; }
+.methods-heading h2 { font-size: clamp(34px,3.8vw,49px); }
+.methods-heading > p { font-size: 14px; line-height: 1.8; max-width: 320px; }
+.methods-notebook { padding-top: 20px; }
+.methods-scene-desktop { max-height: 190px; }
+.methods-steps { padding-bottom: 16px; }
+.methods-paper-top { font-size: 10px; }
+.methods-paper-top span:last-child { font-size: 12px; }
+.methods-paper-foot { font-size: 11px; }
+.methods-paper-foot > span:last-child { font-size: 9px; }
+.methods-evidence { min-height: 0; padding-top: 22px; padding-bottom: 22px; }
+.methods-evidence-source > .methods-evidence-role, .methods-evidence-source > a { font-size: 12px; }
+.methods-evidence-copy > .methods-evidence-detail { font-size: 12px; }
+@media(max-width:760px) {
+ .methods-inner { padding-top: 42px; padding-bottom: 42px; }
+ .methods-heading > p { font-size: 13px; }
+ .methods-scene-mobile { height: 210px; }
+ .methods-paper-top { font-size: 9px; }
+ .methods-paper-top span:last-child { font-size: 10px; }
+}

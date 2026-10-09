@@ -1,3 +1,4 @@
+import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
 import { useRef, useState } from "react";
 import {
   AnimatePresence,
@@ -31,8 +32,8 @@ const makeDocuments = (t: Translate) => [
       "Keep the source text, tables and parsed results connected.",
     ),
     body: t(
-      "我参与建设 PDF 到结构化记录的流程，把文档解析、原始文字与表格接入后续处理。版面和表格不是背景，它们决定一个数字究竟属于哪项内容。",
-      "I helped build a workflow from PDFs to structured records, connecting document parsing, source text and tables to further processing. Layout and tables determine what a number actually describes.",
+      "我参与建设 PDF 到结构化记录的流程，保留文本、表格与解析结果之间的联系。",
+      "I helped build a PDF-to-record workflow that keeps source text, tables and parsed results connected.",
     ),
     work: [
       t(
@@ -60,8 +61,8 @@ const makeDocuments = (t: Translate) => [
       "Bring document understanding, field extraction and semantic matching together.",
     ),
     body: t(
-      "我参与整合 NuExtract3、PaddleOCR-VL 与 Qwen3-Embedding，让不同模块承担各自的任务。模型之间的输入、输出和工程安排，需要与数据流程一起考虑。",
-      "I helped integrate NuExtract3, PaddleOCR-VL and Qwen3-Embedding, each with its own task. Their inputs, outputs and engineering requirements need to be considered alongside the data workflow.",
+      "我参与整合 NuExtract3、PaddleOCR-VL 与 Qwen3-Embedding，连接文档理解、结构化抽取和语义匹配。",
+      "I helped integrate NuExtract3, PaddleOCR-VL and Qwen3-Embedding for document understanding, structured extraction and semantic matching.",
     ),
     work: [
       t(
@@ -86,8 +87,8 @@ const makeDocuments = (t: Translate) => [
       "Preserve definitions, sources and versions before comparing data.",
     ),
     body: t(
-      "我参与环境指标清洗、口径标准化与数据库、分析平台建设。把结果关联回来源，同时保留主体、期间、单位和统计边界，是一项数据能够被检查和比较的前提。",
-      "I contributed to environmental indicator cleaning, definition standardisation, database development and the analysis platform. Linking results to their sources while retaining the entity, period, units and scope makes data possible to check and compare.",
+      "我参与指标清洗、口径标准化与数据库建设，把主体、期间、单位和统计边界保留在可追溯记录中。",
+      "I contributed to indicator cleaning, definition standardisation and database development, retaining the entity, period, units and scope in traceable records.",
     ),
     work: [
       t(
@@ -137,12 +138,13 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
   const prefersQuiet = useReducedMotion();
   const lowMotion = quiet || Boolean(prefersQuiet);
   const folderRef = useRef<HTMLDivElement>(null);
-  const entered = useInView(folderRef, { once: true, amount: 0.18 });
+  const entered = useInView(folderRef, { once: false, amount: "some" });
   const revealed = entered || lowMotion;
-  const [openPage, setOpenPage] = useState(0);
-  const [model, setModel] = useState(0);
+  const [openPage, setOpenPage] = useState<number | null>(null);
+  const [model, setModel] = useState<number | null>(null);
+  useCollapseOnLeave("esg", () => { setOpenPage(null); setModel(null); });
   const transition = {
-    duration: lowMotion ? 0 : 0.45,
+    duration: lowMotion ? 0 : 0.55,
     ease: [0.22, 1, 0.36, 1] as const,
   };
 
@@ -155,11 +157,17 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
     >
       <div className="chapter-inner esg-inner">
         <div className="esg-filing-line">
-          <p className="chapter-kicker">07 / DOCUMENTS INTO EVIDENCE</p>
-          <span>SUZHOU · SINCE JUL 2026</span>
+          <p className="chapter-kicker">{t("07 / 从报告到可追溯数据", "07 / DOCUMENTS INTO EVIDENCE")}</p>
+          <span>{t("苏州 · 2026.07 — 至今", "SUZHOU · SINCE JUL 2026")}</span>
         </div>
         <header className="esg-heading">
           <div>
+            <p className="esg-project-category">{t("环境 AI · 数据工程", "ENVIRONMENTAL AI · DATA ENGINEERING")}</p>
+            <h2 id="esg-title">
+              {t("ESG 环境", "ESG Data")}
+              <br />
+              <span>{t("数据平台", "Platform")}</span>
+            </h2>
             <p className="esg-institution">
               {t(
                 "清华大学苏州环境创新研究院",
@@ -167,47 +175,34 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
               )}
               <br />
               <span>
-                {t("AI 与数据分析实习生", "AI & data analysis intern")}
+                {t("本人角色 · AI 与数据分析实习生", "MY ROLE · AI & data analysis intern")}
               </span>
             </p>
-            <h2 id="esg-title">
-              {t("让每一个数字，", "Every number,")}
-              <br />
-              {t("找得到", "with a ")}
-              <span>{t("来处。", "source.")}</span>
-            </h2>
           </div>
           <div className="esg-scale-note">
             <span className="esg-note-corner" aria-hidden="true" />
-            <p>THE SCALE OF THE TASK</p>
+            <p>{t("任务规模", "TASK SCOPE")}</p>
             <strong>
               20,000<span>+</span>
             </strong>
             <div>{t("任务面对的报告规模", "Reports in the task scope")}</div>
             <small>
-              {t("是项目处理任务的规模，", "The scale of the project’s task,")}
-              <br />
-              {t("并非已完成解析的数量。", "not the number already parsed.")}
+              {t("解析仍在推进", "Parsing ongoing")}
             </small>
           </div>
         </header>
 
         <div className="esg-brief">
-          <span className="esg-brief-mark">ESG / AI</span>
+          <span className="esg-brief-mark">{t("我参与的工作", "MY CONTRIBUTION")}</span>
           <p>
             {t(
-              "环境报告里不缺数字。难的是知道，它属于谁、哪个期间、什么单位和统计边界。",
-              "Environmental reports contain plenty of numbers. The challenge is identifying whose data it is, the reporting period, the units and the scope. ",
-            )}
-            <br />
-            {t(
-              "我参与把 PDF 解析、模型整合与证据关联连成系统，让一项数据先能够被检查。",
-              "I help connect PDF parsing, model integration and evidence linking so that each record can be checked.",
+              "连接 PDF 解析、模型整合与证据关联，让环境报告中的数字成为可检查、可追溯的数据。",
+              "Connect PDF parsing, model integration and source evidence so that environmental data can be checked and traced.",
             )}
           </p>
         </div>
 
-        <div className="esg-folder" ref={folderRef}>
+        <div className="esg-folder" ref={folderRef} data-entry-state={revealed ? "present" : "reset"}>
           <div className="esg-folder-tab">
             <span>CHONEY’S WORK FILE</span>
             <FoldVertical size={15} strokeWidth={1.5} />
@@ -237,36 +232,36 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
                       ? false
                       : {
                           opacity: 0,
-                          y: 45,
-                          rotate: index % 2 ? 3 : -3,
-                          rotateY: -18,
+                          y: 24,
+                          rotate: index % 2 ? 2 : -2,
+                          rotateY: -12,
                         }
                   }
                   animate={{
                     opacity: revealed ? 1 : 0,
-                    y: revealed ? 0 : 45,
-                    rotate: revealed ? 0 : index % 2 ? 3 : -3,
-                    rotateY: revealed ? 0 : -18,
+                    y: revealed ? 0 : 24,
+                    rotate: revealed ? 0 : index % 2 ? 2 : -2,
+                    rotateY: revealed ? 0 : -12,
                   }}
                   transition={{
                     ...transition,
                     layout: transition,
                     opacity: {
                       duration: lowMotion ? 0 : 0.4,
-                      delay: lowMotion ? 0 : index * 0.12,
+                      delay: lowMotion ? 0 : revealed ? index * 0.08 : (documents.length - 1 - index) * 0.07,
                     },
                     y: {
-                      duration: lowMotion ? 0 : 0.85,
-                      delay: lowMotion ? 0 : index * 0.12,
+                      duration: lowMotion ? 0 : revealed ? 0.65 : 0.4,
+                      delay: lowMotion ? 0 : revealed ? index * 0.08 : (documents.length - 1 - index) * 0.07,
                       ease: [0.22, 1, 0.36, 1],
                     },
                     rotate: {
-                      duration: lowMotion ? 0 : 0.85,
-                      delay: lowMotion ? 0 : index * 0.12,
+                      duration: lowMotion ? 0 : revealed ? 0.65 : 0.4,
+                      delay: lowMotion ? 0 : revealed ? index * 0.08 : (documents.length - 1 - index) * 0.07,
                     },
                     rotateY: {
-                      duration: lowMotion ? 0 : 0.95,
-                      delay: lowMotion ? 0 : index * 0.12,
+                      duration: lowMotion ? 0 : revealed ? 0.7 : 0.42,
+                      delay: lowMotion ? 0 : revealed ? index * 0.08 : (documents.length - 1 - index) * 0.07,
                     },
                   }}
                 >
@@ -281,8 +276,8 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
                         : "inset(0 100% 0 0)",
                     }}
                     transition={{
-                      duration: lowMotion ? 0 : 0.5,
-                      delay: lowMotion ? 0 : 0.35 + index * 0.12,
+                      duration: lowMotion ? 0 : revealed ? 0.35 : 0.25,
+                      delay: lowMotion ? 0 : revealed ? 0.25 + index * 0.07 : (documents.length - 1 - index) * 0.05,
                     }}
                   >
                     <span>{document.number} / FIELD NOTES</span>
@@ -295,7 +290,7 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
                     type="button"
                     aria-expanded={isOpen}
                     aria-controls={`esg-page-${index}`}
-                    onClick={() => setOpenPage(isOpen ? -1 : index)}
+                    onClick={() => setOpenPage(isOpen ? null : index)}
                   >
                     <Icon size={25} strokeWidth={1.25} />
                     <span>
@@ -351,20 +346,29 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
                                   key={item.name}
                                   type="button"
                                   aria-pressed={model === modelIndex}
-                                  onClick={() => setModel(modelIndex)}
+                                  onClick={() => setModel((current) => current === modelIndex ? null : modelIndex)}
+                                  aria-expanded={model === modelIndex}
+                                  aria-controls="esg-model-detail"
                                 >
                                   {item.name}
                                   <ArrowUpRight size={11} />
                                 </button>
                               ))}
                             </div>
-                            <div
+                            <AnimatePresence initial={false}>
+                            {model !== null && <motion.div
                               className="esg-model-detail"
+                              id="esg-model-detail"
                               aria-live="polite"
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: lowMotion ? 0 : 0.35 }}
                             >
                               <span>{models[model].task}</span>
                               <p>{models[model].description}</p>
-                            </div>
+                            </motion.div>}
+                            </AnimatePresence>
                           </div>
                         )}
                         {index === 2 && (
@@ -384,8 +388,8 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
                             </span>
                             <small>
                               {t(
-                                "工程链路说明，不是虚构的企业披露数据。",
-                                "An engineering workflow description, without invented company disclosures.",
+                                "每条记录保留来源、口径与版本。",
+                                "Keep sources, definitions and versions with each record.",
                               )}
                             </small>
                           </div>
@@ -408,19 +412,6 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
         </div>
 
         <div className="esg-afterword">
-          <div>
-            <span>
-              {t("我在这段实习中持续思考", "A QUESTION I KEEP RETURNING TO")}
-            </span>
-            <p>
-              {t("能抽出一个数字，", "Extracting a number")}
-              <br />
-              {t(
-                "与能信任一项数据，之间还有很长的路。",
-                "is only the beginning of making data trustworthy.",
-              )}
-            </p>
-          </div>
           <div className="esg-project-state">
             <span className="esg-status-dot" />
             <strong>
@@ -429,12 +420,13 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
                 "Platform development & internship in progress",
               )}
             </strong>
-            <p>
-              {t(
-                "模型与本地工程已在整合。真实质量评测、完整审核发布闭环和生产部署仍需继续推进。",
-                "Models and local engineering are being integrated. Evaluation on real data, the complete review and release workflow, and production deployment still need further work.",
-              )}
-            </p>
+            <details className="esg-project-scope">
+              <summary>{t("当前阶段", "Current stage")}</summary>
+              <p>{t(
+                "模型与本地工程正在整合。真实质量评测、完整审核发布闭环与生产部署仍需推进。20,000+ 是任务面对的报告规模，非已完成解析量。",
+                "Model and local engineering integration is in progress. Evaluation on real data, the complete review and release workflow, and production deployment require further work. The 20,000+ figure is the task scope, not the number already parsed.",
+              )}</p>
+            </details>
           </div>
         </div>
         <footer className="esg-footer">

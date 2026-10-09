@@ -526,6 +526,131 @@
 .esg-chapter[lang="en"] .esg-footer .chapter-link > svg {
   flex-shrink: 0;
 }
+.esg-project-category {
+  margin: 0 0 17px;
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  color: #DAF17C;
+}
+.esg-institution {
+  margin: 24px 0 0;
+  font-size: 13px;
+}
+.esg-institution > span {
+  display: block;
+  margin-top: 8px;
+  font-size: 14px;
+  color: #FFF4CC;
+}
+.esg-brief {
+  padding: 5px 0 42px;
+}
+.esg-brief > p {
+  color: #FFF4CC;
+  font-size: 18px;
+  line-height: 1.65;
+}
+.esg-brief-mark {
+  font-size: 11px;
+}
+.esg-afterword {
+  display: block;
+  padding: 29px 0 30px;
+}
+.esg-project-state > strong {
+  font-size: 14px;
+}
+.esg-project-scope {
+  margin-top: 12px;
+  font-size: 12px;
+  color: #C6D8C4;
+  line-height: 1.7;
+  max-width: 740px;
+}
+.esg-project-scope summary {
+  cursor: pointer;
+  width: fit-content;
+}
+.esg-project-scope p {
+  font-size: 13px;
+  margin: 12px 0 0;
+}
+.esg-project-scope summary:focus-visible {
+  outline: 2px solid #DAF17C;
+  outline-offset: 4px;
+}
+.esg-paper-details > ul > li,
+.esg-model-detail > p {
+  font-size: 12px;
+}
+.esg-paper-body,
+.esg-project-scope p {
+  font-size: 14px;
+}
+.esg-model-buttons > button {
+  font-size: 11px;
+}
+.esg-model-detail {
+  overflow: hidden;
+}
+.esg-paper-topic {
+  font-size: 10px;
+}
+@media (min-width: 951px) {
+  .chapter .esg-inner {
+    padding-top: 42px;
+    padding-bottom: 36px;
+  }
+  .esg-heading {
+    padding-top: 30px;
+    padding-bottom: 26px;
+  }
+  .esg-institution {
+    margin-top: 18px;
+  }
+  .esg-brief {
+    padding-bottom: 30px;
+  }
+  .esg-folder {
+    padding-top: 22px;
+    padding-bottom: 12px;
+  }
+  .esg-folder-topline {
+    padding-bottom: 18px;
+    font-size: 12px;
+  }
+  .esg-paper {
+    min-height: 248px;
+    padding-top: 19px;
+    padding-bottom: 20px;
+  }
+  .esg-paper-registration {
+    padding-bottom: 16px;
+  }
+  .esg-paper-heading > svg {
+    margin-bottom: 12px;
+  }
+  .esg-paper-heading > span > small {
+    font-size: 12px;
+    padding-bottom: 8px;
+  }
+  .esg-paper-teaser {
+    margin-top: 13px;
+    margin-bottom: 13px;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .esg-afterword {
+    padding-top: 22px;
+    padding-bottom: 22px;
+  }
+  .esg-footer {
+    padding-top: 18px;
+  }
+  .esg-footer .chapter-link {
+    font-size: 12px;
+  }
+}
 @media (max-width: 950px) {
   .esg-scale-note {
     width: 211px;
@@ -577,8 +702,8 @@
     padding: 33px 0 32px;
   }
   .esg-institution {
-    font-size: 10px;
-    margin-bottom: 20px;
+    font-size: 12px;
+    margin: 21px 0 0;
   }
   .esg-heading h2 {
     font-size: clamp(31px, 8.6vw, 47px);
@@ -604,7 +729,7 @@
     padding: 9px 0 43px;
   }
   .esg-brief > p {
-    font-size: 12px;
+    font-size: 16px;
   }
   .esg-brief > p > br {
     display: none;
@@ -678,7 +803,7 @@
     font-size: 10px;
   }
   .esg-paper-topic {
-    font-size: 7px;
+    display: none;
   }
   .esg-paper-body {
     margin: 19px 0 17px;

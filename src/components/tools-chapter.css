@@ -29,7 +29,7 @@
   justify-content: space-between;
   align-items: flex-end;
   gap: 35px;
-  padding: 40px 0 25px;
+  padding: 28px 0 18px;
 }
 .tools-heading h2 {
   font-size: clamp(34px, 4.6vw, 60px);
@@ -178,6 +178,43 @@
   background: #fff4d7;
   box-shadow: 18px 0 0 #fff4d7, -18px 0 0 #fff4d7, 0 18px 0 #fff4d7;
 }
+.tools-reading-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+.tools-reading-header .tools-file-label { line-height: 1.65; }
+.tools-close {
+  display: grid;
+  place-items: center;
+  padding: 4px;
+  border: 0;
+  background: transparent;
+  color: #103338;
+  cursor: pointer;
+  margin-top: -5px;
+  flex-shrink: 0;
+}
+.tools-close:hover { background: #10333812; }
+.tools-close:focus-visible,
+.tools-open-file:focus-visible { outline: 2px solid #2347aa; outline-offset: 4px; }
+.tools-open-file {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  margin-top: 28px;
+  border: 1px solid #10333866;
+  padding: 13px 15px;
+  background: #103338;
+  color: #fff4d7;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.tools-closed-intro { padding-bottom: 20px; }
+.tools-closed-intro .tools-personal-use { max-width: 360px; }
 .tools-file-label {
   display: block;
   color: #173d40;
@@ -203,7 +240,7 @@
 .tools-personal-use {
   color: #173d40;
   font-size: 14px;
-  line-height: 1.95;
+  line-height: 1.75;
   margin: 0;
 }
 .tools-use-tags {
@@ -275,7 +312,7 @@
 }
 .tools-file-index > button > strong {
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 500;
   flex: 1;
 }
 .tools-file-index > button[aria-pressed="true"] {

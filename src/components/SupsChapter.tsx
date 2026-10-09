@@ -1,3 +1,4 @@
+import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
 import { useRef, useState, type CSSProperties } from "react";
 import {
   AnimatePresence,
@@ -6,7 +7,6 @@ import {
   useReducedMotion,
 } from "motion/react";
 import { ArrowDownRight, Layers3 } from "lucide-react";
-import { useContent } from "../data/use-content";
 import { useI18n } from "../i18n";
 import "./sups-chapter.css";
 
@@ -145,27 +145,28 @@ function Block({
 
 export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
   const { language, t } = useI18n();
-  const { projects } = useContent();
   const layerRecords = getLayerRecords(t);
-  const project = projects.find((item) => item.id === "sups")!;
-  const [selected, setSelected] = useState<Layer>("numbers");
+  const [selected, setSelected] = useState<Layer | null>(null);
+  useCollapseOnLeave("sups", () => setSelected(null));
   const reduce = useReducedMotion();
   const still = quiet || Boolean(reduce);
   const stageRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLElement>(null);
-  const readingRef = useRef<HTMLDivElement>(null);
-  const stageEntered = useInView(stageRef, { once: true, amount: 0.18 });
-  const headingEntered = useInView(headingRef, { once: true, amount: 0.12 });
-  const readingEntered = useInView(readingRef, { once: true, amount: 0.12 });
+  const selectorRef = useRef<HTMLDivElement>(null);
+  const stageEntered = useInView(stageRef, { once: false, amount: "some" });
+  const headingEntered = useInView(headingRef, { once: false, amount: "some" });
+  const selectorEntered = useInView(selectorRef, { once: false, amount: "some" });
   const headingReady = still || headingEntered;
-  const readingReady = still || readingEntered;
+  const selectorReady = still || selectorEntered;
   const assembled = still || stageEntered;
-  const active = layerRecords.find((layer) => layer.id === selected)!;
+  const buildDelay = (entry: number, withdrawal: number) =>
+    still ? 0 : assembled ? entry : withdrawal;
+  const active = layerRecords.find((layer) => layer.id === selected);
   const transition = {
     duration: still ? 0 : 0.65,
     ease: [0.22, 1, 0.36, 1] as const,
   };
-  const roofY = selected === "roof" ? -46 : -105;
+  const roofY = selected === null ? 0 : selected === "roof" ? -46 : -105;
 
   return (
     <section
@@ -184,8 +185,8 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
           <div>
             <p className="sups-eyebrow">
               {t(
-                "SUPS / SVL · 仿真与数据工程",
-                "SUPS / SVL · SIMULATION & DATA ENGINEERING",
+                "感知与定位 · 仿真研究环境",
+                "SIMULATION FOR PERCEPTION & LOCALISATION",
               )}
             </p>
             <motion.h2
@@ -201,18 +202,15 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              {t("我为研究，", "I build a space")}
-              <br />
-              {t("搭一个可控制的空间。", "for controlled research.")}
+              SUPS / SVL
+              <span>{t("仿真场景扩展", "Scene Extensions")}</span>
             </motion.h2>
           </div>
-          <p className="sups-heading-note">
-            {t("跑通基础仿真链路，", "First, get the simulation running.")}
-            <br />
-            {t("再把编号、结构与标志", "Then give identifiers, structure")}
-            <br />
-            {t("放回它们应在的位置。", "and signs their place.")}
-          </p>
+          <div className="sups-heading-note">
+            <p>{t("扩展现有停车场仿真，让编号、结构与导向可以被控制和研究。", "Extend an existing parking simulator with controllable identifiers, structure and wayfinding.")}</p>
+            <span>{t("我的角色", "MY ROLE")}</span>
+            <strong>{t("场景扩展与研究工程", "Scene extension & research engineering")}</strong>
+          </div>
         </header>
 
         <div
@@ -223,9 +221,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
           <div className="sups-stage-note">
             <span className="sups-drawing-index">FIG. 02</span>
             <span>
-              {t("场景扩展示意", "Scene-extension illustration")}
-              <br />
-              {t("非真实 SVL 截图", "Illustration, not an SVL capture")}
+              {t("原创场景扩展示意", "Original scene-extension illustration")}
             </span>
           </div>
           <motion.svg
@@ -283,7 +279,8 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
               initial={false}
               animate={{ y: assembled ? 0 : 34, opacity: assembled ? 1 : 0 }}
               transition={{
-                duration: still ? 0 : 0.34,
+                duration: still ? 0 : assembled ? 0.34 : 0.4,
+                delay: buildDelay(0, 0.36),
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
@@ -339,7 +336,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
               animate={{ opacity: assembled ? 1 : 0 }}
               transition={{
                 duration: still ? 0 : 0.3,
-                delay: still ? 0 : 0.24,
+                delay: buildDelay(0.24, 0.25),
               }}
             >
               <motion.g
@@ -411,14 +408,14 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
               animate={{ y: assembled ? 0 : 15, opacity: assembled ? 1 : 0 }}
               transition={{
                 duration: still ? 0 : 0.34,
-                delay: still ? 0 : 0.27,
+                delay: buildDelay(0.27, 0.22),
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
               <motion.g
                 animate={{
                   y: selected === "numbers" ? -9 : 0,
-                  opacity: selected === "numbers" ? 1 : 0.48,
+                  opacity: selected === null || selected === "numbers" ? 1 : 0.48,
                 }}
                 transition={transition}
               >
@@ -468,7 +465,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                 }}
                 transition={{
                   duration: still ? 0 : 0.32,
-                  delay: still ? 0 : 0.23 + index * 0.035,
+                  delay: buildDelay(0.23 + index * 0.035, 0.13 + (4 - index) * 0.025),
                   ease: [0.22, 1, 0.36, 1],
                 }}
               >
@@ -491,13 +488,13 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
               animate={{ y: assembled ? 0 : 12, opacity: assembled ? 1 : 0 }}
               transition={{
                 duration: still ? 0 : 0.32,
-                delay: still ? 0 : 0.48,
+                delay: buildDelay(0.48, 0.08),
               }}
             >
               <motion.g
                 animate={{
                   y: selected === "signs" ? -10 : 0,
-                  opacity: selected === "signs" ? 1 : 0.54,
+                  opacity: selected === null || selected === "signs" ? 1 : 0.54,
                 }}
                 transition={transition}
               >
@@ -539,14 +536,14 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
               animate={{ y: assembled ? 0 : -57, opacity: assembled ? 1 : 0 }}
               transition={{
                 duration: still ? 0 : 0.4,
-                delay: still ? 0 : 0.53,
+                delay: buildDelay(0.53, 0),
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
               <motion.g
                 animate={{
                   y: roofY,
-                  opacity: selected === "roof" ? 0.95 : 0.24,
+                  opacity: selected === null || selected === "roof" ? 0.95 : 0.24,
                 }}
                 transition={transition}
               >
@@ -593,7 +590,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
               animate={{ opacity: assembled ? 1 : 0 }}
               transition={{
                 duration: still ? 0 : 0.25,
-                delay: still ? 0 : 0.74,
+                delay: buildDelay(0.74, 0),
               }}
               className="sups-layer-callout"
             >
@@ -625,7 +622,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                     {t("02 / 屋顶结构", "02 / ROOF")}
                   </text>
                 </>
-              ) : (
+              ) : selected === "signs" ? (
                 <>
                   <path
                     d={`M ${point(4.25, 0.55, 85)[0]} ${point(4.25, 0.55, 85)[1] - 10} L 746 366 L 818 366`}
@@ -639,7 +636,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                     {t("03 / 导向分区", "03 / WAYFINDING")}
                   </text>
                 </>
-              )}
+              ) : null}
             </motion.g>
           </motion.svg>
           <div className="sups-scene-side-note">
@@ -657,6 +654,8 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
 
         <div
           className="sups-layer-selector"
+          ref={selectorRef}
+          data-entry-state={selectorReady ? "present" : "reset"}
           aria-label={t(
             "选择我参与扩展的场景层",
             "Choose a scene layer I worked on",
@@ -668,16 +667,22 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
               type="button"
               className={selected === layer.id ? "is-selected" : ""}
               aria-pressed={selected === layer.id}
+              aria-expanded={selected === layer.id}
               aria-controls="sups-work-reading"
-              onClick={() => setSelected(layer.id)}
+              onClick={() => setSelected((current) => current === layer.id ? null : layer.id)}
+              drag="y"
+              dragSnapToOrigin
+              dragConstraints={{ top: -44, bottom: 8 }}
+              dragElastic={0.16}
+              onDragEnd={(_, info) => {
+                if (info.offset.y < -18) setSelected(layer.id);
+              }}
               style={{ "--layer-color": layer.color } as CSSProperties}
               initial={still ? false : { y: 10, opacity: 0 }}
-              animate={still ? { y: 0, opacity: 1 } : undefined}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true, amount: 0.2 }}
+              animate={{ y: selectorReady ? 0 : 10, opacity: selectorReady ? 1 : 0 }}
               transition={{
                 duration: still ? 0 : 0.3,
-                delay: still ? 0 : index * 0.055,
+                delay: still ? 0 : selectorReady ? index * 0.055 : (layerRecords.length - 1 - index) * 0.035,
               }}
             >
               <span className="sups-layer-button-number">0{index + 1}</span>
@@ -689,15 +694,14 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
             </motion.button>
           ))}
         </div>
-        <div ref={readingRef} style={{ display: "flow-root" }}>
-          <motion.div
+        <p className="sups-operation">{t("向上抽取一层 / 点击 · 再点收回", "Pull a layer upward / click · Click again to close")}</p>
+        <div id="sups-work-reading" aria-live="polite">
+          <AnimatePresence initial={false}>
+          {active && <motion.div
             className="sups-work-reading"
-            id="sups-work-reading"
-            aria-live="polite"
-            initial={still ? false : { clipPath: "inset(0 0 100% 0)" }}
-            animate={{
-              clipPath: readingReady ? "inset(0 0 0% 0)" : "inset(0 0 100% 0)",
-            }}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
             transition={{
               duration: still ? 0 : 0.44,
               delay: still ? 0 : 0.08,
@@ -721,23 +725,23 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                 </div>
                 <div className="sups-work-description">
                   <p>{active.text}</p>
-                  <p className="sups-work-reason">{active.reason}</p>
+                  <details className="sups-work-reason">
+                    <summary>{t("研究意义", "Why this layer matters")}</summary>
+                    <p>{active.reason}</p>
+                  </details>
                   <span className="sups-work-status">
                     <i style={{ background: active.color }} /> {active.status}
                   </span>
                 </div>
               </motion.div>
             </AnimatePresence>
-          </motion.div>
+          </motion.div>}
+          </AnimatePresence>
         </div>
         <div className="sups-foundation">
           <span>
             {t("起点：", "Foundation: ")}
             <strong>{t("基础仿真链路跑通", "Base simulation running")}</strong>
-          </span>
-          <span>
-            {t("角色：", "Role: ")}
-            <strong>{project.role}</strong>
           </span>
           <span>
             {t("目前：", "Status: ")}
@@ -746,12 +750,13 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
             </strong>
           </span>
         </div>
-        <p className="sups-boundary">
-          {t(
-            "我扩展的是现有仿真平台。这里是对工作内容的原创示意；完整样本规模、统一标注与公开数据集发布尚未确认。",
-            "I extend an existing simulation platform. This is an original illustration of the work; complete sample counts, unified annotation and public dataset release have not been confirmed.",
-          )}
-        </p>
+        <details className="sups-boundary">
+          <summary>{t("场景与数据范围", "Scene & data scope")}</summary>
+          <p>{t(
+            "工作基于现有 SUPS / SVL 平台扩展。图中为原创工作示意；完整样本规模、统一标注与公开数据集发布尚未确认。",
+            "This work extends the existing SUPS / SVL platform. The scene is an original illustration; complete sample counts, unified annotation and a public dataset release have not been confirmed.",
+          )}</p>
+        </details>
         <footer className="sups-exits">
           <a className="chapter-link" href="#mask">
             {t(

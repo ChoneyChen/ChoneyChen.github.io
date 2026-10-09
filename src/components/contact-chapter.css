@@ -1,24 +1,26 @@
 .contact-chapter {
   background: #202831;
   color: #f5f1e7;
-  padding: 100px 0 60px;
+  padding: 0;
   overflow: hidden;
 }
-.contact-inner {
+.contact-chapter .contact-inner {
   display: grid;
   grid-template-columns: 0.9fr 1.1fr;
-  gap: 68px;
+  gap: 24px;
   align-items: center;
+  padding-block: 32px;
 }
 .contact-intro .chapter-kicker {
   color: #c2ad89;
 }
+.contact-intro { position: relative; }
 .contact-intro h2 {
-  font-size: clamp(40px, 4.7vw, 70px);
+  font-size: clamp(40px, 4.5vw, 64px);
   letter-spacing: -0.055em;
   line-height: 1.15;
   font-weight: 500;
-  margin: 38px 0 27px;
+  margin: 28px 0 22px;
 }
 .contact-intro h2 em {
   font-family: Georgia, "Songti SC", serif;
@@ -46,19 +48,21 @@
   letter-spacing: 0.16em;
 }
 .contact-postmark {
-  width: 147px;
-  height: 147px;
+  width: 112px;
+  height: 112px;
   border: 1px solid #ac98715c;
   border-radius: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  margin: 35px 0 0 135px;
+  gap: 9px;
+  margin: 0;
   transform: rotate(-14deg);
   color: #b5a17c;
-  position: relative;
+  position: absolute;
+  right: 0;
+  bottom: 90px;
 }
 .contact-postmark:after {
   content: "";
@@ -112,7 +116,7 @@
   gap: 13px;
   align-items: center;
   border-bottom: 1px solid #b9ad9740;
-  padding: 20px 0;
+  padding: 14px 0;
   text-decoration: none;
   color: inherit;
   position: relative;
@@ -121,22 +125,23 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font: 8px var(--mono);
-  color: #8c795d;
+  font: 9px var(--mono);
+  color: #706047;
 }
 .contact-channel > div {
   min-width: 0;
 }
 .contact-address {
   display: block;
-  font-size: clamp(13px, 1.32vw, 19px);
+  font-size: clamp(15px, 1.4vw, 20px);
+  font-weight: 500;
   letter-spacing: -0.025em;
   overflow-wrap: anywhere;
 }
 .contact-channel small {
   display: block;
   font: 8px/1.5 var(--mono);
-  color: #939188;
+  color: #6e675d;
   margin-top: 6px;
 }
 .contact-channel > svg {
@@ -185,7 +190,7 @@
   font-size: 9px;
   color: #8c7f68;
   line-height: 1.7;
-  min-height: 30px;
+  min-height: 16px;
 }
 .contact-envelope-front {
   pointer-events: none;
@@ -204,12 +209,13 @@
   letter-spacing: 0.09em;
 }
 .contact-websites {
-  grid-column: 1/-1;
   display: flex;
   align-items: center;
-  gap: 25px;
+  gap: 14px;
   border-top: 1px solid #bac2c020;
   padding-top: 26px;
+  margin-top: 34px;
+  flex-wrap: wrap;
 }
 .contact-websites > span {
   font: 8px var(--mono);
@@ -224,10 +230,10 @@
   color: #bdc4c6;
 }
 .contact-websites a:last-child {
-  margin-left: auto;
+  width: 100%;
 }
 @media (max-width: 1000px) {
-  .contact-inner {
+  .contact-chapter .contact-inner {
     gap: 35px;
   }
   .contact-letter {
@@ -241,10 +247,11 @@
 }
 @media (max-width: 700px) {
   .contact-chapter {
-    padding: 65px 0 42px;
+    padding: 0;
   }
-  .contact-inner {
+  .contact-chapter .contact-inner {
     display: block;
+    padding-block: 54px;
   }
   .contact-intro h2 {
     font-size: 45px;
@@ -261,7 +268,8 @@
     width: 103px;
     height: 103px;
     right: 35px;
-    margin-top: -96px;
+    top: 190px;
+    bottom: auto;
   }
   .contact-postmark strong {
     font-size: 29px;
@@ -281,7 +289,7 @@
     font-size: 14px;
   }
   .contact-channel-kind {
-    font-size: 7px;
+    font-size: 8px;
     gap: 4px;
   }
   .contact-channel-kind svg {

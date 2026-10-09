@@ -283,12 +283,12 @@
   padding: 20px 0 22px;
 }
 .mask-chain-work strong {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
 }
 .mask-chain-work p {
   color: #465574;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.8;
   margin: 9px 0 0;
 }
@@ -304,10 +304,18 @@
   padding-bottom: 26px;
 }
 .mask-story-step {
+  display: block;
+  appearance: none;
+  width: 100%;
   position: relative;
-  padding: 22px 0 42px 27px;
+  padding: 22px 0 30px 27px;
+  border: 0;
   border-left: 1px solid #ccd8ee;
-  transition: border-color 0.3s;
+  background: transparent;
+  color: #172038;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.3s, background-color 0.3s;
 }
 .mask-story-step::before {
   content: "";
@@ -335,12 +343,28 @@
   color: #465574;
   letter-spacing: 0.08em;
 }
-.mask-story-step h3 {
+.mask-step-title {
+  display: block;
   font-size: 24px;
   line-height: 1.4;
   font-weight: 500;
   letter-spacing: -0.04em;
   margin: 13px 0 14px;
+}
+.mask-story-step:hover {
+  background: #e7eefb66;
+}
+.mask-story-step:focus-visible {
+  outline: 2px solid #2458f2;
+  outline-offset: 4px;
+}
+.mask-step-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  color: #2458f2;
+  font-size: 12px;
 }
 .mask-story-step > p {
   color: #465574;
@@ -352,7 +376,7 @@
   color: #536383;
   font-family: "IBM Plex Mono", monospace;
   font-size: 9px;
-  margin-top: 17px;
+  margin-top: 10px;
   letter-spacing: 0.03em;
 }
 .mask-outcomes {
@@ -421,6 +445,32 @@
   line-height: 1.7;
   color: #465574;
 }
+.mask-introduction {
+  max-width: 760px;
+}
+.mask-role-mark {
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  font-weight: 500;
+}
+.mask-project-scope {
+  font-size: 12px;
+  color: #465574;
+  line-height: 1.7;
+  margin-top: 16px;
+}
+.mask-project-scope summary {
+  cursor: pointer;
+  width: fit-content;
+}
+.mask-project-scope p {
+  margin: 10px 0 0;
+  font-size: 14px;
+}
+.mask-project-scope summary:focus-visible {
+  outline: 2px solid #2458f2;
+  outline-offset: 4px;
+}
 .mask-footer {
   display: flex;
   justify-content: space-between;
@@ -478,6 +528,96 @@
 .mask-chapter[lang="en"] .mask-outcome-award strong > span {
   flex-shrink: 0;
 }
+@media (min-width: 951px) {
+  .chapter .mask-inner {
+    padding-top: 42px;
+    padding-bottom: 36px;
+  }
+  .mask-heading .chapter-kicker {
+    margin-bottom: 0;
+  }
+  .mask-eyebrow {
+    margin-top: 24px;
+    margin-bottom: 14px;
+  }
+  .mask-introduction {
+    margin-top: 20px;
+    margin-bottom: 32px;
+  }
+  .mask-introduction > p {
+    line-height: 1.65;
+  }
+  .mask-role-mark {
+    margin-top: 14px;
+  }
+  .mask-connection-board,
+  .mask-chapter[lang="en"] .mask-connection-board {
+    height: clamp(390px, 52vh, 440px);
+  }
+  .mask-stage-topline {
+    padding: 13px 0;
+    font-size: 10px;
+  }
+  .mask-connection-node {
+    padding: 10px 12px;
+  }
+  .mask-connection-node > span {
+    font-size: 12px;
+  }
+  .mask-system-header {
+    padding: 14px 0;
+  }
+  .mask-system-header > button {
+    font-size: 12px;
+  }
+  .mask-narrative {
+    padding-top: 15px;
+    padding-bottom: 12px;
+  }
+  .mask-narrative-intro {
+    padding-bottom: 12px;
+    font-size: 12px;
+  }
+  .mask-story-step {
+    padding: 12px 0 18px 23px;
+  }
+  .mask-story-step::before {
+    top: 18px;
+  }
+  .mask-step-number {
+    font-size: 10px;
+  }
+  .mask-step-title {
+    margin-top: 8px;
+    margin-bottom: 6px;
+    font-size: 22px;
+    line-height: 1.25;
+  }
+  .mask-step-label {
+    display: none;
+  }
+  .mask-step-action {
+    margin-top: 6px;
+  }
+  .mask-outcomes {
+    margin-top: 30px;
+    padding-top: 22px;
+    gap: 25px;
+  }
+  .mask-outcomes strong {
+    margin-top: 12px;
+  }
+  .mask-outcomes > div > p {
+    font-size: 14px;
+  }
+  .mask-footer {
+    margin-top: 28px;
+    padding-top: 18px;
+  }
+  .mask-footer .chapter-link {
+    font-size: 12px;
+  }
+}
 @media (min-width: 1450px) {
   .mask-story-layout {
     gap: 70px;
@@ -498,7 +638,7 @@
   .mask-connection-node > small {
     font-size: 6px;
   }
-  .mask-story-step h3 {
+  .mask-step-title {
     font-size: 19px;
   }
   .mask-story-step {
@@ -566,13 +706,33 @@
     font-size: 10px;
   }
   .mask-narrative {
-    padding-top: 38px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 20px;
+    padding-top: 28px;
+  }
+  .mask-narrative-intro {
+    grid-column: 1 / -1;
+    padding-bottom: 17px;
   }
   .mask-story-step {
-    padding: 20px 0 26px 22px;
+    padding: 16px 0 20px;
+    border-left: 0;
+    border-top: 1px solid #ccd8ee;
   }
-  .mask-story-step h3 {
-    font-size: 21px;
+  .mask-story-step::before {
+    display: none;
+  }
+  .mask-step-title {
+    font-size: 19px;
+    margin: 10px 0 0;
+    line-height: 1.35;
+  }
+  .mask-step-label {
+    display: none;
+  }
+  .mask-step-action {
+    font-size: 11px;
   }
   .mask-outcomes {
     grid-template-columns: 1fr 1fr;

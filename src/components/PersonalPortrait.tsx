@@ -1,3 +1,4 @@
+import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
 import { useRef, useState } from "react";
 import {
   AnimatePresence,
@@ -5,7 +6,7 @@ import {
   useInView,
   useReducedMotion,
 } from "motion/react";
-import { ArrowUpRight, Github, MoveUpRight } from "lucide-react";
+import { ArrowUpRight, Github, MoveUpRight, X } from "lucide-react";
 import { useI18n } from "../i18n";
 import "./personal-portrait.css";
 
@@ -19,22 +20,22 @@ const getDirections = (t: (zh: string, en: string) => string) =>
       id: "space",
       index: "01",
       label: t("视觉与空间", "Vision and space"),
-      tools: "Cosmos-Loc / U-GLIMPSE",
+      tools: "Cosmos-Loc / U-IMPROVE",
       title: t(
         "我想继续，理解机器怎样看见空间。",
         "I want to understand how machines perceive space.",
       ),
       experience: t(
-        "在 Cosmos-Loc 里，我重点参与 Qwen 训练与多轮实验。现在的毕业研究 U-GLIMPSE，正在探索图像生成模型怎样输出可解码的语义与几何信息。",
-        "In Cosmos-Loc, my focus was Qwen training and repeated experiments. My current final-year project, U-GLIMPSE, explores how image generators might produce decodable semantic and geometric information.",
+        "在 Cosmos-Loc 里，我重点参与 Qwen 训练与多轮实验。现在的毕业研究 U-IMPROVE，提出目标存在性三态 Strip，并研究共享图像生成模型怎样输出可解码的分割、度量深度与法线，再融合为三维场景。",
+        "In Cosmos-Loc, my focus was Qwen training and repeated experiments. My current final-year project, U-IMPROVE, proposes a three-state presence Strip and a shared image generator for decodable segmentation, metric depth and normals, fused into a 3D scene.",
       ),
       question: t(
-        "生成模型学到的视觉先验，能怎样变成可靠的感知？",
-        "How can a generative model’s visual priors become reliable perception?",
+        "面对没见过的环境和类别，模型能定位目标，也能可靠地回答不存在吗？",
+        "In unseen environments and categories, can the model locate a target and reliably recognise its absence?",
       ),
       next: t(
-        "我已推进课题、文献与实验设计，方法效果和跨域表现仍需要验证。",
-        "I have developed the research framing, literature review and experimental design. Method performance and cross-domain behaviour still need validation.",
+        "我已推进课题、文献、输出协议与实验设计；负查询 FPR、分割 IoU 和深度 AbsRel 仍待训练与验证。",
+        "I have developed the research framing, literature review, output protocol and experiment design. Negative-query FPR, segmentation IoU and depth AbsRel remain to be measured after training.",
       ),
       href: "#glimpse",
       link: t("进入我的毕业研究", "Explore my final-year research"),
@@ -232,8 +233,14 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
   const systemQuiet = useReducedMotion();
   const reduced = quiet || Boolean(systemQuiet);
   const [selected, setSelected] = useState(0);
+  const [opened, setOpened] = useState(false);
+  useCollapseOnLeave("next", () => setOpened(false));
+  function selectDirection(index: number) {
+    setSelected(index);
+    setOpened(true);
+  }
   const collageRef = useRef<HTMLDivElement>(null);
-  const collageInView = useInView(collageRef, { once: true, amount: 0.25 });
+  const collageInView = useInView(collageRef, { once: false, amount: 0.25 });
   const collageReady = reduced || collageInView;
   const direction = directions[selected];
   const transition = reduced
@@ -253,10 +260,10 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
         </div>
         <motion.div
           className="portrait-introduction"
-          initial={reduced ? false : { x: -18, opacity: 0.6 }}
+          initial={reduced ? false : { x: -18, opacity: 0 }}
           animate={reduced ? { x: 0, opacity: 1 } : undefined}
           whileInView={{ x: 0, opacity: 1 }}
-          viewport={{ once: true, amount: 0.25 }}
+          viewport={{ once: false, amount: 0.25 }}
           transition={
             reduced
               ? { duration: 0 }
@@ -269,16 +276,9 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
             {t("还在继续。", "still moving forward.")}
           </h2>
           <p>
-            {t("这些兴趣，也都是我。", "These interests are all part of me.")}
-            <br />
             {t(
-              "视觉与空间、系统工程、环境 AI。",
-              "Vision and space. Systems. Environmental AI.",
-            )}
-            <br />
-            {t(
-              "从已经做过的事，走向接下来的问题。",
-              "From the work I have done to the questions ahead.",
+              "视觉与空间、系统工程、环境 AI。经历连着兴趣，兴趣引向下一问。",
+              "Vision and space. Systems. Environmental AI. Experience shapes my interests and the questions ahead.",
             )}
           </p>
         </motion.div>
@@ -297,10 +297,10 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
                 className="portrait-base"
                 viewBox="0 0 680 570"
                 aria-hidden="true"
-                initial={reduced ? false : { scale: 0.96, opacity: 0.5 }}
+                initial={reduced ? false : { scale: 0.96, opacity: 0 }}
                 animate={{
                   scale: collageReady ? 1 : 0.96,
-                  opacity: collageReady ? 1 : 0.5,
+                  opacity: collageReady ? 1 : 0,
                 }}
                 transition={
                   reduced
@@ -348,7 +348,7 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
                 <motion.div
                   className="portrait-fragment-arrival"
                   key={item.id}
-                  style={{ zIndex: selected === index ? 4 : index + 1 }}
+                  style={{ zIndex: opened && selected === index ? 4 : index + 1 }}
                   initial={
                     reduced
                       ? false
@@ -357,7 +357,7 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
                           y: [28, -38, 56][index],
                           rotate: [-9, 10, -8][index],
                           scale: 0.96,
-                          opacity: 0.55,
+                          opacity: 0,
                         }
                   }
                   animate={{
@@ -365,28 +365,29 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
                     y: collageReady ? 0 : [28, -38, 56][index],
                     rotate: collageReady ? 0 : [-9, 10, -8][index],
                     scale: collageReady ? 1 : 0.96,
-                    opacity: collageReady ? 1 : 0.55,
+                    opacity: collageReady ? 1 : 0,
                   }}
                   transition={
                     reduced
                       ? { duration: 0 }
                       : {
                           duration: 0.68,
-                          delay: index * 0.14,
+                          delay: (collageReady ? index : 2 - index) * 0.14,
                           ease: [0.22, 1, 0.36, 1],
                         }
                   }
                 >
                   <motion.button
                     type="button"
-                    className={`portrait-fragment portrait-fragment-${item.id}${selected === index ? " is-selected" : ""}`}
-                    aria-pressed={selected === index}
+                    className={`portrait-fragment portrait-fragment-${item.id}${opened && selected === index ? " is-selected" : ""}`}
+                    aria-pressed={opened && selected === index}
+                    aria-expanded={opened && selected === index}
                     aria-controls="portrait-direction"
                     aria-label={t(
                       `阅读我的${item.label}方向：${item.tools}`,
                       `Read my ${item.label} direction: ${item.tools}`,
                     )}
-                    onClick={() => setSelected(index)}
+                    onClick={() => selectDirection(index)}
                     drag={!reduced}
                     dragConstraints={{
                       left: -24,
@@ -396,7 +397,7 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
                     }}
                     dragElastic={0.16}
                     dragSnapToOrigin
-                    onDragStart={() => setSelected(index)}
+                    onDragStart={() => selectDirection(index)}
                     whileHover={reduced ? undefined : { scale: 1.025 }}
                     whileTap={reduced ? undefined : { scale: 0.985 }}
                     transition={{ type: "spring", stiffness: 210, damping: 25 }}
@@ -405,12 +406,6 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
                   </motion.button>
                 </motion.div>
               ))}
-              <span className="portrait-collage-caption">
-                {t(
-                  "兴趣与方向的抽象拼贴",
-                  "An abstract collage of interests and directions",
-                )}
-              </span>
             </div>
             <div
               className="portrait-selector"
@@ -421,17 +416,19 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
                 <motion.button
                   type="button"
                   key={item.id}
-                  aria-pressed={selected === index}
-                  onClick={() => setSelected(index)}
+                  aria-pressed={opened && selected === index}
+                  aria-expanded={opened && selected === index}
+                  aria-controls="portrait-direction"
+                  onClick={() => { if (opened && selected === index) setOpened(false); else selectDirection(index); }}
                   initial={
                     reduced
                       ? false
-                      : { x: [-10, 0, 10][index], y: 9, opacity: 0.55 }
+                      : { x: [-10, 0, 10][index], y: 9, opacity: 0 }
                   }
                   animate={{
                     x: collageReady ? 0 : [-10, 0, 10][index],
                     y: collageReady ? 0 : 9,
-                    opacity: collageReady ? 1 : 0.55,
+                    opacity: collageReady ? 1 : 0,
                   }}
                   transition={
                     reduced
@@ -455,13 +452,6 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
                 " 点选或轻拖一块，展开我对应的经历与下一问。",
                 " Click or gently drag a piece to explore my experience and next question.",
               )}
-              <br />
-              <span>
-                {t(
-                  "原创立体主义启发拼贴，表达研究兴趣与工作方向。",
-                  "An original Cubist-inspired collage of research interests and working directions.",
-                )}
-              </span>
             </p>
           </div>
 
@@ -469,10 +459,10 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
             id="portrait-direction"
             className="portrait-direction"
             aria-live="polite"
-            initial={reduced ? false : { x: 18, opacity: 0.6 }}
+            initial={reduced ? false : { x: 18, opacity: 0 }}
             animate={reduced ? { x: 0, opacity: 1 } : undefined}
             whileInView={{ x: 0, opacity: 1 }}
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: false, amount: 0.2 }}
             transition={
               reduced
                 ? { duration: 0 }
@@ -481,12 +471,14 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
           >
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
-                key={direction.id}
+                key={opened ? direction.id : "closed"}
                 initial={reduced ? false : { opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: reduced ? 0 : -8 }}
                 transition={transition}
               >
+                {opened ? <>
+                <button type="button" className="portrait-close" aria-label={t("合上个人方向", "Close personal direction")} onClick={() => setOpened(false)}><X size={18}/></button>
                 <span className="portrait-direction-number">
                   {direction.index} / {direction.label}
                 </span>
@@ -503,6 +495,7 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
                   {direction.link}
                   <ArrowUpRight size={17} />
                 </a>
+                </> : <div className="portrait-closed-intro"><span className="portrait-direction-number">{t("三种兴趣，一段继续的旅程", "THREE INTERESTS. ONE ONGOING JOURNEY.")}</span><h3>{t("我还想问什么？", "What do I want to ask next?")}</h3><p className="portrait-experience">{t("点选一块拼贴，打开我的经历和下一问。", "Choose a collage piece to open the experience behind it and the question ahead.")}</p></div>}
               </motion.div>
             </AnimatePresence>
           </motion.div>

@@ -1,3 +1,4 @@
+import { useCollapseOnLeave, useReadingExit } from "./hooks/useCollapseOnLeave";
 import {
   useEffect,
   useLayoutEffect,
@@ -40,6 +41,8 @@ import { ToolsChapter } from "./components/ToolsChapter";
 import { PersonalPortrait } from "./components/PersonalPortrait";
 import { ContactChapter } from "./components/ContactChapter";
 import { ResearchDirections } from "./components/ResearchDirections";
+import { useChapterAnchors } from "./hooks/useChapterAnchors";
+import { useSectionPaging } from "./hooks/useSectionPaging";
 
 function getChapters(t: (zh: string, en: string) => string) {
   return [
@@ -102,7 +105,7 @@ function getChapters(t: (zh: string, en: string) => string) {
     {
       id: "glimpse",
       label: t("下一问", "Next question"),
-      caption: "U-GLIMPSE / FYP",
+      caption: "U-IMPROVE / FYP",
       style: "GLASS BLUEPRINT",
       colour: "#214dcb",
     },
@@ -179,7 +182,7 @@ function getIdentities(t: (zh: string, en: string) => string) {
         "Gordon Owusu Boateng 研究团队",
         "Gordon Owusu Boateng’s research team",
       ),
-      note: t("从 Cosmos-Loc 到 U-GLIMPSE", "From Cosmos-Loc to U-GLIMPSE"),
+      note: t("从 Cosmos-Loc 到 U-IMPROVE", "From Cosmos-Loc to U-IMPROVE"),
       stamp: "IN PROGRESS",
       lines: [
         t(
@@ -187,8 +190,8 @@ function getIdentities(t: (zh: string, en: string) => string) {
           "Contributing to Qwen training, experimental comparisons, and localisation evaluation.",
         ),
         t(
-          "毕业研究探索生成模型的开放词汇感知。",
-          "Exploring generative models for open-vocabulary perception in my dissertation.",
+          "U-IMPROVE 毕业研究连接目标存在性、像素语义与度量几何。",
+          "My U-IMPROVE dissertation connects target presence, pixel semantics and metric geometry.",
         ),
       ],
       link: "#cosmos",
@@ -247,16 +250,17 @@ function cycleTabs(
     [next]?.focus();
 }
 
-function IdentityFold({ quiet }: { quiet: boolean }) {
+function IdentityFold({ quiet, entered }: { quiet: boolean; entered: boolean }) {
   const { t } = useI18n();
   const identities = getIdentities(t);
-  const [identity, setIdentity] = useState(0);
-  const page = identities[identity];
+  const [identity, setIdentity] = useState<number | null>(null);
+  useCollapseOnLeave("home", () => setIdentity(null));
+  const page = identity === null ? null : identities[identity];
   return (
     <motion.div
       className="identity-fold"
       initial={quiet ? false : { opacity: 0, rotateX: -16, y: 36 }}
-      animate={{ opacity: 1, rotateX: 0, y: 0 }}
+      animate={quiet || entered ? { opacity: 1, rotateX: 0, y: 0 } : { opacity: 0, rotateX: -10, y: 28 }}
       transition={
         quiet
           ? { duration: 0 }
@@ -275,7 +279,7 @@ function IdentityFold({ quiet }: { quiet: boolean }) {
           "Get to know Tianyi through three roles",
         )}
         onKeyDown={(event) =>
-          cycleTabs(event, identity, identities.length, setIdentity)
+          cycleTabs(event, identity ?? 0, identities.length, setIdentity)
         }
       >
         {identities.map((item, index) => (
@@ -285,8 +289,9 @@ function IdentityFold({ quiet }: { quiet: boolean }) {
             id={`identity-tab-${index}`}
             aria-controls="identity-page"
             aria-selected={identity === index}
-            tabIndex={identity === index ? 0 : -1}
-            onClick={() => setIdentity(index)}
+            tabIndex={identity === index || (identity === null && index === 0) ? 0 : -1}
+            aria-expanded={identity === index}
+            onClick={() => setIdentity(identity === index ? null : index)}
           >
             <span>{item.number}</span>
             {item.label}
@@ -302,10 +307,10 @@ function IdentityFold({ quiet }: { quiet: boolean }) {
       >
         <div className="identity-paper-top">
           <span>CHONEY CHEN</span>
-          <span>PERSONAL FILE / {page.number}</span>
+          <span>PERSONAL FILE / {page?.number ?? "INDEX"}</span>
         </div>
         <AnimatePresence mode="wait" initial={false}>
-          <motion.div
+          {page && identity !== null ? <motion.div
             key={identity}
             role="tabpanel"
             id="identity-page"
@@ -316,6 +321,7 @@ function IdentityFold({ quiet }: { quiet: boolean }) {
             exit={{ opacity: 0, y: quiet ? 0 : -10 }}
             transition={{ duration: 0.22 }}
           >
+            <button className="reading-close identity-close" onClick={() => setIdentity(null)} aria-label={t("合上身份档案", "Close role file")}><X size={16} /></button>
             <div className="identity-title">{page.title}</div>
             <h2>{page.subtitle}</h2>
             <p className="identity-detail">{page.detail}</p>
@@ -330,9 +336,14 @@ function IdentityFold({ quiet }: { quiet: boolean }) {
               {page.linkLabel}
               <ArrowUpRight size={18} />
             </a>
-          </motion.div>
+          </motion.div> : <motion.div key="cover" className="identity-cover" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: quiet ? 0 : 0.18 }}>
+            <span className="identity-cover-index">THREE WAYS IN</span>
+            <div className="identity-cover-name">Tianyi<br /><em>Chen.</em></div>
+            <p>{t("学生、研究者、实践者。", "Student. Researcher. Practitioner.")}</p>
+            <span>{t("选一个身份，翻开我的档案。", "Choose a role to open my file.")}</span>
+          </motion.div>}
         </AnimatePresence>
-        <span className="identity-stamp">{page.stamp}</span>
+        <span className="identity-stamp">{page?.stamp ?? "PERSONAL INDEX"}</span>
         <div className="identity-paper-bottom">
           <span>FROM SHIYAN</span>
           <span>BASED IN SUZHOU</span>
@@ -366,9 +377,11 @@ function IdentityFold({ quiet }: { quiet: boolean }) {
 
 function Hero({ quiet }: { quiet: boolean }) {
   const { t, language } = useI18n();
+  const heroRef = useRef<HTMLDivElement>(null);
+  const entered = useInView(heroRef, { amount: 0.12 });
   return (
     <section id="home" className="chapter personal-hero">
-      <div className="hero-grid">
+      <div className="hero-grid" ref={heroRef}>
         <div className="hero-copy">
           <div className="hero-kicker">
             <span className="live-dot" /> A PERSONAL INDEX, 2026
@@ -393,7 +406,7 @@ function Hero({ quiet }: { quiet: boolean }) {
                   initial={
                     quiet ? false : { y: 32, opacity: 0, filter: "blur(6px)" }
                   }
-                  animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+                  animate={quiet || entered ? { y: 0, opacity: 1, filter: "blur(0px)" } : { y: 22, opacity: 0, filter: "blur(4px)" }}
                   transition={
                     quiet
                       ? { duration: 0 }
@@ -411,7 +424,7 @@ function Hero({ quiet }: { quiet: boolean }) {
             <motion.span
               className="hero-name-en"
               initial={quiet ? false : { clipPath: "inset(0 100% 0 0)" }}
-              animate={{ clipPath: "inset(-12% -20% -18% -12%)" }}
+              animate={{ clipPath: quiet || entered ? "inset(-12% -20% -18% -12%)" : "inset(0 100% 0 0)" }}
               transition={
                 quiet
                   ? { duration: 0 }
@@ -457,7 +470,7 @@ function Hero({ quiet }: { quiet: boolean }) {
             <ArrowDown size={18} />
           </a>
         </div>
-        <IdentityFold quiet={quiet} />
+        <IdentityFold quiet={quiet} entered={entered} />
       </div>
       <div className="hero-foot">
         <span>
@@ -545,156 +558,50 @@ const originIcons = [
 function Origins({ quiet }: { quiet: boolean }) {
   const { t } = useI18n();
   const { experienceTimeline } = useContent();
-  const originNames = [
-    t("从一顿饭开始", "An everyday question"),
-    t("走进真实的系统", "Into real systems"),
-    t("先把数据采好", "Reliable data first"),
-  ];
-  const [selected, setSelected] = useState(0);
+  const originNames = [t("食堂回归分析", "Canteen regression"), t("凯鼎 IT 实习", "Kaiding IT internship"), t("SURF 可穿戴研究", "SURF wearable research")];
+  const [selected, setSelected] = useState<number | null>(null);
+  useCollapseOnLeave("origins", () => setSelected(null));
   const bank = useRef<HTMLDivElement>(null);
-  const entered = useInView(bank, { once: true, amount: 0.25 });
-  const selectedExperience = experienceTimeline.find(
-    (item) => item.id === originIds[selected],
-  )!;
+  const entered = useInView(bank, { amount: 0.2 });
+  const selectedExperience = selected === null ? null : experienceTimeline.find(item => item.id === originIds[selected]);
   return (
-    <section id="origins" className="chapter origins-chapter">
+    <section id="origins" className="chapter origins-chapter" aria-labelledby="origins-title">
       <div className="chapter-inner">
-        <div className="origins-heading">
-          <div>
-            <p className="chapter-kicker">01 / THE BEGINNINGS</p>
-            <h2>
-              {t("我不是从一个", "It began with")}
-              <br />
-              <span>{t("大问题", "small questions")}</span>
-              {t("开始的。", ".")}
-            </h2>
-          </div>
-          <p>
-            {t(
-              "食堂的人流、一段系统联调、一条稳定的信号。",
-              "Canteen footfall. A working system. A clean signal.",
-            )}
-            <br />
-            {t(
-              "这些具体的事情，成了我后来的起点。",
-              "These concrete tasks became my starting points.",
-            )}
-          </p>
-        </div>
+        <header className="origins-heading">
+          <div><p className="chapter-kicker">01 / THE BEGINNINGS</p><h2 id="origins-title">{t("从具体的", "It began with")}<br /><span>{t("问题开始。", "small questions.")}</span></h2></div>
+          <p>{t("回归分析、软件维护、可穿戴数据采集。", "Regression. Software maintenance. Wearable data.")}<br />{t("我的三段早期经历。", "Three early experiences that shaped my work.")}</p>
+        </header>
         <div className="origin-desk">
-          <div
-            className="origin-file-bank"
-            ref={bank}
-            role="tablist"
-            aria-label={t(
-              "我的早期经历文件",
-              "Files from my early experiences",
-            )}
-            onKeyDown={(event) =>
-              cycleTabs(event, selected, originIds.length, setSelected)
-            }
-          >
-            {originIds.map((id, index) => {
-              const item = experienceTimeline.find((entry) => entry.id === id)!;
-              return (
-                <motion.button
-                  key={id}
-                  role="tab"
-                  aria-selected={index === selected}
-                  tabIndex={selected === index ? 0 : -1}
-                  aria-controls="origin-record"
-                  id={`origin-tab-${index}`}
-                  className={`origin-file origin-file-${index} ${selected === index ? "is-open" : ""}`}
-                  onClick={() => setSelected(index)}
-                  drag={!quiet ? "y" : false}
-                  dragConstraints={{ top: -55, bottom: 0 }}
-                  dragElastic={0.18}
-                  dragSnapToOrigin
-                  onDragEnd={(_, info) => {
-                    if (info.offset.y < -20) setSelected(index);
-                  }}
-                  initial={quiet ? false : { y: 95, rotate: 0, opacity: 0 }}
-                  animate={{
-                    y: quiet || entered ? (selected === index ? -24 : 0) : 95,
-                    opacity: quiet || entered ? 1 : 0,
-                    rotate: quiet
-                      ? 0
-                      : entered
-                        ? index === 0
-                          ? -5
-                          : index === 1
-                            ? 2
-                            : 7
-                        : 0,
-                  }}
-                  transition={
-                    quiet
-                      ? { duration: 0 }
-                      : {
-                          type: "spring",
-                          stiffness: 120,
-                          damping: 20,
-                          delay: index * 0.06,
-                        }
-                  }
-                >
-                  <span className="origin-tab-label">FILE 0{index + 1}</span>
-                  <span className="origin-file-date">{item.year}</span>
-                  <h3>{originNames[index]}</h3>
-                  <p>{item.title}</p>
-                  <div className="origin-file-drawing">
-                    {originIcons[index]}
-                  </div>
-                  <span className="origin-file-label">
-                    {index === selected
-                      ? t("已展开 · 我的工作", "Open · My contribution")
-                      : t("向上抽出 / 点击阅读", "Pull up / Click to read")}
-                    <ArrowUpRight size={16} />
-                  </span>
-                </motion.button>
-              );
-            })}
-            <div className="origin-folder-label">
-              CHONEY'S EARLY FILES <span>2023 — 2025</span>
+          <div className="origin-file-bank" ref={bank}>
+            <div className="origin-folder-back" aria-hidden="true" />
+            <div className="origin-paper-slots" role="tablist" aria-label={t("我的早期经历文件", "Files from my early experiences")} onKeyDown={event => cycleTabs(event, selected ?? 0, originIds.length, setSelected)}>
+              {originIds.map((id, index) => {
+                const item = experienceTimeline.find(entry => entry.id === id)!;
+                return <motion.div key={id} className="origin-paper-slot" initial={quiet ? false : { y: 58, opacity: 0 }} animate={{ y: quiet || entered ? 0 : 58, opacity: quiet || entered ? 1 : 0 }} transition={{ duration: quiet ? 0 : 0.7, delay: quiet ? 0 : index * 0.09, ease: [0.16, 1, 0.3, 1] }}>
+                  <motion.button role="tab" aria-selected={index === selected} aria-expanded={index === selected} tabIndex={selected === index || (selected === null && index === 0) ? 0 : -1} aria-controls="origin-record" id={`origin-tab-${index}`} className={`origin-file origin-file-${index} ${selected === index ? "is-open" : ""}`}
+                    onClick={() => setSelected(selected === index ? null : index)}
+                    drag={!quiet ? "y" : false} dragConstraints={{ top: -62, bottom: 0 }} dragElastic={0.08} dragSnapToOrigin
+                    onDragEnd={(_, info) => { if (info.offset.y < -20) setSelected(index); }}
+                    animate={{ y: selected === index ? -48 : 0, rotate: quiet ? 0 : [-4, 1, 5][index] }} transition={{ type: "spring", stiffness: 150, damping: 26 }}>
+                    <span className="origin-tab-label">FILE 0{index + 1}</span><span className="origin-file-date">{item.year}</span><h3>{originNames[index]}</h3>
+                    <div className="origin-file-drawing">{originIcons[index]}</div>
+                  </motion.button>
+                </motion.div>;
+              })}
             </div>
+            <div className="origin-folder-front" aria-hidden="true"><span>CHONEY’S EARLY FILES<small>2023 — 2025</small></span></div>
+            <p className="origin-pull-hint">{t("向上抽出 · 或点击文件", "Pull a file up · or click to read")} <ArrowUpRight size={15} /></p>
           </div>
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.article
-              id="origin-record"
-              className="origin-record"
-              role="tabpanel"
-              aria-labelledby={`origin-tab-${selected}`}
-              key={selectedExperience.id}
-              initial={{ opacity: 0, y: quiet ? 0 : 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-            >
-              <span className="record-number">RECORD / 0{selected + 1}</span>
-              {selected === 1 ? (
-                <SteampunkWork quiet={quiet} />
-              ) : (
-                <>
-                  <h3>{selectedExperience.title}</h3>
-                  <p className="record-role">{selectedExperience.role}</p>
-                  <p>{selectedExperience.description}</p>
-                  <div className="record-tags">
-                    {selectedExperience.tags.map((tag) => (
-                      <span key={tag}>{tag}</span>
-                    ))}
-                  </div>
-                  <small>{selectedExperience.boundary}</small>
-                </>
-              )}
-            </motion.article>
-          </AnimatePresence>
+          <div className="origin-reading-slot">
+            <AnimatePresence mode="wait" initial={false}>
+              {selectedExperience && selected !== null ? <motion.article id="origin-record" className="origin-record" role="tabpanel" aria-labelledby={`origin-tab-${selected}`} key={selectedExperience.id} initial={{ opacity: 0, x: quiet ? 0 : -16, clipPath: "inset(0 100% 0 0)" }} animate={{ opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)" }} exit={{ opacity: 0, x: quiet ? 0 : 10 }} transition={{ duration: quiet ? 0 : 0.38, ease: [0.22, 1, 0.36, 1] }}>
+                <div className="origin-record-top"><span className="record-number">RECORD / 0{selected + 1}</span><button className="reading-close" onClick={() => setSelected(null)} aria-label={t("合上经历文件", "Close experience file")}><X size={17} /></button></div>
+                {selected === 1 ? <SteampunkWork quiet={quiet} /> : <><h3>{selectedExperience.title}</h3><p className="record-role">{selectedExperience.role}</p><p>{selectedExperience.description}</p><div className="record-tags">{selectedExperience.tags.map(tag => <span key={tag}>{tag}</span>)}</div>{selectedExperience.boundary && <details className="support-notes"><summary>{t("记录说明", "Record context")}</summary><p>{selectedExperience.boundary}</p></details>}</>}
+              </motion.article> : <motion.div key="closed" className="origin-closed" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><span>2023 — 2025</span><h3>{t("三个起点，", "Three beginnings,")}<br />{t("同一份好奇。", "one curiosity.")}</h3><p>{t("抽出一份文件，读我的实际工作。", "Open a file to read what I worked on.")}</p></motion.div>}
+            </AnimatePresence>
+          </div>
         </div>
-        <a className="chapter-link origins-next" href="#methods">
-          {t(
-            "这些经历，慢慢变成我做事的方式。",
-            "From these experiences, a way of working.",
-          )}
-          <ArrowRight size={18} />
-        </a>
+        <a className="chapter-link origins-next" href="#methods">{t("接下来：我的做事方式", "Next: how I approach the work")}<ArrowRight size={18} /></a>
       </div>
     </section>
   );
@@ -704,7 +611,8 @@ function PersonalArchive({ quiet }: { quiet: boolean }) {
   const { t } = useI18n();
   const { experienceTimeline } = useContent();
   const [year, setYear] = useState("all");
-  const [open, setOpen] = useState("can201");
+  const [open, setOpen] = useState("");
+  useCollapseOnLeave("archive", () => setOpen(""));
   const items = experienceTimeline.filter(
     (item) => year === "all" || item.year.includes(year),
   );
@@ -748,7 +656,7 @@ function PersonalArchive({ quiet }: { quiet: boolean }) {
               aria-pressed={year === item}
               onClick={() => setYear(item)}
             >
-              {item === "all" ? t(t("全部", "All"), "All") : item}
+              {item === "all" ? t("全部", "All") : item}
               {year === item && <span>↗</span>}
             </button>
           ))}
@@ -763,7 +671,7 @@ function PersonalArchive({ quiet }: { quiet: boolean }) {
               initial={quiet ? false : { opacity: 0, x: index % 2 ? 28 : -28 }}
               animate={quiet ? { opacity: 1, x: 0 } : undefined}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
+              viewport={{ once: false, amount: 0.2 }}
               transition={
                 quiet
                   ? { duration: 0 }
@@ -780,7 +688,7 @@ function PersonalArchive({ quiet }: { quiet: boolean }) {
                 aria-controls={`record-${item.id}`}
                 onClick={() => setOpen(open === item.id ? "" : item.id)}
               >
-                <span className="archive-year">{item.year}</span>
+                <span className="archive-year">{item.id === "can201" ? "2025" : item.year}</span>
                 <span className="archive-title">
                   {item.title}
                   <small>{item.role}</small>
@@ -829,12 +737,12 @@ function PersonalArchive({ quiet }: { quiet: boolean }) {
             </motion.article>
           ))}
         </div>
-        <p className="archive-footnote">
+        <details className="archive-footnote support-notes"><summary>{t("关于这份经历索引", "About this index")}</summary><p>
           {t(
             "地下停车场 SURF 与 Cosmos-Loc 存在工作重叠；面罩竞赛是同一原型的后续成果。这里保留经历脉络，不重复计算项目成果。",
             "The car-park SURF overlaps with Cosmos-Loc; the maker competition is a later result of the same mask prototype. These records preserve the timeline without counting the same achievement twice.",
           )}
-        </p>
+        </p></details>
       </div>
     </section>
   );
@@ -874,6 +782,9 @@ export default function App() {
   const [manualQuiet, setManualQuiet] = useState(false);
   const quiet = manualQuiet || Boolean(systemQuiet);
   const [menuOpen, setMenuOpen] = useState(false);
+  useChapterAnchors();
+  useReadingExit(!menuOpen);
+  useSectionPaging({ enabled: !menuOpen, reduced: quiet });
   const [active, setActive] = useState("home");
   const menuButton = useRef<HTMLButtonElement>(null);
   const menuContainer = useRef<HTMLDivElement>(null);
@@ -1005,6 +916,7 @@ export default function App() {
             <button
               className="quiet-toggle"
               aria-pressed={quiet}
+              aria-label={t("切换轻动态", "Toggle reduced motion")}
               onClick={() => setManualQuiet(!manualQuiet)}
               title={
                 systemQuiet

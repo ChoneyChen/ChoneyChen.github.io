@@ -73,38 +73,38 @@ const projectCopy: Record<string, Partial<Project>> = {
       "These are team results under a particular experimental setting. My main contribution is Qwen training and repeated experiments, rather than sole authorship of the full Cosmos evaluation. These metrics do not establish generalisation across car parks. Development evaluations and the final test must be distinguished.",
   },
   glimpse: {
-    subtitle: "Generative open-vocabulary and spatial perception · FYP",
-    question: "Can a generated answer be read by a program?",
+    subtitle: "Image-generated open-vocabulary semantics and geometry · FYP",
+    question: "Can generated perception also say ‘not present’ reliably?",
     year: "2026.08/09 — present",
     status: "Undergraduate dissertation in progress",
     role: "Undergraduate researcher · Supervised by Gordon Owusu Boateng",
     description:
-      "I investigate whether pretrained image generators can turn their semantic and geometric priors into decodable perception. Given an image and a language instruction, the output should be pixel-aligned and explicitly represent target absence. Underground car parks provide a target domain for studying generalisation to unseen environments.",
+      "I investigate a shared perception backbone that takes only RGB images and natural-language instructions, generating pixel-aligned segmentation, metric depth and surface normals for deterministic decoding. A Presence-Aware Metadata Strip distinguishes present, absent and uncertain targets. Semantic-geometric fusion and camera intrinsics then lift these outputs into a language-addressable 3D scene. Underground parking is the focus for testing environmental and open-vocabulary generalisation.",
     contributions: [
-      "Developing an open-vocabulary detection topic into a unified framework for segmentation, depth, and spatial perception.",
-      "Designing task representations from RGB and language to structured visual output and deterministic decoding.",
-      "Exploring strip-assisted segmentation, with generation strategy and 2D/3D representation as independent research axes.",
-      "Reviewing literature and datasets, and designing train/test protocols for class transfer, domain transfer, and absent targets.",
+      "Proposing a Presence-Aware Metadata Strip output protocol for open-vocabulary segmentation, encoding present, absent and uncertain states.",
+      "Designing a shared image-generation backbone and RGB task encodings for deterministic segmentation, metric-depth and surface-normal decoding; query masks also provide detection boxes.",
+      "Designing semantic-geometric fusion and metric 3D lifting with camera intrinsics K, with diffusion and autoregressive generation as candidate routes to compare.",
+      "Developing general/road/underground-parking protocols with categories seen or unseen during perception fine-tuning, fixed or natural queries, and positive or negative queries; planning FPR, IoU and AbsRel evaluation.",
     ],
     results: [
       {
-        label: "Work developed",
-        value: "Framework and experiment design",
-        note: "Literature, tasks, data splits, and system model",
+        label: "Output protocol",
+        value: "present / absent / uncertain",
+        note: "Proposed three-state Presence-Aware Metadata Strip",
       },
       {
-        label: "Two research axes",
-        value: "How to generate / How to represent",
-        note: "Can be explored and validated independently",
+        label: "Shared task interface",
+        value: "Segmentation / metric depth / normals",
+        note: "RGB task outputs → deterministic decoding → semantic-geometric fusion",
       },
       {
-        label: "Next step",
-        value: "Training and quantitative validation",
-        note: "Segmentation decoding and cross-domain performance remain to be tested",
+        label: "Evaluation plan",
+        value: "FPR / IoU / AbsRel",
+        note: "Negative queries, segmentation and depth still require training and measurement",
       },
     ],
     boundary:
-      "The formal topic is Image-Generation-Based Open-Vocabulary Object Detection for Driving Environment Perception in Underground Parking Lots. Strip methods, latent/token decoding, semantic point clouds, BEV, and occupancy are research directions. Complete final experiments and published papers are not yet available.",
+      "The formal topic is Image-Generation-Based Open-Vocabulary Object Detection for Driving Environment Perception in Underground Parking Lots. U-IMPROVE is a proposed framework: the Metadata Strip, environmental/category generalisation and semantic point clouds require experimental validation. Camera intrinsics K provide calibration metadata for 3D lifting. BEV, voxels and occupancy are later extensions, and the multi-frame fusion method remains to be selected. Literature metrics are not my results; no complete final experiments or published papers are provided.",
   },
   esg: {
     subtitle: "Document intelligence and environmental data",
@@ -344,14 +344,14 @@ const experienceCopy: Record<string, Partial<Experience>> = {
   },
   fyp: {
     year: "2026.08/09 — present",
-    title: "U-GLIMPSE undergraduate dissertation",
-    subtitle: "PSP305 / FYP · From generation to perception",
+    title: "U-IMPROVE undergraduate dissertation",
+    subtitle: "PSP305 / FYP · Image-generated open-vocabulary perception",
     role: "Undergraduate dissertation researcher",
     status: "Research in progress",
     description:
-      "Exploring decodable open-vocabulary visual outputs, pixel-level semantics, and metric geometry. Developing the topic, literature review, system model, and unseen-domain experiment design.",
+      "Proposing a three-state Presence-Aware Metadata Strip, with shared image generation for segmentation, metric-depth and surface-normal encoding, deterministic decoding and 3D lifting. Developing environmental-transfer and held-out-category evaluation protocols.",
     boundary:
-      "The methods and 3D representation routes require training and quantitative validation.",
+      "The proposed methods still require training and quantitative validation; FPR, IoU and AbsRel have no personal results yet. Semantic point clouds are a proposed core representation; BEV, voxels, occupancy and multi-frame fusion remain later research.",
   },
   "avpc-research": {
     year: "2026 — present",

@@ -6,6 +6,10 @@ Visit: [Vercel](https://choney-between-states.vercel.app) · [GitHub Pages](http
 
 Three research directions have separate visual scenes and pull-out gestures: a horizontal task ribbon for LLM agent applications, an upward architectural section for autonomous-driving spatial perception, and a diagonal glass evidence folio for AI in environmental and energy systems. Each has click and keyboard alternatives. Chapter palettes alternate warm/cool and light/dark surfaces.
 
+Project names, research questions and my role form the first reading layer. All expandable records start closed. Scene entrances reverse when they leave the viewport and replay on return. Open reading layers automatically close near the viewport exit; language preferences remain.
+
+Wheel gestures use a threshold and damped transition at chapter boundaries. Each opening strip aligns below the fixed header; longer chapters retain continuous native scrolling. Touch, keyboard, deep links and reduced motion have equivalent reading paths.
+
 English is the default on a first visit. The EN/ZH control switches the complete content and retains the current reading selections. Language preferences are stored locally. The contact chapter includes WeChat, phone, email, and GitHub links supplied for publication by the author.
 
 ## Development
@@ -15,11 +19,12 @@ Node.js 24 and npm are recommended.
 ```sh
 npm ci
 npm run dev
+npm test
 npm run build
 npm run preview
 ```
 
-The static build is generated in `dist/`. React and Motion power the interface and chapter-specific entrance animations. Three.js is loaded on demand for the original research-tool books. Native scrolling, chapter deep links, keyboard alternatives, and reduced-motion settings keep the information accessible.
+The static build is generated in `dist/`. React and Motion power the interface and chapter-specific entrance animations. Three.js is loaded on demand for the original research-tool books and the U-IMPROVE concept preview. The dissertation content follows the author's latest PSP305 presentation: a proposed Presence-Aware Metadata Strip, a shared RGB-and-language image-generation backbone for segmentation, metric depth and surface normals, deterministic decoding, and semantic-geometric fusion with camera-intrinsic 3D lifting. The interactive visuals explain this proposed framework and are explicitly labelled as concept demonstrations. FPR, IoU and AbsRel are evaluation plans, not personal results. Native scrolling, chapter deep links, keyboard alternatives, and reduced-motion settings keep the information accessible.
 
 ## Content and assets
 

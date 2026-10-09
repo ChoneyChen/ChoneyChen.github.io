@@ -1,12 +1,14 @@
+import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
 import { useEffect, useRef, useState } from "react";
 import type * as Three from "three";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion, useInView, useReducedMotion } from "motion/react";
 import {
   ArrowLeft,
   ArrowRight,
   ArrowUpRight,
   BookOpen,
   MoveHorizontal,
+  X,
 } from "lucide-react";
 import { useI18n } from "../i18n";
 import "./tools-chapter.css";
@@ -30,10 +32,6 @@ const makeToolFiles = (t: Translate) => [
       "LoRA",
       t("实验迭代", "Experiment iteration"),
     ],
-    note: t(
-      "我的主要工作是 Qwen 训练与实验分析；团队 Cosmos 指标另行署明。",
-      "My main contributions were Qwen training and experiment analysis. Cosmos team results are attributed separately.",
-    ),
     color: "#2347AA",
   },
   {
@@ -52,10 +50,6 @@ const makeToolFiles = (t: Translate) => [
     context: t("ISA305 · 人工智能课程实验", "ISA305 · AI course experiments"),
     link: "#archive",
     tags: ["MATLAB", "EEGLAB / BioSig", "CSP"],
-    note: t(
-      "这些是特定课程实验，不推广为诊断模型表现。",
-      "These are specific course experiments, without claims about diagnostic model performance.",
-    ),
     color: "#15514D",
   },
   {
@@ -77,10 +71,6 @@ const makeToolFiles = (t: Translate) => [
     ),
     link: "#mask",
     tags: ["FastAPI", "Raspberry Pi", "ESP32-S3"],
-    note: t(
-      "这里记录我的工具应用和团队工作，不是设备性能或临床效果声明。",
-      "This records my tool use and team contribution, without claims about device performance or clinical outcomes.",
-    ),
     color: "#B63D32",
   },
   {
@@ -99,10 +89,6 @@ const makeToolFiles = (t: Translate) => [
     context: t("ESG AI · 研究院实习", "ESG AI · research institute internship"),
     link: "#esg",
     tags: ["NuExtract3", "PaddleOCR-VL", "Qwen3-Embedding"],
-    note: t(
-      "模块已在工程中整合，真实质量评测和完整发布闭环仍需推进。",
-      "The modules have been integrated into the engineering workflow. Evaluation on real data and the complete release process remain in progress.",
-    ),
     color: "#6C183C",
   },
   {
@@ -125,10 +111,6 @@ const makeToolFiles = (t: Translate) => [
       t("语义地标", "Semantic landmarks"),
       t("几何一致性", "Geometric consistency"),
     ],
-    note: t(
-      "不是从零开发模拟器；完整数据规模和公开数据集发布尚未确认。",
-      "This extends an existing simulator. The full dataset scale and public dataset release have not been confirmed.",
-    ),
     color: "#254CC7",
   },
   {
@@ -151,10 +133,6 @@ const makeToolFiles = (t: Translate) => [
       t("多元线性回归", "Multiple linear regression"),
       t("统计检验", "Statistical tests"),
     ],
-    note: t(
-      "保留方法与工作内容，不补写缺少可靠记录的预测精度。",
-      "The methods and work are documented. Prediction accuracy is omitted where reliable records are unavailable.",
-    ),
     color: "#F2D169",
   },
 ];
@@ -266,8 +244,12 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
   const prefersQuiet = useReducedMotion();
   const lowMotion = quiet || Boolean(prefersQuiet);
   const [active, setActive] = useState(0);
+  const [opened, setOpened] = useState(false);
+  useCollapseOnLeave("tools", () => setOpened(false));
   const [mode, setMode] = useState<"pending" | "webgl" | "fallback">("pending");
   const hostRef = useRef<HTMLDivElement>(null);
+  const sceneInView = useInView(hostRef, { amount: 0.2 });
+  const sceneReady = lowMotion || sceneInView;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const controlsRef = useRef<ArchiveControl | null>(null);
   const activeRef = useRef(active);
@@ -279,6 +261,7 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
     const normalized = (index + toolFiles.length) % toolFiles.length;
     activeRef.current = normalized;
     setActive(normalized);
+    setOpened(true);
     controlsRef.current?.select(normalized);
   }
 
@@ -493,6 +476,7 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
         setActive(index);
       }
       function select(index: number) {
+        setOpened(true);
         const requested = -index * turn;
         target =
           rotation +
@@ -681,6 +665,7 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
       function pointerUp(event: PointerEvent) {
         if (!dragging || dragging.id !== event.pointerId) return;
         const moved = dragging.moved;
+        if (moved && event.type !== "pointercancel") setOpened(true);
         if (performance.now() - dragging.time > 100) velocity = 0;
         dragging = null;
         if (canvas!.hasPointerCapture(event.pointerId))
@@ -807,10 +792,13 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
               <span>{String(active + 1).padStart(2, "0")} / 06</span>
             </div>
             <div className="tools-scene" ref={hostRef}>
-              <canvas
+              <motion.canvas
                 ref={canvasRef}
                 className={mode !== "webgl" ? "tools-canvas-hidden" : undefined}
                 data-renderer={mode}
+                initial={lowMotion ? false : { opacity: 0, y: 16 }}
+                animate={{ opacity: sceneReady ? 1 : 0, y: sceneReady ? 0 : 16 }}
+                transition={lowMotion ? { duration: 0 } : { duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
                 tabIndex={0}
                 role="group"
                 aria-label={t(
@@ -829,10 +817,15 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
                     event.preventDefault();
                     selectFile(0);
                   }
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    setOpened(!opened);
+                  }
+                  if (event.key === "Escape") setOpened(false);
                 }}
               />
               {mode !== "webgl" && (
-                <div className="tools-flat-file">
+                <motion.div className="tools-flat-file" initial={lowMotion ? false : { opacity: 0 }} animate={{ opacity: sceneReady ? 1 : 0 }} transition={{ duration: lowMotion ? 0 : 0.35 }}>
                   <BookOpen size={35} strokeWidth={1} />
                   <span>{String(active + 1).padStart(2, "0")} / WORK FILE</span>
                   <strong>{file.name}</strong>
@@ -845,7 +838,7 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
                           "Choose a file below to keep reading",
                         )}
                   </small>
-                </div>
+                </motion.div>
               )}
             </div>
             <div className="tools-scene-controls">
@@ -874,18 +867,18 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
               </div>
             </div>
           </div>
-          <div className="tools-reading-column" aria-live="polite">
-            <span className="tools-file-label">
-              FILE {String(active + 1).padStart(2, "0")} / {file.label}
-            </span>
+          <div id="tools-work-reading" className={`tools-reading-column${opened ? " is-open" : ""}`} aria-live="polite">
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
-                key={active}
+                layout={!lowMotion}
+                key={opened ? active : "closed"}
                 initial={{ opacity: 0, y: lowMotion ? 0 : 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: lowMotion ? 0 : 0.2 }}
               >
+                {opened ? <>
+                <div className="tools-reading-header"><span className="tools-file-label">FILE {String(active + 1).padStart(2, "0")} / {file.label}</span><button type="button" className="tools-close" aria-label={t("合上工作档案", "Close work file")} onClick={() => setOpened(false)}><X size={18}/></button></div>
                 <h3>{file.name}</h3>
                 <h4>{file.title}</h4>
                 <p className="tools-personal-use">{file.body}</p>
@@ -901,7 +894,7 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
                   </span>
                   <ArrowUpRight size={19} />
                 </a>
-                <p className="tools-content-note">{file.note}</p>
+                </> : <div className="tools-closed-intro"><span className="tools-file-label">{t("六册档案 · 六段实践", "SIX FILES · SIX EXPERIENCES")}</span><h3>{t("工具，也有来处。", "Every tool has a context.")}</h3><p className="tools-personal-use">{t("从模型训练到系统联调。打开一册，看看我怎样把工具用进项目。", "From model training to system integration. Open a file to see how I used the tools in a project.")}</p><button type="button" className="tools-open-file" onClick={() => selectFile(active)}>{t("打开这册档案", "Open this file")}<BookOpen size={17}/></button></div>}
               </motion.div>
             </AnimatePresence>
           </div>
@@ -914,8 +907,10 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
             <button
               type="button"
               key={item.name}
-              aria-pressed={active === index}
-              onClick={() => selectFile(index)}
+              aria-pressed={opened && active === index}
+              aria-expanded={opened && active === index}
+              aria-controls="tools-work-reading"
+              onClick={() => { if (opened && active === index) setOpened(false); else selectFile(index); }}
             >
               <span>{String(index + 1).padStart(2, "0")}</span>
               <strong>{item.name}</strong>
@@ -924,19 +919,7 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
           ))}
         </div>
         <div className="tools-closing">
-          <p>
-            {t(
-              "我把工具放回它们的使用场景里。",
-              "I put tools in the context of the work they made possible.",
-            )}
-            <br />
-            <span>
-              {t(
-                "开发、团队实践与课程实验分别记录；研究候选路线不算已经完成的工具应用。",
-                "Development, team work and course experiments are recorded separately. Candidate research methods are not presented as completed tool applications.",
-              )}
-            </span>
-          </p>
+          <p>{t("模型 · 信号 · 接口 · 文档 · 空间 · 数据", "Models · signals · interfaces · documents · spaces · data")}</p>
           <a className="chapter-link" href="#archive">
             {t("回到我的完整经历", "Explore my complete experience")}{" "}
             <ArrowRight size={16} />

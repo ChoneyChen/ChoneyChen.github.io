@@ -1,3 +1,4 @@
+import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
 import { useRef, useState } from "react";
 import {
   AnimatePresence,
@@ -451,17 +452,20 @@ export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
   const { experienceTimeline } = useContent();
   const methods = getMethods(t);
   const [selected, setSelected] = useState(0);
+  const [opened, setOpened] = useState(false);
+  useCollapseOnLeave("methods", () => setOpened(false));
   const [pulse, setPulse] = useState(0);
   const reduce = useReducedMotion();
   const still = quiet || Boolean(reduce);
   const sceneRef = useRef<HTMLDivElement>(null);
   const evidenceRef = useRef<HTMLDivElement>(null);
-  const sceneEntered = useInView(sceneRef, { once: true, amount: 0.24 });
-  const evidenceEntered = useInView(evidenceRef, { once: true, amount: 0.12 });
+  const sceneEntered = useInView(sceneRef, { once: false, amount: 0.24 });
+  const evidenceEntered = useInView(evidenceRef, { once: false, amount: 0.12 });
   const evidenceReady = still || evidenceEntered;
   const current = methods[selected];
   const experience = experienceTimeline.find((item) => item.id === current.id);
   function choose(index: number) {
+    setOpened(index === selected ? !opened : true);
     setSelected(index);
     setPulse((count) => count + 1);
   }
@@ -492,23 +496,18 @@ export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
                 initial={still ? false : { pathLength: 0 }}
                 animate={still ? { pathLength: 1 } : undefined}
                 whileInView={{ pathLength: 1 }}
-                viewport={{ once: true, amount: 0.3 }}
+                viewport={{ once: false, amount: 0.3 }}
                 transition={{ duration: still ? 0 : 0.52 }}
               />
             </svg>
           </div>
           <p>
             {t(
-              "从一个课程问题，到团队原型，",
-              "From a class question to a team prototype,",
+              "从课程研究到团队原型。",
+              "From class research to team prototypes. ",
             )}
             <br />
-            {t("再到真实的实验输出。", "and the output of a real experiment.")}
-            <br />
-            {t(
-              "这些经历，留下了不同的做事步骤。",
-              "Each record shows a different step.",
-            )}
+            {t("四个步骤，对应我的实际工作。", "Four steps, grounded in my work.")}
           </p>
         </header>
         <div className="methods-notebook" data-still={still}>
@@ -551,22 +550,23 @@ export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
                 }
                 animate={still ? { y: 0, rotate: 0 } : undefined}
                 whileInView={{ y: 0, rotate: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
+                viewport={{ once: false, amount: 0.3 }}
                 transition={{
                   duration: still ? 0 : 0.42,
                   delay: still ? 0 : index * 0.055,
                 }}
               >
                 <motion.button
-                  className={selected === index ? "is-selected" : ""}
+                  className={opened && selected === index ? "is-selected" : ""}
                   type="button"
-                  aria-pressed={selected === index}
+                  aria-pressed={opened && selected === index}
+                  aria-expanded={opened && selected === index}
                   aria-controls="methods-evidence"
                   onClick={() => choose(index)}
                   drag="x"
                   dragSnapToOrigin
                   dragConstraints={{ left: -15, right: 15 }}
-                  onDragStart={() => choose(index)}
+                  onDragStart={() => { setSelected(index); setOpened(true); setPulse(count => count + 1); }}
                   whileDrag={
                     still ? {} : { rotate: index % 2 === 0 ? -3 : 3, y: -3 }
                   }
@@ -584,7 +584,7 @@ export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
                       initial={still ? false : { pathLength: 0 }}
                       animate={still ? { pathLength: 1 } : undefined}
                       whileInView={{ pathLength: 1 }}
-                      viewport={{ once: true, amount: 0.25 }}
+                      viewport={{ once: false, amount: 0.25 }}
                       transition={{
                         duration: still ? 0 : 0.52,
                         delay: still ? 0 : index * 0.055,
@@ -596,6 +596,7 @@ export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
             ))}
           </div>
           <div ref={evidenceRef} style={{ display: "flow-root" }}>
+            <AnimatePresence initial={false}>{opened && <motion.div className="methods-reading" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: still ? 0 : 0.3 }}>
             <motion.div
               className="methods-evidence"
               id="methods-evidence"
@@ -642,16 +643,17 @@ export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
                 </motion.div>
               </AnimatePresence>
             </motion.div>
+            </motion.div>}</AnimatePresence>
           </div>
           <footer className="methods-paper-foot">
             <span>
               {t(
-                "小动作是阅读的线索，工作记录是这一页的内容。",
-                "Small gestures guide the reading. The work records tell the story.",
+                "观察 · 连接 · 检验 · 协作",
+                "Observe · Connect · Check · Collaborate",
               )}
             </span>
             <span>
-              {t("为这个页面原创手绘 / 2026", "DRAWN FOR THIS PAGE / 2026")}
+              {t("工作笔记 / 2026", "WORKING NOTES / 2026")}
             </span>
           </footer>
         </div>

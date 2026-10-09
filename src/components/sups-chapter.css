@@ -298,6 +298,105 @@
 .sups-chapter.is-english .sups-work-title h3 {
   line-height: 1.32;
 }
+.chapter .sups-inner {
+  padding-top: 44px;
+  padding-bottom: 42px;
+}
+.sups-masthead {
+  margin-bottom: 28px;
+}
+@media (min-width: 951px) {
+  .sups-architecture {
+    margin-top: 12px;
+    margin-bottom: 12px;
+  }
+  .sups-scene {
+    width: min(100%, 850px);
+    height: clamp(355px, 52vh, 440px);
+    max-height: 440px;
+    margin: 0 auto;
+    object-fit: contain;
+  }
+  .sups-stage-note {
+    top: 20px;
+  }
+  .sups-scene-side-note {
+    bottom: 36px;
+  }
+}
+.sups-heading h2 > span {
+  display: block;
+  color: #993d2c;
+  font-size: 0.72em;
+  line-height: 1.4;
+  margin-top: 10px;
+}
+.sups-heading-note {
+  max-width: 365px;
+  font-size: 15px;
+  line-height: 1.65;
+}
+.sups-heading-note > p {
+  margin: 0 0 18px;
+}
+.sups-heading-note > span {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+.sups-heading-note > strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #202d5f;
+}
+.sups-layer-selector button {
+  touch-action: pan-x;
+  cursor: grab;
+}
+.sups-layer-selector button:active {
+  cursor: grabbing;
+}
+.sups-operation {
+  margin: 16px 0 24px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #3b4264;
+}
+.sups-work-reading {
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.sups-work-grid {
+  padding: 20px 0 31px;
+}
+.sups-work-reason summary,
+.sups-boundary summary {
+  cursor: pointer;
+  width: fit-content;
+  font-size: 12px;
+  line-height: 1.65;
+}
+.sups-work-reason p,
+.sups-boundary p {
+  font-size: 14px;
+  line-height: 1.75;
+  margin: 12px 0 0;
+}
+.sups-work-reason {
+  margin: 14px 0;
+}
+.sups-boundary summary:focus-visible,
+.sups-work-reason summary:focus-visible {
+  outline: 2px solid #3047b9;
+  outline-offset: 4px;
+}
+.sups-foundation {
+  font-size: 12px;
+  line-height: 1.75;
+}
 @media (max-width: 760px) {
   .sups-masthead {
     align-items: flex-start;
@@ -377,18 +476,17 @@
     line-height: 1.35;
   }
   .sups-chapter.is-english .sups-layer-selector button small {
-    font-size: 5px;
+    display: none;
   }
   .sups-layer-selector button small {
-    font-size: 5px;
+    display: none;
   }
   .sups-layer-selector button i {
     display: none;
   }
   .sups-work-reading {
-    min-height: 307px;
-    padding-top: 25px;
-    padding-bottom: 25px;
+    min-height: 0;
+    padding: 0;
   }
   .sups-work-grid {
     grid-template-columns: 1fr;
@@ -404,7 +502,7 @@
     margin-bottom: 10px;
   }
   .sups-work-description > p {
-    font-size: 13px;
+    font-size: 14px;
   }
   .sups-work-description .sups-work-reason {
     font-size: 12px;
@@ -412,7 +510,7 @@
   .sups-foundation {
     flex-direction: column;
     gap: 10px;
-    font-size: 9px;
+    font-size: 12px;
   }
   .sups-boundary {
     font-size: 8px;

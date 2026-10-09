@@ -1,3 +1,4 @@
+import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
 import {
   useRef,
   useState,
@@ -10,7 +11,7 @@ import {
   useInView,
   useReducedMotion,
 } from "motion/react";
-import { ArrowDownRight, ArrowUpRight } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, X } from "lucide-react";
 import { useContent } from "../data/use-content";
 import { useI18n } from "../i18n";
 import "./cosmos-chapter.css";
@@ -103,7 +104,8 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
   const { projects } = useContent();
   const records = getRecords(t);
   const project = projects.find((item) => item.id === "cosmos")!;
-  const [selected, setSelected] = useState(0);
+  const [selected, setSelected] = useState<number | null>(null);
+  useCollapseOnLeave("cosmos", () => setSelected(null));
   const [trails, setTrails] = useState<PixelTrail[]>([]);
   const [dragging, setDragging] = useState<number | null>(null);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -112,15 +114,15 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
   const headingRef = useRef<HTMLElement>(null);
   const deskRef = useRef<HTMLDivElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
-  const headingEntered = useInView(headingRef, { once: true, amount: 0.12 });
-  const deskEntered = useInView(deskRef, { once: true, amount: 0.08 });
-  const resultsEntered = useInView(resultsRef, { once: true, amount: 0.18 });
+  const headingEntered = useInView(headingRef, { once: false, amount: "some" });
+  const deskEntered = useInView(deskRef, { once: false, amount: "some" });
+  const resultsEntered = useInView(resultsRef, { once: false, amount: "some" });
   const reduce = useReducedMotion();
   const still = quiet || Boolean(reduce);
   const headingReady = still || headingEntered;
   const deskReady = still || deskEntered;
   const resultsReady = still || resultsEntered;
-  const record = records[selected];
+  const record = selected === null ? null : records[selected];
 
   function navigate(event: KeyboardEvent<HTMLDivElement>) {
     if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
@@ -130,7 +132,7 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
         ? 0
         : event.key === "End"
           ? records.length - 1
-          : (selected +
+          : ((selected ?? (event.key === "ArrowRight" ? -1 : 0)) +
               (event.key === "ArrowRight" ? 1 : -1) +
               records.length) %
             records.length;
@@ -161,7 +163,7 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
         <header className="cosmos-heading" ref={headingRef}>
           <div>
             <p className="cosmos-project-number">
-              {t("研究记录 / 01", "RESEARCH RECORD / 01")}
+              {t("视觉定位研究", "VISUAL LOCALISATION RESEARCH")}
             </p>
             <motion.h2
               id="cosmos-title"
@@ -185,7 +187,12 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
               <br />
               {t("我在哪里？", "where am I?")}
             </h3>
-            <p>{project.description}</p>
+            <p>
+              {t(
+                "用视觉语言模型，在 GPS 拒止的地下停车场中推断位置。",
+                "Visual language models for localisation in GPS-denied underground parking facilities.",
+              )}
+            </p>
             <p className="cosmos-my-role">
               {t("我在团队里：", "My contribution: ")}
               <strong>
@@ -201,6 +208,7 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
         <div
           className="cosmos-record-stage"
           ref={deskRef}
+          data-entry-state={deskReady ? "present" : "reset"}
           style={{ display: "flow-root" }}
         >
           <motion.div
@@ -210,43 +218,56 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
             animate={{
               clipPath: deskReady ? "inset(0 0 0% 0)" : "inset(0 0 100% 0)",
             }}
-            transition={{ duration: still ? 0 : 0.52, ease: pixelStep }}
+            transition={{
+              duration: still ? 0 : deskReady ? 0.52 : 0.4,
+              delay: still || deskReady ? 0 : 0.12,
+              ease: pixelStep,
+            }}
           >
             <div className="cosmos-record-topline">
               <span>{t("CHONEY 的贡献记录", "CHONEY’S CONTRIBUTIONS")}</span>
               <span>
-                {t("4 条记录 / 可直接阅读", "4 RECORDS / OPEN TO READ")}
+                {t("4 条记录", "4 RECORDS")}
               </span>
             </div>
             <div
               className="cosmos-reader"
-              role="tabpanel"
+              role={record ? "tabpanel" : undefined}
               id="cosmos-record-panel"
-              aria-labelledby={`cosmos-record-${selected}`}
+              aria-labelledby={record ? `cosmos-record-${selected}` : undefined}
+              data-open={Boolean(record)}
             >
               <div className="cosmos-reader-index" aria-hidden="true">
-                <span>0{selected + 1}</span>
+                <span>{selected === null ? "—" : `0${selected + 1}`}</span>
                 <div className="cosmos-index-pixels">
                   {Array.from({ length: 12 }, (_, i) => (
                     <i
                       key={i}
                       style={{
-                        opacity: i % 4 <= selected ? 1 : 0.18,
-                        background: record.color,
+                        opacity: selected !== null && i % 4 <= selected ? 1 : 0.18,
+                        background: record?.color ?? "#dfff57",
                       }}
                     />
                   ))}
                 </div>
               </div>
               <AnimatePresence mode="wait" initial={false}>
-                <motion.div
+                {record && selected !== null ? <motion.div
                   key={selected}
                   className="cosmos-reader-copy"
                   initial={still ? false : { opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: still ? 0 : 0.16 }}
+                  transition={{ duration: still ? 0 : 0.3 }}
                 >
+                  <button
+                    className="cosmos-record-close"
+                    type="button"
+                    onClick={() => setSelected(null)}
+                    aria-label={t("放回研究记录", "Put the record back")}
+                  >
+                    <X size={17} />
+                  </button>
                   <p
                     className="cosmos-reader-label"
                     style={{ color: record.color }}
@@ -257,13 +278,26 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
                   <p className="cosmos-reader-contribution">
                     {project.contributions[selected]}
                   </p>
-                  <p className="cosmos-reader-context">{record.context}</p>
+                  <details className="cosmos-record-context">
+                    <summary>{t("实验背景", "Experiment context")}</summary>
+                    <p className="cosmos-reader-context">{record.context}</p>
+                  </details>
                   <div className="cosmos-record-tags">
                     {record.tags.map((tag) => (
                       <span key={tag}>{tag}</span>
                     ))}
                   </div>
-                </motion.div>
+                </motion.div> : <motion.div
+                  key="closed"
+                  className="cosmos-reader-empty"
+                  initial={still ? false : { opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: still ? 0 : 0.25 }}
+                >
+                  <p className="cosmos-reader-label">{t("等待一份研究记录", "READY FOR A RESEARCH RECORD")}</p>
+                  <h3>{t("抽出一块，看看我做了什么。", "Pull a cartridge. Explore my contribution.")}</h3>
+                </motion.div>}
               </AnimatePresence>
             </div>
             <div
@@ -289,8 +323,8 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
                       : "inset(85% 0 0 0)",
                   }}
                   transition={{
-                    duration: still ? 0 : 0.38,
-                    delay: still ? 0 : 0.35 + index * 0.065,
+                    duration: still ? 0 : deskReady ? 0.32 : 0.24,
+                    delay: still ? 0 : deskReady ? 0.28 + index * 0.06 : (records.length - 1 - index) * 0.03,
                     ease: pixelStep,
                   }}
                 >
@@ -304,12 +338,13 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
                     id={`cosmos-record-${index}`}
                     aria-controls="cosmos-record-panel"
                     aria-selected={selected === index}
+                    aria-expanded={selected === index}
                     aria-label={`${item.label}：${item.title}`}
-                    tabIndex={selected === index ? 0 : -1}
+                    tabIndex={selected === index || (selected === null && index === 0) ? 0 : -1}
                     ref={(element) => {
                       tabRefs.current[index] = element;
                     }}
-                    onClick={() => setSelected(index)}
+                    onClick={() => setSelected((current) => current === index ? null : index)}
                     drag
                     dragSnapToOrigin
                     dragElastic={0.25}
@@ -400,13 +435,13 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
             <p className="cosmos-operation">
               <span aria-hidden="true">↖</span>{" "}
               {t(
-                "抽出一块研究记录，读我在这一步做的工作。",
-                "Pull out a record to read my work at that step.",
+                "向上抽取 / 点击",
+                "Pull up / click",
               )}
               <span className="cosmos-keyboard-hint">
                 {t(
-                  "也可点击 · 聚焦后 ← → 切换",
-                  "Or click · Use ← → when focused",
+                  "← → 切换 · 再点放回",
+                  "← → to switch · Click again to close",
                 )}
               </span>
             </p>
@@ -436,8 +471,8 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
                   : "inset(0 0 100% 0)",
               }}
               transition={{
-                duration: still ? 0 : 0.32,
-                delay: still ? 0 : index * 0.07,
+                duration: still ? 0 : resultsReady ? 0.32 : 0.28,
+                delay: still ? 0 : resultsReady ? index * 0.07 : (project.results.length - 1 - index) * 0.03,
                 ease: pixelStep,
               }}
             >
@@ -446,12 +481,13 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
             </motion.div>
           ))}
         </div>
-        <p className="cosmos-boundary">
-          {t(
-            "我的主要工作是 Qwen 训练与多轮实验。以上定位指标来自团队特定设置，不代表独立完成全部 Cosmos 实验，也不能直接说明跨停车场泛化。",
-            "My main work was Qwen training and repeated experiments. These localisation metrics are team results under a specific setup, rather than experiments completed entirely by me. They do not establish generalisation across parking facilities.",
-          )}
-        </p>
+        <details className="cosmos-boundary">
+          <summary>{t("实验范围与团队归属", "Experiment scope & team attribution")}</summary>
+          <p>{t(
+            "以上为 Cosmos-Reason2 + LoRA 在特定设置下的团队指标；我的主要贡献是 Qwen 训练与多轮实验分析。结果不直接说明跨停车场泛化，开发评测与最终测试需区分。",
+            "These Cosmos-Reason2 + LoRA metrics are team results under a specific setup. My main contribution was Qwen training and repeated experiment analysis. They do not establish cross-facility generalisation; development evaluations and final tests must be distinguished.",
+          )}</p>
+        </details>
         <footer className="cosmos-exits">
           <a className="chapter-link" href="#sups">
             {t(

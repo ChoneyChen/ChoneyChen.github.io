@@ -1,13 +1,15 @@
 import { useRef, useState } from "react";
-import { motion, useInView } from "motion/react";
+import { motion, useInView, useReducedMotion } from "motion/react";
 import { ArrowUpRight, Check, Copy, Github, Mail, Phone } from "lucide-react";
 import { useI18n } from "../i18n";
 import "./contact-chapter.css";
 
 export function ContactChapter({ quiet = false }: { quiet?: boolean }) {
   const { t } = useI18n();
+  const systemQuiet = useReducedMotion();
+  const reduced = quiet || Boolean(systemQuiet);
   const letter = useRef<HTMLDivElement>(null);
-  const entered = useInView(letter, { once: true, amount: 0.2 });
+  const entered = useInView(letter, { once: false, amount: 0.2 });
   const [copied, setCopied] = useState(false);
   const [copyError, setCopyError] = useState(false);
   async function copyWeChat() {
@@ -19,7 +21,7 @@ export function ContactChapter({ quiet = false }: { quiet?: boolean }) {
       setCopyError(true);
     }
   }
-  const ready = quiet || entered;
+  const ready = reduced || entered;
   return (
     <section
       id="contact"
@@ -36,8 +38,8 @@ export function ContactChapter({ quiet = false }: { quiet?: boolean }) {
           </h2>
           <p>
             {t(
-              "如果我的研究、项目，或者某个正在发生的想法，让你想聊一聊——这里可以找到我。",
-              "If a project, a research question, or an idea here starts a conversation, this is where you can find me.",
+              "从一个项目或问题，开始下一段对话。",
+              "A project or a question can start our next conversation.",
             )}
           </p>
           <div className="contact-signature" aria-label="Choney Chen">
@@ -48,21 +50,41 @@ export function ContactChapter({ quiet = false }: { quiet?: boolean }) {
             <strong>CC</strong>
             <span>PERSONAL CORRESPONDENCE</span>
           </div>
+        <div className="contact-websites">
+          <span>{t("个人主页", "THIS HOMEPAGE")}</span>
+          <a
+            href="https://choney-between-states.vercel.app"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Vercel <ArrowUpRight size={13} />
+          </a>
+          <a
+            href="https://choneychen.github.io/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            GitHub Pages <ArrowUpRight size={13} />
+          </a>
+          <a href="#home">
+            {t("回到开始", "Back to the beginning")} <ArrowUpRight size={13} />
+          </a>
+        </div>
         </div>
         <div className="contact-envelope" ref={letter}>
           <div className="contact-envelope-lining" aria-hidden="true" />
           <motion.div
             className="contact-letter"
-            initial={quiet ? false : { y: 75, rotate: -3, opacity: 0 }}
+            initial={reduced ? false : { y: 28, rotate: -1, opacity: 0 }}
             animate={{
-              y: ready ? 0 : 75,
-              rotate: ready ? 0 : -3,
+              y: ready ? 0 : 28,
+              rotate: ready ? 0 : -1,
               opacity: ready ? 1 : 0,
             }}
             transition={
-              quiet
+              reduced
                 ? { duration: 0 }
-                : { duration: 0.95, ease: [0.16, 1, 0.3, 1] }
+                : { duration: 0.72, ease: [0.16, 1, 0.3, 1] }
             }
           >
             <div className="contact-letter-head">
@@ -73,7 +95,6 @@ export function ContactChapter({ quiet = false }: { quiet?: boolean }) {
               <span className="contact-channel-kind">WECHAT</span>
               <div>
                 <span className="contact-address">Choney1110</span>
-                <small>{t("微信号", "WeChat ID")}</small>
               </div>
               <button
                 onClick={copyWeChat}
@@ -107,7 +128,6 @@ export function ContactChapter({ quiet = false }: { quiet?: boolean }) {
               </span>
               <div>
                 <span className="contact-address">Choney1110@gmail.com</span>
-                <small>{t("写一封邮件", "Write a note")}</small>
               </div>
               <ArrowUpRight size={19} />
             </a>
@@ -118,7 +138,6 @@ export function ContactChapter({ quiet = false }: { quiet?: boolean }) {
               </span>
               <div>
                 <span className="contact-address">Tianyi1104@163.com</span>
-                <small>{t("另一条通信地址", "An alternative address")}</small>
               </div>
               <ArrowUpRight size={19} />
             </a>
@@ -134,7 +153,6 @@ export function ContactChapter({ quiet = false }: { quiet?: boolean }) {
               </span>
               <div>
                 <span className="contact-address">ChoneyChen</span>
-                <small>github.com/ChoneyChen</small>
               </div>
               <ArrowUpRight size={19} />
             </a>
@@ -149,45 +167,22 @@ export function ContactChapter({ quiet = false }: { quiet?: boolean }) {
                       "微信号已复制，可以在微信中搜索。",
                       "WeChat ID copied. You can search for it in WeChat.",
                     )
-                  : t(
-                      "从一个问题，开始下一段对话。",
-                      "A next conversation starts with a question.",
-                    )}
+                  : ""}
             </p>
           </motion.div>
           <motion.div
             className="contact-envelope-front"
             aria-hidden="true"
-            initial={quiet ? false : { rotateX: -32 }}
-            animate={{ rotateX: ready ? 0 : -32 }}
+            initial={reduced ? false : { rotateX: -12 }}
+            animate={{ rotateX: ready ? 0 : -12 }}
             transition={
-              quiet
+              reduced
                 ? { duration: 0 }
-                : { duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }
+                : { duration: 0.65, delay: 0.08, ease: [0.16, 1, 0.3, 1] }
             }
           >
             <span>CHONEY / PERSONAL ADDRESS BOOK</span>
           </motion.div>
-        </div>
-        <div className="contact-websites">
-          <span>{t("个人主页", "THIS HOMEPAGE")}</span>
-          <a
-            href="https://choney-between-states.vercel.app"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Vercel <ArrowUpRight size={13} />
-          </a>
-          <a
-            href="https://choneychen.github.io/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            GitHub Pages <ArrowUpRight size={13} />
-          </a>
-          <a href="#home">
-            {t("回到开始", "Back to the beginning")} <ArrowUpRight size={13} />
-          </a>
         </div>
       </div>
     </section>

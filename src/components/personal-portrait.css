@@ -200,7 +200,28 @@
 }
 .portrait-direction {
   padding-top: 25px;
-  min-height: 430px;
+  min-height: 0;
+  position: relative;
+}
+.portrait-direction > div { position: relative; }
+.portrait-close {
+  position: absolute;
+  top: -5px;
+  right: 0;
+  display: grid;
+  place-items: center;
+  border: 0;
+  padding: 5px;
+  background: transparent;
+  color: #2d2c46;
+  cursor: pointer;
+}
+.portrait-close:hover { background: #2d2c4610; }
+.portrait-close:focus-visible { outline: 2px solid #254cc7; outline-offset: 4px; }
+.portrait-close + .portrait-direction-number { padding-right: 30px; }
+.portrait-closed-intro {
+  border-left: 2px solid #254cc7;
+  padding: 10px 0 10px 25px;
 }
 .portrait-direction-number {
   display: block;
@@ -220,7 +241,7 @@
 }
 .portrait-experience {
   font-size: 13px;
-  line-height: 1.95;
+  line-height: 1.75;
   color: #515069;
 }
 .portrait-question {
@@ -294,7 +315,7 @@
     font-size: 25px;
   }
   .portrait-direction {
-    min-height: 440px;
+    min-height: 0;
   }
   .portrait-selector {
     gap: 12px;
@@ -361,7 +382,7 @@
   }
   .portrait-direction {
     padding-top: 33px;
-    min-height: 380px;
+    min-height: 0;
   }
   .portrait-direction-number {
     margin-bottom: 19px;

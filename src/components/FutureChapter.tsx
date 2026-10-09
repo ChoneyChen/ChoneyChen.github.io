@@ -1,3 +1,5 @@
+import { GlimpsePerception } from "./GlimpsePerception";
+import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
 import { useRef, useState, type CSSProperties } from "react";
 import {
   AnimatePresence,
@@ -10,6 +12,7 @@ import {
   ArrowDownRight,
   ArrowUpRight,
   MoveHorizontal,
+  Minus,
   Plus,
 } from "lucide-react";
 import { useI18n } from "../i18n";
@@ -19,38 +22,32 @@ interface FutureChapterProps {
   quiet?: boolean;
 }
 
-type GenerationRoute = "rgb" | "latent";
+type GenerationRoute = "diffusion" | "autoregressive";
 type CollaborationFocus = "data" | "constraints" | "iteration";
 
 const getRouteCopy = (t: (zh: string, en: string) => string) =>
   ({
-    rgb: {
-      title: t("先生成，再确定性解码。", "Generate, then decode."),
+    diffusion: {
+      title: t("扩散式图像生成", "Diffusion image generation"),
       description: t(
-        "输入 RGB 图像和文字任务，探索把生成的像素对齐结果解码为分割遮罩或度量深度。我的研究重点之一，是 strip-assisted 分割与解码策略。",
-        "Given an RGB image and a text task, I investigate decoding pixel-aligned generated outputs into segmentation masks or metric depth. Strip-assisted segmentation and decoding is one of my research directions.",
+        "以 RGB 图像和自然语言指令为条件，从噪声逐步恢复任务图像，再确定性解码出分割、度量深度或表面法线。多个任务共享同一个感知骨干。",
+        "Conditioned on RGB images and natural-language instructions, diffusion progressively recovers a task image from noise. Deterministic decoding recovers segmentation, metric depth or surface normals from a shared perception backbone.",
       ),
-      next: t(
-        "待验证：生成结果的稳定性、解码质量，以及未见类别与未见环境的表现。",
-        "To validate: output stability, decoding quality, and performance on unseen categories and environments.",
-      ),
-      label: t("RGB 感知输出", "RGB perception output"),
-      layer: t("像素对齐的视觉编码", "Pixel-aligned visual code"),
-      decoder: t("Strip / 确定性解码", "Strip / deterministic decode"),
+      next: t("拟比较单任务、联合任务及联合后专项微调，检查生成与解码误差。", "Planned comparisons cover single-task, joint-task and joint-then-specialised tuning, including generation and decoding errors."),
+      label: t("扩散式生成", "Diffusion generation"),
+      layer: t("条件去噪与 RGB 输出", "Conditioned denoising to RGB"),
+      decoder: t("任务图像的确定性解码", "Deterministic task decoding"),
     },
-    latent: {
-      title: t("也在探索，更短的路径。", "Exploring a shorter route, too."),
+    autoregressive: {
+      title: t("自回归式图像生成", "Autoregressive image generation"),
       description: t(
-        "除了完整 RGB 生成，我研究从生成模型的视觉 latent 或 token 中直接解码的可能性，让感知任务不必经过整张图像的生成。",
-        "Alongside full RGB generation, I explore direct decoding from visual latents or tokens, so perception may not require generating an entire image.",
+        "框架也纳入自回归式图像生成：图像与文字编码为 token，经 Transformer 生成视觉 token，再解码为 RGB 任务图像。最终仍通过任务解码器恢复感知结果。",
+        "The framework also considers autoregressive image generation: a Transformer processes image and text tokens, generates visual tokens, and an RGB decoder produces the task image. A task decoder then recovers perception outputs.",
       ),
-      next: t(
-        "待验证：表示是否保留足够语义与几何信息，以及能否实际减少生成开销。",
-        "To validate: whether the representation retains enough semantic and geometric information, and whether it actually reduces generation cost.",
-      ),
-      label: t("Latent / token 解码", "Latent / token decoding"),
-      layer: t("模型内部视觉表示", "Internal visual representation"),
-      decoder: t("直接解码 · 拟探索", "Direct decoding · proposed"),
+      next: t("这是拟研究的生成骨干方案，具体模型选择与训练结果仍待验证。", "This is a proposed backbone option. Model selection and training results remain to be validated."),
+      label: t("自回归式生成", "Autoregressive generation"),
+      layer: t("视觉 token 到 RGB 输出", "Visual tokens to RGB output"),
+      decoder: t("任务图像的确定性解码", "Deterministic task decoding"),
     },
   }) as const;
 
@@ -59,12 +56,12 @@ const getCollaborationCopy = (t: (zh: string, en: string) => string) =>
     data: {
       number: "01",
       title: t(
-        "我先检查，数据能不能验证位置。",
-        "First, I check what the data can verify.",
+        "先确认位置与姿态真值。",
+        "Start with position and pose ground truth.",
       ),
       description: t(
-        "参与停车与驾驶数据集筛选，特别检查是否提供车辆位置或姿态 Ground Truth。视觉线索再丰富，没有可靠真值，也难以判断定位方案是否有效。",
-        "I help screen parking and driving datasets, checking whether they provide vehicle position or pose ground truth. Reliable reference labels are essential for evaluating a localisation method.",
+        "筛选停车与驾驶数据集，检查车辆位置或姿态真值，为定位方案的验证准备数据。",
+        "I help screen parking and driving datasets for vehicle position or pose ground truth, preparing reliable references for localisation evaluation.",
       ),
       keywords: [
         t("数据集调研", "Dataset screening"),
@@ -75,12 +72,12 @@ const getCollaborationCopy = (t: (zh: string, en: string) => string) =>
     constraints: {
       number: "02",
       title: t(
-        "我参与，把观察变成空间约束。",
-        "I help turn observations into constraints.",
+        "把观察变成空间约束。",
+        "Turn observations into constraints.",
       ),
       description: t(
-        "在感知和定位方案讨论中，研究语义地标、类别、距离、方位与地图拓扑怎样对应；共享的信息相互冲突时，也需要保留问题与检查条件。",
-        "In perception and localisation discussions, I explore how semantic landmarks, categories, distances, bearings and map topology relate. Conflicting shared observations need to remain visible for consistency checks.",
+        "在方案讨论中研究语义地标、距离、方位与地图拓扑的对应关系，并保留共享观察中的冲突供一致性检查。",
+        "In framework discussions, I explore semantic landmarks, distances, bearings and map topology, retaining conflicting shared observations for consistency checks.",
       ),
       keywords: [
         t("环境语义地标", "Semantic landmarks"),
@@ -91,12 +88,12 @@ const getCollaborationCopy = (t: (zh: string, en: string) => string) =>
     iteration: {
       number: "03",
       title: t(
-        "我探索，让失败成为下一轮的问题。",
-        "I explore what a failure can teach us.",
+        "从失败样例，走向下一轮。",
+        "Let failures guide the next test.",
       ),
       description: t(
-        "参与仿真探索与闭环研究框架讨论：用复杂、长尾或易混淆场景检查方案，再把失败反馈到新的数据与验证。协同决策与资源优化仍需要进一步研究。",
-        "I participate in simulation exploration and discussions of a closed-loop framework: examine difficult, long-tail or ambiguous scenes, then use failures to guide new data and validation. Collaborative decision-making and resource optimisation require further research.",
+        "参与仿真与闭环框架讨论，用复杂、长尾场景检查方案，再由失败样例推动新一轮数据与验证。",
+        "I contribute to simulation exploration and closed-loop framework discussions, using difficult and long-tail scenarios to guide new data and validation.",
       ),
       keywords: [
         t("复杂场景", "Difficult scenes"),
@@ -114,15 +111,19 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
   const { t } = useI18n();
   const systemQuiet = useReducedMotion();
   const reduced = quiet || Boolean(systemQuiet);
-  const [route, setRoute] = useState<GenerationRoute>("rgb");
+  const [route, setRoute] = useState<GenerationRoute>("diffusion");
   const [expression, setExpression] = useState(0);
   const [alignment, setAlignment] = useState(50);
+  const [researchOpen, setResearchOpen] = useState(false);
+  const [collaborationOpen, setCollaborationOpen] = useState(false);
+  useCollapseOnLeave("glimpse", () => { setResearchOpen(false); setExpression(0); });
+  useCollapseOnLeave("avpc", () => { setCollaborationOpen(false); setAlignment(50); });
   const expressionStart = useRef(0);
   const alignmentStart = useRef(50);
   const glassRef = useRef<HTMLDivElement>(null);
   const printRef = useRef<HTMLDivElement>(null);
-  const glassInView = useInView(glassRef, { once: true, amount: 0.25 });
-  const printInView = useInView(printRef, { once: true, amount: 0.25 });
+  const glassInView = useInView(glassRef, { once: false, amount: 0.25 });
+  const printInView = useInView(printRef, { once: false, amount: 0.25 });
   const glassReady = reduced || glassInView;
   const printReady = reduced || printInView;
   const representation3D = expression >= 50;
@@ -136,10 +137,12 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
 
   function moveExpression(_: unknown, info: PanInfo) {
     setExpression(bounded(expressionStart.current + info.offset.x * 0.38));
+    if (Math.abs(info.offset.x) > 12) setResearchOpen(true);
   }
 
   function moveAlignment(_: unknown, info: PanInfo) {
     setAlignment(bounded(alignmentStart.current + info.offset.x * 0.42));
+    if (Math.abs(info.offset.x) > 12) setCollaborationOpen(true);
   }
 
   const glassStyle = { "--research-open": expression / 100 } as CSSProperties;
@@ -164,10 +167,10 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
           </div>
           <motion.div
             className="fg-introduction"
-            initial={reduced ? false : { x: -20, opacity: 0.55 }}
+            initial={reduced ? false : { x: -20, opacity: 0 }}
             animate={reduced ? { x: 0, opacity: 1 } : undefined}
             whileInView={{ x: 0, opacity: 1 }}
-            viewport={{ once: true, amount: 0.25 }}
+            viewport={{ once: false, amount: 0.25 }}
             transition={
               reduced
                 ? { duration: 0 }
@@ -175,33 +178,24 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
             }
           >
             <div>
-              <p className="fg-project-name">U-GLIMPSE</p>
-              <h2 id="glimpse-title">
-                {t("我正在把生成，", "I am connecting")}
-                <br />
-                {t("与感知连接起来。", "generation with perception.")}
-              </h2>
+              <p className="fg-project-name">{t("地下停车场 · 生成式开放词汇空间感知", "UNDERGROUND PARKING · GENERATIVE SPATIAL PERCEPTION")}</p>
+              <h2 id="glimpse-title">U-IMPROVE</h2>
+              <p className="fg-project-question">{t("让图像生成模型，读懂地下停车场。", "Image generators for understanding underground parking.")}</p>
             </div>
             <div className="fg-personal">
               <p className="fg-role">
-                {t("2026.08/09 — 至今", "Aug/Sep 2026 — present")}
-                <br />
-                {t("PSP305 / 本科毕业设计", "PSP305 / Final-year project")}
-                <br />
-                {t(
-                  "Gordon Owusu Boateng 指导",
-                  "Supervised by Gordon Owusu Boateng",
-                )}
+                {t("本人毕业研究 · PSP305", "MY FINAL-YEAR PROJECT · PSP305")}
               </p>
               <p>
                 {t(
-                  "图像生成模型学到的语义与几何先验，能否变成可以明确解码的视觉感知结果？这是我现在的研究问题。",
-                  "Can the semantic and geometric priors learned by image generators become explicitly decodable perception outputs? This is the question I am working on.",
+                  "研究仅凭 RGB 与语言指令，生成可解码的语义与度量几何，再构建可查询的 3D 场景。",
+                  "Investigating decodable semantics and metric geometry from RGB and language, towards queryable 3D scenes.",
                 )}
               </p>
             </div>
           </motion.div>
 
+          <GlimpsePerception quiet={reduced} />
           <div className="fg-route-row">
             <div className="fg-axis-caption">
               <span>A</span>
@@ -214,32 +208,32 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
               className="fg-route-switch"
               role="group"
               aria-label={t(
-                "选择 U-GLIMPSE 生成路线",
-                "Choose a U-GLIMPSE generation route",
+                "选择 U-IMPROVE 生成路线",
+                "Choose a U-IMPROVE generation route",
               )}
             >
               <button
                 type="button"
-                aria-pressed={route === "rgb"}
-                className={route === "rgb" ? "is-selected" : ""}
-                onClick={() => setRoute("rgb")}
+                aria-pressed={route === "diffusion"}
+                className={route === "diffusion" ? "is-selected" : ""}
+                onClick={() => { setRoute("diffusion"); setResearchOpen(true); }}
               >
                 <span>01</span>
-                {t(" RGB 感知输出", " RGB perception output")}
+                {t(" 扩散式生成", " Diffusion generation")}
               </button>
               <button
                 type="button"
-                aria-pressed={route === "latent"}
-                className={route === "latent" ? "is-selected" : ""}
-                onClick={() => setRoute("latent")}
+                aria-pressed={route === "autoregressive"}
+                className={route === "autoregressive" ? "is-selected" : ""}
+                onClick={() => { setRoute("autoregressive"); setResearchOpen(true); }}
               >
-                <span>02</span> Latent / token
+                <span>02</span> {t(" 自回归式生成", " Autoregressive generation")}
               </button>
             </div>
           </div>
 
           <div className="fg-blueprint">
-            <div className="fg-material-column">
+            <details className="fg-material-column fg-architecture-notes"><summary>{t("展开研究蓝图与表达轴", "Open the research blueprint & representation axis")}</summary>
               <motion.div
                 ref={glassRef}
                 className={`fg-glass-stage ${representation3D ? "is-expanded" : ""}`}
@@ -256,16 +250,16 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                 <motion.div
                   className="fg-stage-grid"
                   aria-hidden="true"
-                  initial={reduced ? false : { opacity: 0.2 }}
-                  animate={{ opacity: glassReady ? 1 : 0.2 }}
+                  initial={reduced ? false : { opacity: 0 }}
+                  animate={{ opacity: glassReady ? 1 : 0 }}
                   transition={reduced ? { duration: 0 } : { duration: 0.7 }}
                 />
                 <motion.div
                   className="fg-stage-label"
-                  initial={reduced ? false : { x: -12, opacity: 0.5 }}
+                  initial={reduced ? false : { x: -12, opacity: 0 }}
                   animate={{
                     x: glassReady ? 0 : -12,
-                    opacity: glassReady ? 1 : 0.5,
+                    opacity: glassReady ? 1 : 0,
                   }}
                   transition={reduced ? { duration: 0 } : { duration: 0.45 }}
                 >
@@ -277,13 +271,13 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                   initial={
                     reduced
                       ? false
-                      : { x: -24, y: 28, scale: 0.98, opacity: 0.35 }
+                      : { x: -24, y: 28, scale: 0.98, opacity: 0 }
                   }
                   animate={{
                     x: glassReady ? 0 : -24,
                     y: glassReady ? 0 : 28,
                     scale: glassReady ? 1 : 0.98,
-                    opacity: glassReady ? 1 : 0.35,
+                    opacity: glassReady ? 1 : 0,
                   }}
                   transition={
                     reduced
@@ -316,13 +310,13 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                   initial={
                     reduced
                       ? false
-                      : { x: 20, y: 25, scale: 0.98, opacity: 0.35 }
+                      : { x: 20, y: 25, scale: 0.98, opacity: 0 }
                   }
                   animate={{
                     x: glassReady ? 0 : 20,
                     y: glassReady ? 0 : 25,
                     scale: glassReady ? 1 : 0.98,
-                    opacity: glassReady ? 1 : 0.35,
+                    opacity: glassReady ? 1 : 0,
                   }}
                   transition={
                     reduced
@@ -359,13 +353,13 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                   initial={
                     reduced
                       ? false
-                      : { x: -16, y: 26, scale: 0.98, opacity: 0.35 }
+                      : { x: -16, y: 26, scale: 0.98, opacity: 0 }
                   }
                   animate={{
                     x: glassReady ? 0 : -16,
                     y: glassReady ? 0 : 26,
                     scale: glassReady ? 1 : 0.98,
-                    opacity: glassReady ? 1 : 0.35,
+                    opacity: glassReady ? 1 : 0,
                   }}
                   transition={
                     reduced
@@ -384,14 +378,14 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                     <span className="fg-layer-index">DECODING / 03</span>
                     <strong>{currentRoute.decoder}</strong>
                     <p>
-                      {route === "rgb"
+                      {route === "diffusion"
                         ? t(
                             "从视觉编码恢复感知结果",
                             "Recover perception from visual codes",
                           )
                         : t(
-                            "探索直接读取视觉表示",
-                            "Explore reading visual representations",
+                            "从 RGB 任务图像恢复感知结果",
+                            "Recover perception from RGB task images",
                           )}
                     </p>
                     <span className="fg-layer-rule" aria-hidden="true" />
@@ -402,13 +396,13 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                   initial={
                     reduced
                       ? false
-                      : { x: 18, y: 24, scale: 0.98, opacity: 0.35 }
+                      : { x: 18, y: 24, scale: 0.98, opacity: 0 }
                   }
                   animate={{
                     x: glassReady ? 0 : 18,
                     y: glassReady ? 0 : 24,
                     scale: glassReady ? 1 : 0.98,
-                    opacity: glassReady ? 1 : 0.35,
+                    opacity: glassReady ? 1 : 0,
                   }}
                   transition={
                     reduced
@@ -435,7 +429,7 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                             "拟探索：语义与几何融合",
                             "Proposed: semantic geometry",
                           )
-                        : t("2D：分割与度量深度", "2D: segmentation and depth")}
+                        : t("2D：语义与度量几何", "2D: semantics and metric geometry")}
                     </strong>
                     <p>
                       {representation3D
@@ -444,8 +438,8 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                             "Point cloud / BEV / voxels / occupancy",
                           )
                         : t(
-                            "像素级遮罩与距离信息",
-                            "Pixel-level masks and distance",
+                            "像素遮罩 / 度量深度 / 表面法线",
+                            "Pixel masks / metric depth / surface normals",
                           )}
                     </p>
                     <span className="fg-expression-symbol" aria-hidden="true">
@@ -453,12 +447,6 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                     </span>
                   </motion.div>
                 </motion.div>
-                <span className="fg-blueprint-note">
-                  {t(
-                    "方法关系示意 · 不是模型运行结果",
-                    "Method diagram · not model inference",
-                  )}
-                </span>
               </motion.div>
 
               <div className="fg-expression-control">
@@ -474,8 +462,8 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                 </div>
                 <label className="fg-range-label" htmlFor="glimpse-expression">
                   {t(
-                    "左右拖动蓝图或滑块，阅读 2D / 拟研究 3D 表达",
-                    "Drag the blueprint or slider to read about 2D and proposed 3D representations",
+                    "左右拖动，探索 2D 与拟研究的 3D 表达",
+                    "Drag to explore 2D and proposed 3D representations",
                   )}
                 </label>
                 <input
@@ -496,51 +484,54 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                           "2D segmentation and depth: the foundational task design",
                         )
                   }
-                  onChange={(event) =>
-                    setExpression(Number(event.target.value))
-                  }
+                  onChange={(event) => { setExpression(Number(event.target.value)); setResearchOpen(true); }}
                 />
                 <div className="fg-range-endpoints">
                   <button
                     type="button"
                     aria-pressed={!representation3D}
-                    onClick={() => setExpression(0)}
+                    onClick={() => { setExpression(0); setResearchOpen(true); }}
                   >
-                    {t("2D 分割 / 深度", "2D masks / depth")}
+                    {t("2D 任务图像", "2D task images")}
                   </button>
                   <button
                     type="button"
                     aria-pressed={representation3D}
-                    onClick={() => setExpression(100)}
+                    onClick={() => { setExpression(100); setResearchOpen(true); }}
                   >
                     {t("3D 表达 · 拟研究", "3D representation · proposed")}
                   </button>
                 </div>
               </div>
-            </div>
+            </details>
 
             <motion.div
               className="fg-research-reading"
               aria-live="polite"
-              initial={reduced ? false : { x: 18, opacity: 0.55 }}
+              initial={reduced ? false : { x: 18, opacity: 0 }}
               animate={reduced ? { x: 0, opacity: 1 } : undefined}
               whileInView={{ x: 0, opacity: 1 }}
-              viewport={{ once: true, amount: 0.2 }}
+              viewport={{ once: false, amount: 0.2 }}
               transition={
                 reduced
                   ? { duration: 0 }
                   : { duration: 0.6, ease: [0.22, 1, 0.36, 1] }
               }
             >
-              <p className="fg-reading-number">
-                A{route === "rgb" ? "1" : "2"} / B{representation3D ? "2" : "1"}
-              </p>
+              <p className="fg-reading-number">{t("研究框架", "RESEARCH FRAMEWORK")}</p>
+              <div className="fg-reading-summary">
+                <h3>{t("两条生成路线。", "Two generation routes.")}<br/>{t("语义与几何融合。", "Semantic-geometric fusion.")}</h3>
+                <p>{t("Presence-Aware Metadata Strip 让输出携带目标状态；任务解码器恢复语义与几何，相机内参用于度量 3D 抬升。", "A Presence-Aware Metadata Strip carries target status. Task decoders recover semantics and geometry; camera intrinsics support metric 3D lifting.")}</p>
+              </div>
+              <button type="button" className="future-reading-toggle" aria-expanded={researchOpen} aria-controls="glimpse-research-details" onClick={() => setResearchOpen(!researchOpen)}>{researchOpen ? t("收起研究笔记", "Close research notes") : t("阅读研究笔记", "Read research notes")}{researchOpen ? <Minus size={16}/> : <Plus size={16}/>}</button>
               <AnimatePresence mode="wait" initial={false}>
-                <motion.div
+                {researchOpen && <motion.div
+                  id="glimpse-research-details"
+                  className="future-details"
                   key={`${route}-${representation3D}`}
-                  initial={reduced ? false : { opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: reduced ? 0 : -6 }}
+                  initial={reduced ? false : { opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: reduced ? 1 : 0, height: 0 }}
                   transition={reveal}
                 >
                   <h3>{currentRoute.title}</h3>
@@ -564,61 +555,33 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                     <p>
                       {representation3D
                         ? t(
-                            "在 2D 结果基础上，拟探索语义点云、BEV、体素或占据表达。它是进阶表示层，尚需训练与定量验证。",
-                            "Building on 2D outputs, I plan to explore semantic point clouds, BEV, voxels or occupancy. This is an additional representation layer that still needs training and quantitative validation.",
+                            "利用度量深度与相机内参 K 恢复相机坐标系中的 3D 点，再附加查询条件下的语义。语义点云是拟研究的表达，BEV、体素、占据及 3D Gaussians 为后续扩展；多帧方案仍待确定。",
+                            "Metric depth and camera intrinsics K recover 3D points in the camera frame, with query-conditioned semantics attached. Semantic point clouds are a proposed representation; BEV, voxels, occupancy and 3D Gaussians are extensions. Multi-frame choices remain open.",
                           )
                         : t(
-                            "以像素级分割和度量深度为基础，研究目标是否存在、在哪里，以及怎样恢复可以被程序读取的结果。",
-                            "Starting from pixel-level segmentation and metric depth, I investigate whether a target exists, where it is, and how to recover outputs a program can read.",
+                            "不同指令使用共享模型生成 RGB 编码的分割、度量深度或表面法线。分割输出通过 Metadata Strip 表达存在、不存在或不确定，再确定性解码目标遮罩；正式检测课题以查询条件分割作为通向边界框的路线。",
+                            "Different instructions use a shared model to generate RGB-encoded segmentation, metric depth or surface normals. The segmentation Metadata Strip expresses present, absent or uncertain before deterministic mask decoding. Query-conditioned segmentation provides a route to boxes for the formal detection topic.",
                           )}
                     </p>
                   </div>
                   <p className="fg-pending">{currentRoute.next}</p>
-                </motion.div>
+                  <p className="fg-pending">{t("拟评估：通用 / 道路 / 地下停车场，分别测试类别与环境泛化、固定与自然指令，以及正负查询。未见类别指感知微调时未见。", "Planned evaluation: general, road and underground-parking scenes; category and environment transfer; fixed and natural queries; positive and negative queries. Unseen categories are held out from perception fine-tuning.")}</p>
+                  <p className="fg-supervisor">{t("Gordon Owusu Boateng 指导 · 2026.08/09 — 至今", "Supervised by Gordon Owusu Boateng · Aug/Sep 2026 — present")}</p>
+                </motion.div>}
               </AnimatePresence>
             </motion.div>
           </div>
 
-          <motion.div
-            className="fg-progress-line"
-            initial={reduced ? false : { y: 18, opacity: 0.6 }}
-            animate={reduced ? { y: 0, opacity: 1 } : undefined}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={
-              reduced
-                ? { duration: 0 }
-                : { duration: 0.48, ease: [0.22, 1, 0.36, 1] }
-            }
-          >
-            <div>
-              <span>{t("我已推进", "What I have developed")}</span>
-              <p>
-                {t(
-                  "课题定位、文献调研、任务定义、数据划分与实验设计。",
-                  "Research framing, literature review, task definitions, data splits and experimental design.",
-                )}
-              </p>
-            </div>
-            <div>
-              <span>{t("我要怎样检验", "How I plan to evaluate")}</span>
-              <p>
-                {t(
-                  "把地下停车场作为未见环境评估域，区分类别迁移和场景迁移。",
-                  "Use underground parking as an unseen evaluation domain, distinguishing category transfer from environment transfer.",
-                )}
-              </p>
-            </div>
-            <div>
-              <span>{t("尚待验证", "Still to validate")}</span>
-              <p>
-                {t(
-                  "Strip 方法、完整模型实验、跨域指标与 3D 表达；暂无最终论文成果。",
-                  "Strip methods, full model experiments, cross-domain metrics and 3D representations; no final publication is claimed.",
-                )}
-              </p>
-            </div>
-          </motion.div>
+          <div className="fg-evaluation" aria-label={t("拟采用的评估指标", "Planned evaluation metrics")}>
+            <p>{t("评估方案 · 尚无最终实验指标", "EVALUATION PLAN · FINAL RESULTS PENDING")}</p>
+            <div><span><strong>FPR ↓</strong><small>{t("不存在目标的误报", "False positives on absent targets")}</small></span><span><strong>IoU ↑</strong><small>{t("分割遮罩的空间重叠", "Segmentation mask overlap")}</small></span><span><strong>AbsRel ↓</strong><small>{t("度量深度的相对误差", "Relative metric-depth error")}</small></span></div>
+          </div>
+          <details className="fg-source-framework">
+            <summary>{t("查看我的完整研究框架", "View my full research framework")}</summary>
+            <figure><img src="/research/u-improve-framework.png" loading="lazy" alt={t("U-IMPROVE 拟研究框架：RGB 与查询、扩散或自回归图像生成、任务解码、相机标定与语义 3D 点，后续可扩展为其他 3D 表达。", "Proposed U-IMPROVE framework: RGB and query inputs, diffusion or autoregressive image generation, task decoding, camera calibration and semantic 3D points, with further representation extensions.")}/><figcaption>{t("来自 Tianyi.pptx 的研究框架图；为方法设计，尚待训练与实验验证。", "Research framework from Tianyi.pptx. A method design requiring training and experimental validation.")}</figcaption></figure>
+            <p className="fg-formal-title">{t("正式毕业课题：", "Formal dissertation topic: ")}Image-Generation-Based Open-Vocabulary Object Detection for Driving Environment Perception in Underground Parking Lots</p>
+          </details>
+
           <a className="chapter-link fg-next-link" href="#avpc">
             {t(
               "沿着空间研究，继续到协同方向 ",
@@ -643,33 +606,28 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
           </div>
           <motion.div
             className="fa-introduction"
-            initial={reduced ? false : { x: 22, opacity: 0.55 }}
+            initial={reduced ? false : { x: 22, opacity: 0 }}
             animate={reduced ? { x: 0, opacity: 1 } : undefined}
             whileInView={{ x: 0, opacity: 1 }}
-            viewport={{ once: true, amount: 0.25 }}
+            viewport={{ once: false, amount: 0.25 }}
             transition={
               reduced
                 ? { duration: 0 }
                 : { duration: 0.58, ease: [0.22, 1, 0.36, 1] }
             }
           >
-            <h2 id="avpc-title">
-              {t("我在团队里，", "Within the team,")}
-              <br />
-              {t("继续研究协同。", "I keep exploring collaboration.")}
-            </h2>
+            <div><p className="fa-project-name">{t("协同感知与空间约束", "COLLABORATIVE PERCEPTION")}</p><h2 id="avpc-title">AVPC</h2><p className="fa-project-question">{t("多辆车的局部观察，怎样形成共同的空间约束？", "How can vehicles reconcile partial observations?")}</p></div>
             <div>
-              <p className="fa-project-name">AVPC / COLLABORATIVE PERCEPTION</p>
-              <p>
+              <p className="fa-role">
                 {t(
-                  "Gordon Owusu Boateng 团队 · 研究参与者",
-                  "Gordon Owusu Boateng team · research participant",
+                  "团队研究参与者 · 进行中",
+                  "RESEARCH PARTICIPANT · IN PROGRESS",
                 )}
               </p>
               <p className="fa-intro-copy">
                 {t(
-                  "不同视角带来局部观察。我参与数据、感知定位方案和仿真探索，研究怎样把它们放到可以检查的共同约束里。",
-                  "Different viewpoints offer partial observations. I participate in data screening, perception and localisation discussions, and simulation exploration, investigating how observations can share checkable constraints.",
+                  "参与数据筛选、感知与定位方案讨论，以及仿真探索。",
+                  "Dataset screening, perception and localisation discussions, and simulation exploration.",
                 )}
               </p>
             </div>
@@ -691,13 +649,13 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
             <motion.div
               className="fa-paper-arrival"
               initial={
-                reduced ? false : { x: -64, y: -18, rotate: -8, opacity: 0.5 }
+                reduced ? false : { x: -64, y: -18, rotate: -8, opacity: 0 }
               }
               animate={{
                 x: printReady ? 0 : -64,
                 y: printReady ? 0 : -18,
                 rotate: printReady ? 0 : -8,
-                opacity: printReady ? 1 : 0.5,
+                opacity: printReady ? 1 : 0,
               }}
               transition={
                 reduced
@@ -723,13 +681,13 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
             <motion.div
               className="fa-paper-arrival"
               initial={
-                reduced ? false : { x: 64, y: 24, rotate: 9, opacity: 0.5 }
+                reduced ? false : { x: 64, y: 24, rotate: 9, opacity: 0 }
               }
               animate={{
                 x: printReady ? 0 : 64,
                 y: printReady ? 0 : 24,
                 rotate: printReady ? 0 : 9,
-                opacity: printReady ? 1 : 0.5,
+                opacity: printReady ? 1 : 0,
               }}
               transition={
                 reduced
@@ -754,10 +712,10 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
             </motion.div>
             <motion.div
               className="fa-label-arrival"
-              initial={reduced ? false : { scale: 1.12, opacity: 0.35 }}
+              initial={reduced ? false : { scale: 1.12, opacity: 0 }}
               animate={{
                 scale: printReady ? 1 : 1.12,
-                opacity: printReady ? 1 : 0.35,
+                opacity: printReady ? 1 : 0,
               }}
               transition={
                 reduced
@@ -770,18 +728,15 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                 <span>
                   {t("把视角放在一起", "Bring viewpoints together")}
                   <br />
-                  <small>
-                    {t("研究关系示意", "Research relationship diagram")}
-                  </small>
                 </span>
               </div>
             </motion.div>
             <motion.div
               className="fa-print-caption"
-              initial={reduced ? false : { y: 13, opacity: 0.5 }}
+              initial={reduced ? false : { y: 13, opacity: 0 }}
               animate={{
                 y: printReady ? 0 : 13,
-                opacity: printReady ? 1 : 0.5,
+                opacity: printReady ? 1 : 0,
               }}
               transition={
                 reduced
@@ -795,11 +750,6 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                   "感知 → 定位 → 协同",
                   "Perception → localisation → collaboration",
                 )}
-                <br />
-                {t(
-                  "各模块仍需分别验证",
-                  "Each module needs its own validation",
-                )}
               </p>
             </motion.div>
           </motion.div>
@@ -807,7 +757,7 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
           <div className="fa-controls">
             <label htmlFor="avpc-alignment">
               {t(
-                "移动研究页，阅读我参与的工作 ",
+                "左右移动，探索我的工作 ",
                 "Move the sheets to explore my work ",
               )}
               <MoveHorizontal size={18} aria-hidden="true" />
@@ -820,7 +770,7 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
               max="100"
               value={alignment}
               aria-valuetext={currentCollaboration.title}
-              onChange={(event) => setAlignment(Number(event.target.value))}
+              onChange={(event) => { setAlignment(Number(event.target.value)); setCollaborationOpen(true); }}
             />
             <div
               className="fa-focus-buttons"
@@ -833,34 +783,35 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
               <button
                 type="button"
                 aria-pressed={focus === "data"}
-                onClick={() => setAlignment(0)}
+                onClick={() => { setAlignment(0); setCollaborationOpen(true); }}
               >
                 {t("01 / 数据与真值", "01 / Data and ground truth")}
               </button>
               <button
                 type="button"
                 aria-pressed={focus === "constraints"}
-                onClick={() => setAlignment(50)}
+                onClick={() => { setAlignment(50); setCollaborationOpen(true); }}
               >
                 {t("02 / 共同约束", "02 / Shared constraints")}
               </button>
               <button
                 type="button"
                 aria-pressed={focus === "iteration"}
-                onClick={() => setAlignment(100)}
+                onClick={() => { setAlignment(100); setCollaborationOpen(true); }}
               >
                 {t("03 / 失败与迭代", "03 / Failure and iteration")}
               </button>
             </div>
           </div>
 
-          <motion.div
+          <button type="button" className="future-reading-toggle fa-reading-toggle" aria-expanded={collaborationOpen} aria-controls="avpc-work-details" onClick={() => setCollaborationOpen(!collaborationOpen)}>{collaborationOpen ? t("收起工作记录", "Close work notes") : t("阅读我的工作", "Read my work")}{collaborationOpen ? <Minus size={16}/> : <Plus size={16}/>}</button>
+          <AnimatePresence initial={false}>{collaborationOpen && <motion.div
+            id="avpc-work-details"
             className="fa-work-reading"
             aria-live="polite"
-            initial={reduced ? false : { y: 18, opacity: 0.6 }}
-            animate={reduced ? { y: 0, opacity: 1 } : undefined}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true, amount: 0.2 }}
+            initial={reduced ? false : { height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: reduced ? 1 : 0 }}
             transition={
               reduced
                 ? { duration: 0 }
@@ -887,15 +838,12 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                 </div>
               </motion.div>
             </AnimatePresence>
-          </motion.div>
+          </motion.div>}</AnimatePresence>
 
           <div className="fa-current-boundary">
             <span>{t("当前进展", "Current stage")}</span>
             <p>
-              {t(
-                "导师团队持续研究方向，已有数据筛选、方案讨论与仿真探索。完整停车资源优化系统及量化收益尚未确认；Cosmos-Loc 的定位指标不作为这里的协同优化成果。",
-                "This is an ongoing team research direction, with dataset screening, framework discussions and simulation exploration. A complete parking-resource optimisation system and quantified benefits are not yet confirmed. Cosmos-Loc localisation metrics are not claimed as collaborative optimisation results.",
-              )}
+              {t("Gordon Owusu Boateng 团队 · 研究框架与仿真探索阶段，量化评估待推进。", "Gordon Owusu Boateng team · framework and simulation exploration, with quantitative evaluation ahead.")}
             </p>
           </div>
           <div className="fa-chapter-links">

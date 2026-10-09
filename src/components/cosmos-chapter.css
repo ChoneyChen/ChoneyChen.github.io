@@ -406,6 +406,96 @@
 .cosmos-chapter.is-english .cosmos-reader-copy h3 {
   letter-spacing: -0.035em;
 }
+.chapter .cosmos-inner {
+  padding-top: 44px;
+  padding-bottom: 42px;
+}
+.cosmos-masthead {
+  margin-bottom: 30px;
+}
+.cosmos-heading {
+  margin-bottom: 30px;
+}
+.cosmos-introduction > p {
+  font-size: 16px;
+  line-height: 1.65;
+}
+.cosmos-introduction .cosmos-my-role {
+  font-size: 12px;
+  line-height: 1.8;
+}
+.cosmos-my-role strong {
+  display: block;
+  font-size: 17px;
+}
+.cosmos-reader[data-open="false"] {
+  min-height: 172px;
+  align-items: center;
+}
+.cosmos-reader-copy {
+  position: relative;
+  padding-right: 26px;
+}
+.cosmos-reader-empty h3 {
+  margin: 0;
+  max-width: 540px;
+  font-size: clamp(22px, 2.4vw, 31px);
+  line-height: 1.35;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+.cosmos-reader-empty .cosmos-reader-label {
+  color: #bdaae8;
+  font-size: 10px;
+}
+.cosmos-record-close {
+  position: absolute;
+  right: -4px;
+  top: -4px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #aa83de55;
+  background: #20133d;
+  color: #fff0d5;
+  cursor: pointer;
+}
+.cosmos-record-close:focus-visible,
+.cosmos-record-context summary:focus-visible,
+.cosmos-boundary summary:focus-visible {
+  outline: 2px solid #dfff57;
+  outline-offset: 4px;
+}
+.cosmos-record-context {
+  font-size: 12px;
+  color: #cbbce7;
+  margin: 14px 0 0;
+}
+.cosmos-record-context summary,
+.cosmos-boundary summary {
+  width: fit-content;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.cosmos-record-context p,
+.cosmos-boundary p {
+  font-size: 14px;
+  line-height: 1.8;
+  margin: 12px 0 0;
+}
+.cosmos-boundary {
+  margin-bottom: 30px;
+  color: #cbbce7;
+}
+.cosmos-record-tags span {
+  font-size: 11px;
+}
+.cosmos-operation,
+.cosmos-keyboard-hint {
+  font-size: 11px;
+}
 @media (max-width: 760px) {
   .cosmos-masthead {
     margin-bottom: 35px;
@@ -448,7 +538,7 @@
   .cosmos-reader {
     grid-template-columns: 44px 1fr;
     gap: 14px;
-    min-height: 336px;
+    min-height: 0;
     padding-top: 21px;
   }
   .cosmos-reader-index > span {
@@ -470,18 +560,33 @@
     font-size: 23px;
     line-height: 1.5;
   }
+  .cosmos-reader[data-open="false"] {
+    min-height: 166px;
+  }
+  .cosmos-reader-empty h3 {
+    font-size: 23px;
+  }
+  .cosmos-reader-copy {
+    padding-right: 17px;
+  }
+  .cosmos-record-close {
+    top: -6px;
+    right: -8px;
+    width: 27px;
+    height: 27px;
+  }
   .cosmos-reader-contribution {
-    font-size: 13px;
+    font-size: 14px;
   }
   .cosmos-reader-context {
-    font-size: 12px;
+    font-size: 14px;
   }
   .cosmos-record-tags {
     gap: 5px;
     margin-top: 12px;
   }
   .cosmos-record-tags span {
-    font-size: 8px;
+    font-size: 10px;
     padding: 3px 5px;
   }
   .cosmos-cartridge-rack {
