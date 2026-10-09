@@ -39,6 +39,7 @@ import { MethodsChapter } from "./components/MethodsChapter";
 import { ToolsChapter } from "./components/ToolsChapter";
 import { PersonalPortrait } from "./components/PersonalPortrait";
 import { ContactChapter } from "./components/ContactChapter";
+import { ResearchDirections } from "./components/ResearchDirections";
 
 function getChapters(t: (zh: string, en: string) => string) {
   return [
@@ -47,70 +48,77 @@ function getChapters(t: (zh: string, en: string) => string) {
       label: t("认识我", "About"),
       caption: t("陈天一 / Choney Chen", "Tianyi / Choney Chen"),
       style: "PERSONAL PORTRAIT",
-      colour: "#4a55db",
+      colour: "#304de8",
     },
     {
       id: "origins",
       label: t("起点", "Origins"),
       caption: t("从日常问题开始", "Starting with everyday questions"),
       style: "PAPER ARCHIVE",
-      colour: "#b19575",
+      colour: "#cc6d44",
     },
     {
       id: "methods",
       label: t("方法", "Methods"),
       caption: t("我怎样做一件事", "How I approach a piece of work"),
       style: "HAND-DRAWN NOTES",
-      colour: "#7b91a5",
+      colour: "#285baf",
+    },
+    {
+      id: "directions",
+      label: t("方向", "Directions"),
+      caption: t("我的三个研究方向", "My three research directions"),
+      style: "RIBBON / SECTION / FOLIO",
+      colour: "#274bee",
     },
     {
       id: "cosmos",
       label: t("定位", "Locate"),
       caption: "Cosmos-Loc",
       style: "PIXEL ARCADE",
-      colour: "#a79ed8",
+      colour: "#9e65d0",
     },
     {
       id: "sups",
       label: t("造景", "Build"),
       caption: "SUPS / SVL",
       style: "ISOMETRIC WORLD",
-      colour: "#74a6a0",
+      colour: "#3047b9",
     },
     {
       id: "mask",
       label: t("系统", "Systems"),
       caption: t("智能光疗面罩", "Intelligent phototherapy mask"),
       style: "PRODUCT STORY",
-      colour: "#c69f89",
+      colour: "#2458f2",
     },
     {
       id: "esg",
       label: t("环境", "Environment"),
       caption: "ESG AI",
       style: "DOCUMENT DESK",
-      colour: "#739783",
+      colour: "#0f4e3d",
     },
     {
       id: "glimpse",
       label: t("下一问", "Next question"),
       caption: "U-GLIMPSE / FYP",
       style: "GLASS BLUEPRINT",
-      colour: "#a5b8d8",
+      colour: "#214dcb",
     },
     {
       id: "avpc",
       label: t("协同", "Collaborate"),
       caption: t("AVPC 研究", "AVPC research"),
       style: "TWO PERSPECTIVES",
-      colour: "#a48da9",
+      colour: "#6c183c",
     },
     {
       id: "tools",
       label: t("工具", "Tools"),
       caption: t("我的研究工具档案", "My research-tool archive"),
       style: "3D WORK FILES",
-      colour: "#47716c",
+      colour: "#cf633b",
     },
     {
       id: "archive",
@@ -124,7 +132,7 @@ function getChapters(t: (zh: string, en: string) => string) {
       label: t("继续", "Continuing"),
       caption: t("关于接下来的我", "What I am exploring next"),
       style: "STILL BECOMING",
-      colour: "#4a55db",
+      colour: "#254cc7",
     },
     {
       id: "contact",
@@ -705,7 +713,7 @@ function PersonalArchive({ quiet }: { quiet: boolean }) {
       <div className="chapter-inner">
         <div className="archive-heading">
           <div>
-            <p className="chapter-kicker">10 / MY PERSONAL ALMANAC</p>
+            <p className="chapter-kicker">11 / MY PERSONAL ALMANAC</p>
             <h2>
               {t("这些事，", "Every experience,")}
               <br />
@@ -967,7 +975,9 @@ export default function App() {
   return (
     <MotionConfig
       reducedMotion={quiet ? "always" : "user"}
-      transition={{ type: "spring", stiffness: 140, damping: 22 }}
+      transition={quiet
+        ? { type: "tween", duration: 0 }
+        : { type: "spring", stiffness: 140, damping: 22 }}
     >
       <div className="personal-site" data-quiet={quiet}>
         <a href="#home" className="skip-link">
@@ -1098,6 +1108,7 @@ export default function App() {
           <Hero quiet={quiet} />
           <Origins quiet={quiet} />
           <MethodsChapter quiet={quiet} />
+          <ResearchDirections quiet={quiet} />
           <CosmosChapter quiet={quiet} />
           <SupsChapter quiet={quiet} />
           <MaskChapter quiet={quiet} />

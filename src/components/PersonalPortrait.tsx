@@ -98,34 +98,34 @@ const getDirections = (t: (zh: string, en: string) => string) =>
 function SpaceFragment() {
   return (
     <svg viewBox="0 0 400 400" aria-hidden="true">
-      <path d="M15 95L255 4L391 182L201 398L30 302Z" fill="#6d3541" />
-      <path d="M20 100L226 44L149 156L66 253Z" fill="#ad6a65" />
-      <path d="M149 156L227 43L363 177L255 282Z" fill="#f1e5cd" />
-      <path d="M66 253L149 156L255 282L204 398Z" fill="#794552" />
+      <path d="M15 95L255 4L391 182L201 398L30 302Z" fill="#C03C2B" />
+      <path d="M20 100L226 44L149 156L66 253Z" fill="#F2D169" />
+      <path d="M149 156L227 43L363 177L255 282Z" fill="#FFF4D7" />
+      <path d="M66 253L149 156L255 282L204 398Z" fill="#254CC7" />
       <path
         d="M227 43L238 275M87 107L344 180M66 253L344 180M149 156L238 275"
         fill="none"
-        stroke="#271f2d"
+        stroke="#2D2C46"
         strokeWidth="2"
       />
       <path
         d="M173 115L273 160L238 232L135 191Z"
         fill="none"
-        stroke="#4f536c"
+        stroke="#254CC7"
         strokeWidth="2"
       />
       <path
         d="M163 131L263 177M151 151L253 195M142 170L245 216M195 126L163 205M222 138L189 218M248 149L216 229"
         fill="none"
-        stroke="#7c7b86"
+        stroke="#C03C2B"
         strokeWidth="1"
       />
-      <circle cx="213" cy="174" r="8" fill="#454aa0" />
-      <path d="M24 308L149 252L239 290L204 398Z" fill="#c8aa8c" />
-      <text x="84" y="293" fill="#2d2538" fontSize="10" letterSpacing="2">
+      <circle cx="213" cy="174" r="8" fill="#2D2C46" />
+      <path d="M24 308L149 252L239 290L204 398Z" fill="#FFF4D7" />
+      <text x="84" y="293" fill="#2D2C46" fontSize="10" letterSpacing="2">
         01 / LOOK CLOSER
       </text>
-      <path d="M51 81L92 68M304 86L335 118" stroke="#f1e5cd" strokeWidth="4" />
+      <path d="M51 81L92 68M304 86L335 118" stroke="#FFF4D7" strokeWidth="4" />
     </svg>
   );
 }
@@ -133,36 +133,36 @@ function SpaceFragment() {
 function SystemsFragment() {
   return (
     <svg viewBox="0 0 400 470" aria-hidden="true">
-      <path d="M59 0L386 58L400 362L147 466L0 217Z" fill="#4d56a0" />
-      <path d="M61 0L228 128L8 216Z" fill="#9a9ec4" />
-      <path d="M228 128L387 58L350 274L147 466Z" fill="#38467a" />
-      <path d="M228 128L350 274L122 330L8 216Z" fill="#d8c4aa" />
+      <path d="M59 0L386 58L400 362L147 466L0 217Z" fill="#254CC7" />
+      <path d="M61 0L228 128L8 216Z" fill="#F2D169" />
+      <path d="M228 128L387 58L350 274L147 466Z" fill="#2347AA" />
+      <path d="M228 128L350 274L122 330L8 216Z" fill="#C03C2B" />
       <path
         d="M79 196L174 151L248 198L231 283L122 307Z"
         fill="none"
-        stroke="#342b37"
+        stroke="#FFF4D7"
         strokeWidth="2.5"
       />
-      <path d="M100 217L173 185L218 216L205 257L135 274Z" fill="#e4d7c0" />
+      <path d="M100 217L173 185L218 216L205 257L135 274Z" fill="#FFF4D7" />
       <path
         d="M115 211L110 201M135 202L131 191M156 193L153 182M176 196L184 180M196 207L209 193M216 222L234 219M209 244L230 252M190 261L200 281M169 266L169 289M146 265L135 286M127 253L113 266M118 235L94 238"
-        stroke="#514b64"
+        stroke="#2D2C46"
         strokeWidth="2"
       />
-      <path d="M169 218L188 231L177 248L155 242L155 225Z" fill="#4d56a0" />
+      <path d="M169 218L188 231L177 248L155 242L155 225Z" fill="#254CC7" />
       <path
         d="M248 198L297 159L320 115M231 283L309 292L336 332M79 196L38 160L60 95"
         fill="none"
-        stroke="#e4d7c0"
+        stroke="#FFF4D7"
         strokeWidth="2"
       />
-      <circle cx="320" cy="115" r="8" fill="#bd856f" />
-      <circle cx="336" cy="332" r="8" fill="#bd856f" />
-      <path d="M125 348L242 317L203 384L147 465Z" fill="#b79381" />
+      <circle cx="320" cy="115" r="8" fill="#F2D169" />
+      <circle cx="336" cy="332" r="8" fill="#F2D169" />
+      <path d="M125 348L242 317L203 384L147 465Z" fill="#F2D169" />
       <text
         x="150"
         y="357"
-        fill="#2d2538"
+        fill="#2D2C46"
         fontSize="9"
         letterSpacing="2"
         transform="rotate(-12 150 357)"
@@ -171,7 +171,7 @@ function SystemsFragment() {
       </text>
       <path
         d="M80 35L174 87M270 368L318 348"
-        stroke="#d8c4aa"
+        stroke="#C03C2B"
         strokeWidth="3"
       />
     </svg>
@@ -181,39 +181,39 @@ function SystemsFragment() {
 function EnvironmentFragment() {
   return (
     <svg viewBox="0 0 430 350" aria-hidden="true">
-      <path d="M76 0L430 89L376 334L0 350L8 111Z" fill="#bd856f" />
-      <path d="M76 0L263 94L142 215L8 111Z" fill="#e7d6b8" />
-      <path d="M263 94L430 89L376 334L142 215Z" fill="#c79d80" />
-      <path d="M142 215L376 334L0 350Z" fill="#755d60" />
-      <path d="M72 112L190 72L280 129L172 210Z" fill="#f0e5cf" />
+      <path d="M76 0L430 89L376 334L0 350L8 111Z" fill="#C03C2B" />
+      <path d="M76 0L263 94L142 215L8 111Z" fill="#FFF4D7" />
+      <path d="M263 94L430 89L376 334L142 215Z" fill="#F2D169" />
+      <path d="M142 215L376 334L0 350Z" fill="#254CC7" />
+      <path d="M72 112L190 72L280 129L172 210Z" fill="#DDF3E4" />
       <path
         d="M89 118L197 94M108 135L216 111M125 152L231 127M142 170L243 143"
-        stroke="#8d8379"
+        stroke="#254CC7"
         strokeWidth="2"
       />
-      <path d="M267 141L341 164L316 249L239 222Z" fill="#6b3547" />
+      <path d="M267 141L341 164L316 249L239 222Z" fill="#2D2C46" />
       <path
         d="M281 166L284 210L323 185"
         fill="none"
-        stroke="#e8d5bd"
+        stroke="#FFF4D7"
         strokeWidth="2"
       />
-      <circle cx="281" cy="166" r="4" fill="#e8d5bd" />
-      <circle cx="284" cy="210" r="4" fill="#e8d5bd" />
-      <circle cx="323" cy="185" r="4" fill="#e8d5bd" />
-      <path d="M54 253L138 240L155 280L68 295Z" fill="#a7aea6" />
-      <text x="76" y="273" fill="#383436" fontSize="10" letterSpacing="1.5">
+      <circle cx="281" cy="166" r="4" fill="#FFF4D7" />
+      <circle cx="284" cy="210" r="4" fill="#FFF4D7" />
+      <circle cx="323" cy="185" r="4" fill="#FFF4D7" />
+      <path d="M54 253L138 240L155 280L68 295Z" fill="#F2D169" />
+      <text x="76" y="273" fill="#2D2C46" fontSize="10" letterSpacing="1.5">
         ESG / AI
       </text>
       <path
         d="M11 338L253 282L376 334"
         fill="none"
-        stroke="#282335"
+        stroke="#2D2C46"
         strokeWidth="2"
       />
       <path
         d="M352 74L391 84M92 305L152 318"
-        stroke="#f0e5cf"
+        stroke="#DDF3E4"
         strokeWidth="4"
       />
     </svg>
@@ -248,7 +248,7 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
     >
       <div className="chapter-inner">
         <div className="portrait-heading">
-          <p className="chapter-kicker">11 / THE MANY SIDES OF ME</p>
+          <p className="chapter-kicker">12 / THE MANY SIDES OF ME</p>
           <span>TIANYI CHEN / 2026</span>
         </div>
         <motion.div
@@ -310,34 +310,34 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
               >
                 <path
                   d="M14 119L403 8L655 201L578 539L58 560Z"
-                  fill="#ded2b8"
+                  fill="#FFF4D7"
                 />
-                <path d="M18 118L223 87L94 301L60 559Z" fill="#d0bca4" />
-                <path d="M405 8L655 201L504 441L363 393Z" fill="#e9ddc8" />
-                <path d="M94 301L363 393L576 539L59 559Z" fill="#e8d8bf" />
+                <path d="M18 118L223 87L94 301L60 559Z" fill="#F2D169" />
+                <path d="M405 8L655 201L504 441L363 393Z" fill="#DDF3E4" />
+                <path d="M94 301L363 393L576 539L59 559Z" fill="#FFF4D7" />
                 <path
                   d="M53 141L511 63M108 495L585 326M235 45L213 509"
-                  stroke="#8b81756b"
+                  stroke="#2D2C466b"
                   strokeWidth="1"
                 />
-                <path d="M574 67L643 127L598 132Z" fill="#6c3445" />
-                <path d="M26 398L3 435L50 451Z" fill="#535da5" />
-                <path d="M625 405L653 435L608 471Z" fill="#bd856f" />
+                <path d="M574 67L643 127L598 132Z" fill="#C03C2B" />
+                <path d="M26 398L3 435L50 451Z" fill="#254CC7" />
+                <path d="M625 405L653 435L608 471Z" fill="#F2D169" />
                 <text
                   x="511"
                   y="505"
-                  fill="#574b4b"
+                  fill="#2D2C46"
                   fontSize="16"
                   letterSpacing="4"
                   transform="rotate(-8 511 505)"
                 >
                   C / C
                 </text>
-                <path d="M17 567L548 546" stroke="#655953" strokeWidth="2" />
+                <path d="M17 567L548 546" stroke="#2D2C46" strokeWidth="2" />
                 <text
                   x="23"
                   y="31"
-                  fill="#73675d"
+                  fill="#515069"
                   fontSize="8"
                   letterSpacing="3"
                 >

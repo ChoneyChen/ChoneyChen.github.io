@@ -28,7 +28,7 @@ export function ContactChapter({ quiet = false }: { quiet?: boolean }) {
     >
       <div className="chapter-inner contact-inner">
         <div className="contact-intro">
-          <p className="chapter-kicker">12 / A NOTE TO ME</p>
+          <p className="chapter-kicker">13 / A NOTE TO ME</p>
           <h2 id="contact-title">
             {t("故事还在继续。", "The conversation")}
             <br />

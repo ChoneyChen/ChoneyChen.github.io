@@ -1,6 +1,6 @@
 .cosmos-chapter {
-  color: #d8cef3;
-  background: #14172b;
+  color: #fff0d5;
+  background: #20133d;
   isolation: isolate;
   overflow: hidden;
 }
@@ -12,8 +12,8 @@
   z-index: -1;
   opacity: 0.18;
   background:
-    repeating-linear-gradient(0deg, transparent 0 3px, #747daa22 3px 4px),
-    radial-gradient(ellipse at 80% 10%, #61507555, transparent 52%);
+    repeating-linear-gradient(0deg, transparent 0 3px, #aa83de22 3px 4px),
+    radial-gradient(ellipse at 80% 10%, #8743af55, transparent 52%);
 }
 .cosmos-inner {
   padding-top: 84px;
@@ -28,7 +28,7 @@
 }
 .cosmos-masthead .chapter-kicker,
 .cosmos-date {
-  color: #ada7c3;
+  color: #c8b8ea;
   margin: 0;
 }
 .cosmos-date {
@@ -43,7 +43,7 @@
   margin-bottom: 46px;
 }
 .cosmos-project-number {
-  color: #d6e68e;
+  color: #dfff57;
   font:
     10px "IBM Plex Mono",
     monospace;
@@ -57,11 +57,11 @@
   font-weight: 400;
   letter-spacing: -0.095em;
   line-height: 1.04;
-  color: #e8e0fa;
+  color: #fff0d5;
 }
 .cosmos-heading h2 span {
   display: block;
-  color: #d6e68e;
+  color: #dfff57;
 }
 .cosmos-introduction h3 {
   font-size: clamp(21px, 2vw, 28px);
@@ -73,12 +73,12 @@
 .cosmos-introduction > p {
   font-size: 14px;
   line-height: 1.9;
-  color: #bbb5ce;
+  color: #d5c8ed;
   max-width: 440px;
 }
 .cosmos-status {
   font-size: 10px;
-  color: #d6e68e;
+  color: #dfff57;
   display: inline-flex;
   gap: 7px;
   align-items: center;
@@ -86,21 +86,21 @@
 .cosmos-status i {
   width: 5px;
   height: 5px;
-  background: #d6e68e;
+  background: #dfff57;
 }
 .cosmos-introduction .cosmos-my-role {
   margin: 17px 0 0;
-  color: #ada7c3;
+  color: #c8b8ea;
   font-size: 11px;
 }
 .cosmos-my-role strong {
-  color: #e8e0fa;
+  color: #fff0d5;
   font-weight: 500;
 }
 .cosmos-record-desk {
-  border: 1px solid #747daa55;
-  background: #20243a;
-  box-shadow: 8px 8px 0 #0b0f23;
+  border: 1px solid #aa83de55;
+  background: #30204e;
+  box-shadow: 8px 8px 0 #160b29;
   padding: 21px 30px 18px;
   position: relative;
 }
@@ -109,7 +109,7 @@
   content: "";
   width: 8px;
   height: 8px;
-  background: #d6e68e;
+  background: #dfff57;
   position: absolute;
   top: -4px;
 }
@@ -126,10 +126,10 @@
   font:
     9px "IBM Plex Mono",
     monospace;
-  color: #8f97b7;
+  color: #c1afe3;
   letter-spacing: 0.02em;
   padding-bottom: 16px;
-  border-bottom: 1px dashed #747daa55;
+  border-bottom: 1px dashed #aa83de55;
 }
 .cosmos-reader {
   min-height: 267px;
@@ -144,7 +144,7 @@
   font-family: "Silkscreen", monospace;
   font-size: 70px;
   line-height: 1.1;
-  color: #747daa;
+  color: #aa83de;
   margin: 9px 0 18px;
   letter-spacing: -0.08em;
 }
@@ -172,10 +172,10 @@
   font-weight: 500;
   line-height: 1.4;
   letter-spacing: -0.045em;
-  color: #efebf6;
+  color: #fff6e6;
 }
 .cosmos-reader-contribution {
-  color: #e8e0fa;
+  color: #fff0d5;
   font-size: 15px;
   line-height: 1.95;
   margin: 0 0 9px;
@@ -183,7 +183,7 @@
 .cosmos-reader-context {
   font-size: 13px;
   line-height: 1.85;
-  color: #a8afc5;
+  color: #cbbce7;
   margin: 0;
   max-width: 700px;
 }
@@ -194,10 +194,10 @@
   margin-top: 15px;
 }
 .cosmos-record-tags span {
-  border: 1px solid #747daa55;
+  border: 1px solid #aa83de55;
   font-size: 9px;
   padding: 4px 7px;
-  color: #b7bfd5;
+  color: #d5c8ed;
 }
 .cosmos-cartridge-rack {
   display: grid;
@@ -209,8 +209,8 @@
 .cosmos-cartridge-slot {
   position: relative;
   padding: 18px 7px 8px;
-  background: #101329;
-  border-top: 1px solid #747daa44;
+  background: #23123f;
+  border-top: 1px solid #aa83de44;
   min-width: 0;
 }
 .cosmos-slot-number {
@@ -220,14 +220,14 @@
   font:
     8px "IBM Plex Mono",
     monospace;
-  color: #667197;
+  color: #bdaae8;
 }
 .cosmos-cartridge {
   position: relative;
   width: 100%;
   appearance: none;
   cursor: grab;
-  color: #14172b;
+  color: #20133d;
   border: 0;
   padding: 15px 11px 11px;
   background: var(--cartridge-color);
@@ -263,7 +263,7 @@
 .cosmos-cartridge-ridges i {
   width: 3px;
   height: 11px;
-  background: #14172b30;
+  background: #20133d30;
 }
 .cosmos-cartridge-label {
   display: flex;
@@ -271,7 +271,7 @@
   flex-direction: column;
   text-align: left;
   padding: 9px 9px 7px;
-  background: #14172b;
+  background: #20133d;
   min-height: 78px;
   border-left: 3px solid #ffffff20;
 }
@@ -282,7 +282,7 @@
   color: var(--cartridge-color);
 }
 .cosmos-cartridge-label strong {
-  color: #e8e0fa;
+  color: #fff0d5;
   font-size: 19px;
   font-weight: 500;
   line-height: 1.6;
@@ -291,7 +291,7 @@
   font:
     6px "IBM Plex Mono",
     monospace;
-  color: #8f97b7;
+  color: #c1afe3;
   white-space: nowrap;
   margin-top: 5px;
 }
@@ -304,7 +304,7 @@
 .cosmos-cartridge-connector i {
   width: 6px;
   height: 9px;
-  background: #14172b45;
+  background: #20133d45;
 }
 .cosmos-pixel-trail {
   position: absolute;
@@ -318,18 +318,18 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 6px;
-  color: #adb4cb;
+  color: #d5c8ed;
   font-size: 10px;
   line-height: 1.7;
   margin: 16px 0 0;
 }
 .cosmos-operation > span:first-child {
-  color: #d6e68e;
+  color: #dfff57;
   font-size: 17px;
   margin-right: 2px;
 }
 .cosmos-keyboard-hint {
-  color: #828ba8;
+  color: #bdaae8;
   margin-left: auto;
   font-size: 9px;
 }
@@ -347,25 +347,25 @@
 .cosmos-small-pixel {
   width: 9px;
   height: 9px;
-  background: #d6e68e;
+  background: #dfff57;
   margin-top: 5px;
   flex-shrink: 0;
-  box-shadow: 5px 5px 0 #747daa;
+  box-shadow: 5px 5px 0 #aa83de;
 }
 .cosmos-results-label p {
   font-size: 11px;
-  color: #e8e0fa;
+  color: #fff0d5;
   line-height: 1.8;
   margin: 0;
 }
 .cosmos-results-label p span {
   display: block;
-  color: #828ba8;
+  color: #bdaae8;
   font-size: 9px;
   margin-top: 5px;
 }
 .cosmos-result {
-  border-left: 1px solid #747daa55;
+  border-left: 1px solid #aa83de55;
   padding-left: 20px;
 }
 .cosmos-result strong {
@@ -374,32 +374,32 @@
   font-size: clamp(26px, 3vw, 40px);
   line-height: 1.2;
   letter-spacing: -0.055em;
-  color: #e8e0fa;
+  color: #fff0d5;
   font-weight: 500;
 }
 .cosmos-result > span {
   display: block;
   font-size: 9px;
-  color: #a8afc5;
+  color: #cbbce7;
   margin-top: 10px;
 }
 .cosmos-boundary {
   font-size: 9px;
   line-height: 1.8;
   max-width: 775px;
-  color: #828ba8;
+  color: #bdaae8;
   margin: 0 0 38px;
 }
 .cosmos-exits {
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  border-top: 1px solid #747daa44;
+  border-top: 1px solid #aa83de44;
   padding-top: 20px;
 }
 .cosmos-exits .chapter-link {
   font-size: 10px;
-  color: #d6e68e;
+  color: #dfff57;
   text-decoration: none;
   gap: 7px;
 }
@@ -439,7 +439,7 @@
   }
   .cosmos-record-desk {
     padding: 16px 16px 14px;
-    box-shadow: 5px 5px 0 #0b0f23;
+    box-shadow: 5px 5px 0 #160b29;
   }
   .cosmos-record-topline {
     font-size: 7px;

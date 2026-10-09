@@ -1,7 +1,7 @@
 .portrait-chapter {
   overflow: hidden;
-  background: #eee4d2;
-  color: #3b2b38;
+  background: #ddf3e4;
+  color: #2d2c46;
 }
 .portrait-heading {
   display: flex;
@@ -13,7 +13,7 @@
   font:
     9px "IBM Plex Mono",
     monospace;
-  color: #806b68;
+  color: #515069;
   letter-spacing: 0.04em;
 }
 .portrait-introduction {
@@ -35,7 +35,7 @@
   line-height: 1.95;
   margin: 0;
   max-width: 370px;
-  color: #745f64;
+  color: #515069;
 }
 .portrait-layout {
   display: grid;
@@ -75,7 +75,7 @@
   background: transparent;
   cursor: grab;
   touch-action: pan-y;
-  filter: drop-shadow(0 2px 0 #50384919);
+  filter: drop-shadow(0 2px 0 #2d2c4619);
 }
 .portrait-fragment:active {
   cursor: grabbing;
@@ -112,10 +112,10 @@
 }
 .portrait-fragment.is-selected {
   z-index: 4;
-  filter: drop-shadow(0 4px 0 #50384932);
+  filter: drop-shadow(0 4px 0 #2d2c4632);
 }
 .portrait-fragment:focus-visible {
-  filter: drop-shadow(0 0 6px #40338dcc);
+  filter: drop-shadow(0 0 6px #254cc7cc);
   outline: none;
 }
 .portrait-collage-caption {
@@ -126,7 +126,7 @@
     8px "IBM Plex Mono",
     monospace;
   letter-spacing: 0.03em;
-  color: #7a6864;
+  color: #515069;
   z-index: 5;
   pointer-events: none;
 }
@@ -141,10 +141,10 @@
   flex-direction: column;
   align-items: flex-start;
   border: 0;
-  border-top: 1px solid #8c6c7359;
+  border-top: 1px solid #2d2c4666;
   padding: 13px 0 0;
   background: transparent;
-  color: #8c6c73;
+  color: #515069;
   font: inherit;
   text-align: left;
   cursor: pointer;
@@ -170,15 +170,15 @@
   min-height: 24px;
 }
 .portrait-selector button[aria-pressed="true"] {
-  color: #46334a;
-  border-top: 2px solid #6b3547;
+  color: #254cc7;
+  border-top: 2px solid #254cc7;
   padding-top: 12px;
 }
 .portrait-selector button:hover {
-  color: #3e3558;
+  color: #2d2c46;
 }
 .portrait-selector button:focus-visible {
-  outline: 2px solid #535da5;
+  outline: 2px solid #254cc7;
   outline-offset: 5px;
 }
 .portrait-art-note {
@@ -186,7 +186,7 @@
   margin: 22px 0 0;
   padding-left: 20px;
   font-size: 9px;
-  color: #7d6a67;
+  color: #515069;
   line-height: 1.9;
 }
 .portrait-art-note > svg {
@@ -195,7 +195,7 @@
   left: 0;
 }
 .portrait-art-note > span {
-  color: #99817a;
+  color: #515069;
   font-size: 8px;
 }
 .portrait-direction {
@@ -208,7 +208,7 @@
     10px "IBM Plex Mono",
     monospace;
   letter-spacing: 0.04em;
-  color: #976e6f;
+  color: #c03c2b;
   margin-bottom: 24px;
 }
 .portrait-direction h3 {
@@ -221,54 +221,54 @@
 .portrait-experience {
   font-size: 13px;
   line-height: 1.95;
-  color: #77656b;
+  color: #515069;
 }
 .portrait-question {
   margin-top: 31px;
-  border-top: 1px solid #856c7252;
+  border-top: 1px solid #2d2c4666;
   padding-top: 20px;
 }
 .portrait-question > span {
   font-size: 9px;
-  color: #9a756f;
+  color: #c03c2b;
 }
 .portrait-question > p {
   font-size: 17px;
   font-weight: 500;
   line-height: 1.7;
-  color: #56374e;
+  color: #2d2c46;
   margin: 11px 0 0;
 }
 .portrait-next {
   font-size: 11px;
   line-height: 1.9;
-  color: #88716e;
+  color: #515069;
   margin: 19px 0 0;
 }
 .portrait-direction .chapter-link {
   margin-top: 22px;
   font-size: 10px;
-  color: #4e5091;
+  color: #254cc7;
 }
 .portrait-bottom {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 24px;
-  border-top: 1px solid #866c7154;
+  border-top: 1px solid #2d2c4666;
   padding-top: 28px;
   margin-top: 56px;
 }
 .portrait-bottom > span {
   font-size: 10px;
-  color: #896f6c;
+  color: #515069;
 }
 .portrait-bottom > a {
   display: inline-flex;
   align-items: center;
   gap: 11px;
   font-size: 12px;
-  color: #433e70;
+  color: #254cc7;
   text-decoration: none;
 }
 .portrait-bottom > a:focus-visible {

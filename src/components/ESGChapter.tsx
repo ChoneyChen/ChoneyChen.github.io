@@ -155,7 +155,7 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
     >
       <div className="chapter-inner esg-inner">
         <div className="esg-filing-line">
-          <p className="chapter-kicker">06 / DOCUMENTS INTO EVIDENCE</p>
+          <p className="chapter-kicker">07 / DOCUMENTS INTO EVIDENCE</p>
           <span>SUZHOU · SINCE JUL 2026</span>
         </div>
         <header className="esg-heading">

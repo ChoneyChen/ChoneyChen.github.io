@@ -1,6 +1,6 @@
 .tools-chapter {
-  background: #e3e5df;
-  color: #174344;
+  background: #ed855e;
+  color: #103338;
   overflow: clip;
 }
 .tools-chapter .tools-inner {
@@ -11,7 +11,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-top: 1px solid #afc0b8;
+  border-top: 1px solid #10333866;
   padding-top: 20px;
   gap: 18px;
 }
@@ -19,7 +19,7 @@
   margin: 0;
 }
 .tools-heading-line > span {
-  color: #6d8780;
+  color: #173d40;
   font-size: 8px;
   letter-spacing: 0.075em;
   font-family: "IBM Plex Mono", monospace;
@@ -39,10 +39,10 @@
   font-weight: 500;
 }
 .tools-heading h2 > span {
-  color: #809790;
+  color: #103338;
 }
 .tools-heading > p {
-  color: #71877e;
+  color: #173d40;
   margin: 0 0 8px;
   font-size: 12px;
   line-height: 1.8;
@@ -64,7 +64,7 @@
   font-family: "IBM Plex Mono", monospace;
   font-size: 8px;
   letter-spacing: 0.05em;
-  color: #6d8780;
+  color: #173d40;
 }
 .tools-scene {
   position: relative;
@@ -72,8 +72,8 @@
   height: 440px;
   background: radial-gradient(
     ellipse at 50% 60%,
-    #fafaf11a 0,
-    #f6f6ee61 46%,
+    #fff4d71a 0,
+    #fff4d761 46%,
     transparent 73%
   );
 }
@@ -88,7 +88,7 @@
   border-radius: 8px;
 }
 .tools-scene > canvas:focus-visible {
-  outline: 1px solid #537a73;
+  outline: 1px solid #2347aa;
   outline-offset: -2px;
 }
 .tools-scene > canvas.tools-canvas-hidden {
@@ -102,9 +102,9 @@
   top: 50%;
   transform: translate(-50%, -50%) rotate(-4deg);
   padding: 30px 23px;
-  border-left: 7px solid #235757;
-  background: #f0eee4;
-  box-shadow: 14px 20px 24px #14383718;
+  border-left: 7px solid #103338;
+  background: #fff4d7;
+  box-shadow: 14px 20px 24px #10333826;
   display: flex;
   flex-direction: column;
 }
@@ -115,7 +115,7 @@
   font-family: "IBM Plex Mono", monospace;
   font-size: 8px;
   letter-spacing: 0.08em;
-  color: #6b8478;
+  color: #173d40;
 }
 .tools-flat-file > strong {
   font-size: 26px;
@@ -125,12 +125,12 @@
 }
 .tools-flat-file > p {
   font-size: 11px;
-  color: #6b8478;
+  color: #173d40;
   margin: 12px 0 25px;
 }
 .tools-flat-file > small {
   font-size: 9px;
-  color: #859289;
+  color: #173d40;
 }
 .tools-scene-controls {
   display: flex;
@@ -139,14 +139,14 @@
   gap: 10px;
   padding-top: 7px;
   padding-bottom: 20px;
-  border-bottom: 1px solid #b4c3bb;
+  border-bottom: 1px solid #10333866;
 }
 .tools-scene-controls > p {
   display: inline-flex;
   align-items: center;
   gap: 7px;
   font-size: 10px;
-  color: #6d8780;
+  color: #173d40;
   margin: 0;
 }
 .tools-scene-controls > div {
@@ -159,26 +159,28 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: #f3f3e870;
-  border: 1px solid #b4c3bb;
-  color: #356260;
+  background: #fff4d7b3;
+  border: 1px solid #10333866;
+  color: #103338;
   cursor: pointer;
   transition: background 0.2s;
 }
 .tools-scene-controls button:hover {
-  background: #f3f3e8;
+  background: #fff4d7;
 }
 .tools-scene-controls button:focus-visible,
 .tools-file-index button:focus-visible {
-  outline: 2px solid #537a73;
+  outline: 2px solid #2347aa;
   outline-offset: 4px;
 }
 .tools-reading-column {
   padding-top: 25px;
+  background: #fff4d7;
+  box-shadow: 18px 0 0 #fff4d7, -18px 0 0 #fff4d7, 0 18px 0 #fff4d7;
 }
 .tools-file-label {
   display: block;
-  color: #85948b;
+  color: #173d40;
   font-family: "IBM Plex Mono", monospace;
   font-size: 8px;
   letter-spacing: 0.04em;
@@ -199,7 +201,7 @@
   margin: 0 0 15px;
 }
 .tools-personal-use {
-  color: #56736a;
+  color: #173d40;
   font-size: 14px;
   line-height: 1.95;
   margin: 0;
@@ -212,8 +214,8 @@
 }
 .tools-use-tags > span {
   font-size: 9px;
-  color: #5b7a6e;
-  border: 1px solid #b4c3bb;
+  color: #173d40;
+  border: 1px solid #10333866;
   padding: 5px 8px;
 }
 .tools-context-link {
@@ -221,9 +223,9 @@
   justify-content: space-between;
   align-items: center;
   gap: 15px;
-  border-top: 1px solid #b4c3bb;
-  border-bottom: 1px solid #b4c3bb;
-  color: #235757;
+  border-top: 1px solid #10333866;
+  border-bottom: 1px solid #10333866;
+  color: #103338;
   text-decoration: none;
   padding: 16px 0;
 }
@@ -234,32 +236,32 @@
 .tools-context-link > span > small {
   display: block;
   font-size: 8px;
-  color: #899b90;
+  color: #173d40;
   margin-bottom: 5px;
 }
 .tools-content-note {
   font-size: 10px;
   line-height: 1.8;
-  color: #8a958d;
+  color: #173d40;
   margin: 15px 0 0;
 }
 .tools-file-index {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   margin-top: 40px;
-  border-top: 1px solid #b4c3bb;
-  border-left: 1px solid #b4c3bb;
+  border-top: 1px solid #10333866;
+  border-left: 1px solid #10333866;
 }
 .tools-file-index > button {
   display: flex;
   align-items: center;
   gap: 12px;
   border: 0;
-  border-bottom: 1px solid #b4c3bb;
-  border-right: 1px solid #b4c3bb;
+  border-bottom: 1px solid #10333866;
+  border-right: 1px solid #10333866;
   padding: 17px 19px;
   background: transparent;
-  color: #668278;
+  color: #173d40;
   cursor: pointer;
   text-align: left;
   transition:
@@ -269,7 +271,7 @@
 .tools-file-index > button > span {
   font-family: "IBM Plex Mono", monospace;
   font-size: 9px;
-  opacity: 0.6;
+  opacity: 1;
 }
 .tools-file-index > button > strong {
   font-size: 12px;
@@ -277,14 +279,14 @@
   flex: 1;
 }
 .tools-file-index > button[aria-pressed="true"] {
-  background: #235757;
-  color: #efeee4;
+  background: #103338;
+  color: #fff4d7;
 }
 .tools-file-index > button[aria-pressed="true"] > span {
-  opacity: 0.7;
+  opacity: 1;
 }
 .tools-file-index > button:hover:not([aria-pressed="true"]) {
-  background: #eef0e570;
+  background: #fff4d780;
 }
 .tools-closing {
   display: flex;
@@ -295,12 +297,12 @@
 }
 .tools-closing > p {
   font-size: 11px;
-  color: #5b7a6e;
+  color: #173d40;
   line-height: 1.8;
   margin: 0;
 }
 .tools-closing > p > span {
-  color: #899b90;
+  color: #173d40;
   font-size: 9px;
 }
 .tools-closing .chapter-link {
@@ -309,7 +311,7 @@
   align-items: center;
   gap: 9px;
   font-size: 11px;
-  color: #235757;
+  color: #103338;
   text-decoration: none;
 }
 .tools-chapter[lang="en"] .tools-heading > p {

@@ -33,7 +33,7 @@ const getMethods = (t: (zh: string, en: string) => string) => [
       "The work is documented. Prediction errors and R² values are only reported when reliable original results are available.",
     ),
     source: "#origins",
-    color: "#627f9a",
+    color: "#285baf",
   },
   {
     id: "mec202",
@@ -57,7 +57,7 @@ const getMethods = (t: (zh: string, en: string) => string) => [
       "This is a team engineering prototype I helped develop. The course mark was 79; the team received an Excellence Award at the Suzhou selection event.",
     ),
     source: "#mask",
-    color: "#aa7967",
+    color: "#ad5636",
   },
   {
     id: "isa305",
@@ -81,7 +81,7 @@ const getMethods = (t: (zh: string, en: string) => string) => [
       "CSP and standardisation were fitted on the training set only, keeping training and test boundaries separate. These are results from a specific course experiment, with no clinical diagnostic claim.",
     ),
     source: "#archive",
-    color: "#66856f",
+    color: "#315946",
   },
   {
     id: "can201",
@@ -102,7 +102,7 @@ const getMethods = (t: (zh: string, en: string) => string) => [
       "The role and course result are confirmed. The original report is still needed to establish the project title and technical details.",
     ),
     source: "#archive",
-    color: "#8c789c",
+    color: "#754e96",
   },
 ];
 const stations = [110, 310, 510, 710];
@@ -655,6 +655,10 @@ export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
             </span>
           </footer>
         </div>
+        <a className="chapter-link methods-next" href="#directions">
+          {t("接下来：我关注的三个研究方向", "Next: my three research directions")}
+          <ArrowUpRight size={17} />
+        </a>
       </div>
     </section>
   );

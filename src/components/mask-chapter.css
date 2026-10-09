@@ -1,6 +1,6 @@
 .mask-chapter {
-  background: #f7f6f2;
-  color: #242529;
+  background: #f8faff;
+  color: #172038;
   overflow: clip;
 }
 .mask-chapter .mask-inner {
@@ -11,7 +11,7 @@
   text-align: center;
 }
 .mask-heading .chapter-kicker {
-  color: #897567;
+  color: #465574;
 }
 .mask-eyebrow {
   margin: 46px 0 18px;
@@ -26,14 +26,14 @@
   letter-spacing: -0.06em;
 }
 .mask-heading h2 span {
-  color: #8e7567;
+  color: #2458f2;
 }
 .mask-introduction {
   margin: 30px auto 64px;
 }
 .mask-introduction > p {
   margin: 0;
-  color: #666462;
+  color: #465574;
   font-size: 16px;
   line-height: 1.85;
 }
@@ -48,7 +48,7 @@
 .mask-role-mark > span {
   width: 5px;
   height: 5px;
-  background: #b79381;
+  background: #2458f2;
   border-radius: 50%;
 }
 .mask-story-layout {
@@ -63,8 +63,8 @@
 .mask-product-stage {
   position: sticky;
   top: 112px;
-  border-top: 1px solid #dad6cf;
-  border-bottom: 1px solid #dad6cf;
+  border-top: 1px solid #ccd8ee;
+  border-bottom: 1px solid #ccd8ee;
 }
 .mask-stage-topline {
   display: flex;
@@ -73,7 +73,7 @@
   padding: 18px 0;
   font-family: "IBM Plex Mono", monospace;
   font-size: 9px;
-  color: #7e7972;
+  color: #465574;
   letter-spacing: 0.045em;
 }
 .mask-connection-visual {
@@ -94,7 +94,7 @@
 }
 .mask-connection-lines > path {
   fill: none;
-  stroke: #c2b5a6;
+  stroke: #9eafd2;
   stroke-width: 1;
   marker-end: url(#mask-arrow);
 }
@@ -102,7 +102,7 @@
   stroke-dasharray: 3 4;
 }
 .mask-connection-lines > .mask-interface-pulse {
-  stroke: #9e775c;
+  stroke: #2458f2;
   stroke-width: 2;
   marker-end: none;
 }
@@ -111,12 +111,12 @@
   width: 35%;
   min-height: 67px;
   padding: 12px 14px;
-  border: 1px solid #e0dbd3;
-  border-left: 3px solid #d1c5b8;
+  border: 1px solid #d3def1;
+  border-left: 3px solid #a0b5e1;
   text-align: left;
-  color: #77716a;
-  background: #fffefa;
-  box-shadow: 3px 6px 13px #77645208;
+  color: #465574;
+  background: #ffffff;
+  box-shadow: 3px 6px 13px #17203808;
   cursor: pointer;
   transition:
     border-color 0.3s,
@@ -155,7 +155,7 @@
   font-family: "IBM Plex Mono", monospace;
   font-size: 7px;
   letter-spacing: 0.035em;
-  color: #a1978b;
+  color: #536383;
 }
 .mask-connection-node > strong {
   display: block;
@@ -167,34 +167,34 @@
 .mask-connection-node > span {
   display: block;
   font-size: 9px;
-  color: #9a9187;
+  color: #536383;
   line-height: 1.5;
 }
 .mask-connection-node.is-current {
-  color: #3f352f;
-  border-left-color: #a98169;
-  box-shadow: 3px 6px 13px #77645212;
+  color: #172038;
+  border-left-color: #2458f2;
+  box-shadow: 3px 6px 13px #17203812;
 }
 .mask-connection-board.is-integrating .mask-connection-node {
-  border-color: #cfb9a6;
+  border-color: #a0b5e1;
 }
 .mask-feedback-label {
   position: absolute;
   left: 5%;
   top: 45%;
-  color: #ad9a87;
+  color: #536383;
   font-size: 8px;
 }
 .mask-diagram-note {
   margin: 11px 0 0;
   text-align: center;
-  color: #9e9387;
+  color: #536383;
   font-size: 10px;
 }
 .mask-connection-node:focus-visible,
 .mask-system-header > button:focus-visible,
 .mask-chain-nodes > button:focus-visible {
-  outline: 2px solid #897567;
+  outline: 2px solid #465574;
   outline-offset: 3px;
 }
 .mask-system-header {
@@ -203,7 +203,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 20px 0;
-  border-top: 1px solid #dad6cf;
+  border-top: 1px solid #ccd8ee;
 }
 .mask-system-header > div,
 .mask-system-header > button {
@@ -215,13 +215,13 @@
   font-size: 12px;
 }
 .mask-system-header > div svg {
-  color: #897567;
+  color: #465574;
 }
 .mask-system-header > button {
   background: transparent;
   border: 0;
   padding: 0;
-  color: #7d685d;
+  color: #2458f2;
   font-size: 11px;
   cursor: pointer;
 }
@@ -233,7 +233,7 @@
   align-items: center;
   gap: 6px;
   margin: 8px 0 18px;
-  color: #7e7972;
+  color: #465574;
   font-size: 10px;
 }
 .mask-chain-nodes {
@@ -245,7 +245,7 @@
   content: "";
   position: absolute;
   height: 1px;
-  background: #c9c1b8;
+  background: #bdcbe4;
   left: 10%;
   right: 10%;
   top: 20px;
@@ -253,7 +253,7 @@
 .mask-chain-nodes > button {
   position: relative;
   background: transparent;
-  color: #817970;
+  color: #465574;
   border: 0;
   display: flex;
   flex-direction: column;
@@ -263,8 +263,8 @@
   cursor: pointer;
 }
 .mask-chain-nodes > button svg {
-  background: #f7f6f2;
-  box-shadow: 0 0 0 8px #f7f6f2;
+  background: #f8faff;
+  box-shadow: 0 0 0 8px #f8faff;
   margin-bottom: 14px;
 }
 .mask-chain-nodes > button small {
@@ -274,10 +274,10 @@
   font-size: 8px;
 }
 .mask-chain-nodes > button[aria-pressed="true"] {
-  color: #242529;
+  color: #172038;
 }
 .mask-chain-nodes > button[aria-pressed="true"] svg {
-  color: #9a725a;
+  color: #2458f2;
 }
 .mask-chain-work {
   padding: 20px 0 22px;
@@ -287,7 +287,7 @@
   font-weight: 500;
 }
 .mask-chain-work p {
-  color: #726b65;
+  color: #465574;
   font-size: 12px;
   line-height: 1.8;
   margin: 9px 0 0;
@@ -299,14 +299,14 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  color: #958477;
+  color: #536383;
   font-size: 11px;
   padding-bottom: 26px;
 }
 .mask-story-step {
   position: relative;
   padding: 22px 0 42px 27px;
-  border-left: 1px solid #dad6cf;
+  border-left: 1px solid #ccd8ee;
   transition: border-color 0.3s;
 }
 .mask-story-step::before {
@@ -316,23 +316,23 @@
   height: 5px;
   left: -3px;
   top: 27px;
-  background: #ccc8c1;
+  background: #ccd8ee;
   border-radius: 50%;
   transition:
     background 0.3s,
     box-shadow 0.3s;
 }
 .mask-story-step.is-current {
-  border-left-color: #b79381;
+  border-left-color: #2458f2;
 }
 .mask-story-step.is-current::before {
-  background: #b79381;
-  box-shadow: 0 0 0 4px #eee8df;
+  background: #2458f2;
+  box-shadow: 0 0 0 4px #e7eefb;
 }
 .mask-step-number {
   font-family: "IBM Plex Mono", monospace;
   font-size: 9px;
-  color: #8f7a6c;
+  color: #465574;
   letter-spacing: 0.08em;
 }
 .mask-story-step h3 {
@@ -343,13 +343,13 @@
   margin: 13px 0 14px;
 }
 .mask-story-step > p {
-  color: #726b65;
+  color: #465574;
   font-size: 14px;
   line-height: 1.9;
   margin: 0;
 }
 .mask-step-label {
-  color: #a09389;
+  color: #536383;
   font-family: "IBM Plex Mono", monospace;
   font-size: 9px;
   margin-top: 17px;
@@ -359,13 +359,13 @@
   margin-top: 70px;
   display: grid;
   grid-template-columns: 0.85fr 1fr 1.2fr;
-  border-top: 1px solid #dad6cf;
+  border-top: 1px solid #ccd8ee;
   padding-top: 35px;
   gap: 30px;
 }
 .mask-outcomes > div > span {
   font-size: 10px;
-  color: #8c8075;
+  color: #536383;
   letter-spacing: 0.045em;
 }
 .mask-outcomes strong {
@@ -379,7 +379,7 @@
 }
 .mask-outcome-grade strong > span {
   font-size: 15px;
-  color: #a19b91;
+  color: #536383;
   padding-left: 6px;
   letter-spacing: 0;
 }
@@ -396,19 +396,19 @@
   justify-content: center;
   width: 36px;
   height: 36px;
-  border: 1px solid #b79381;
+  border: 1px solid #2458f2;
   border-radius: 50%;
-  color: #b79381;
+  color: #2458f2;
 }
 .mask-outcomes > div > p {
   margin: 12px 0 0;
   font-size: 12px;
-  color: #726b65;
+  color: #465574;
   line-height: 1.6;
 }
 .mask-outcomes .mask-outcome-reflection > p {
   font-size: 21px;
-  color: #48413b;
+  color: #172038;
   line-height: 1.5;
   letter-spacing: -0.025em;
   margin-top: 18px;
@@ -419,26 +419,26 @@
   max-width: 310px;
   font-size: 11px;
   line-height: 1.7;
-  color: #8b8279;
+  color: #465574;
 }
 .mask-footer {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 20px;
-  border-top: 1px solid #dad6cf;
+  border-top: 1px solid #ccd8ee;
   margin-top: 45px;
   padding-top: 26px;
 }
 .mask-footer .chapter-link {
   font-size: 11px;
-  color: #6f6054;
+  color: #465574;
   align-items: center;
   gap: 7px;
   text-decoration: none;
 }
 .mask-footer .chapter-link:hover {
-  color: #242529;
+  color: #172038;
 }
 .mask-chapter[lang="en"] .mask-heading h2 {
   letter-spacing: -0.045em;
@@ -581,7 +581,7 @@
   }
   .mask-outcome-reflection {
     grid-column: 1 / -1;
-    border-top: 1px solid #dad6cf;
+    border-top: 1px solid #ccd8ee;
     padding-top: 25px;
   }
   .mask-outcomes .mask-outcome-award strong {

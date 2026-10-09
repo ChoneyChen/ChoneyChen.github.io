@@ -1,8 +1,10 @@
 # Choney Chen · Tianyi Chen
 
-A personal homepage about my work, built around a continuous reading thread and thirteen independently designed chapters. Pixel research cartridges, isometric simulation layers, a two-dimensional systems diagram, document files, glass research blueprints, overprinted perspectives, hand-drawn working notes, original 3D tool books, and a cubist collage each reveal real experiences through different interactions.
+A personal homepage about my work, built around a continuous reading thread and fourteen independently designed chapters. Pixel research cartridges, isometric simulation layers, a two-dimensional systems diagram, document files, glass research blueprints, overprinted perspectives, hand-drawn working notes, original 3D tool books, and a cubist collage each reveal real experiences through different interactions.
 
 Visit: [Vercel](https://choney-between-states.vercel.app) · [GitHub Pages](https://choneychen.github.io/)
+
+Three research directions have separate visual scenes and pull-out gestures: a horizontal task ribbon for LLM agent applications, an upward architectural section for autonomous-driving spatial perception, and a diagonal glass evidence folio for AI in environmental and energy systems. Each has click and keyboard alternatives. Chapter palettes alternate warm/cool and light/dark surfaces.
 
 English is the default on a first visit. The EN/ZH control switches the complete content and retains the current reading selections. Language preferences are stored locally. The contact chapter includes WeChat, phone, email, and GitHub links supplied for publication by the author.
 

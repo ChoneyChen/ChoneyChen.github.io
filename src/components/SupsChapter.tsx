@@ -40,7 +40,7 @@ const getLayerRecords = (
       "An identifier should correspond to its actual location before we can study its role in localisation.",
     ),
     status: t("已开展场景扩展", "Scene extension underway"),
-    color: "#4f7a78",
+    color: "#3047b9",
   },
   {
     id: "roof",
@@ -59,7 +59,7 @@ const getLayerRecords = (
       "Controllable scene conditions make it possible to examine environmental changes and failure cases separately.",
     ),
     status: t("已开展结构扩展", "Structural extension underway"),
-    color: "#a77364",
+    color: "#993d2c",
   },
   {
     id: "signs",
@@ -78,7 +78,7 @@ const getLayerRecords = (
       "Changing a sign should mean knowing which zone and stretch of road it refers to.",
     ),
     status: t("研究与工程继续推进", "Research and development ongoing"),
-    color: "#57709a",
+    color: "#283783",
   },
 ];
 
@@ -176,7 +176,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
       <div className="chapter-inner sups-inner">
         <div className="sups-masthead">
           <p className="chapter-kicker">
-            {t("04 / 建立研究环境", "04 / BUILDING A RESEARCH ENVIRONMENT")}
+            {t("05 / 建立研究环境", "05 / BUILDING A RESEARCH ENVIRONMENT")}
           </p>
           <span>{t("2026.09 — 至今", "2026.09 — PRESENT")}</span>
         </div>
@@ -265,7 +265,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                 <path
                   d="M 34 0 L 0 0 0 34"
                   fill="none"
-                  stroke="#314d53"
+                  stroke="#202d5f"
                   strokeOpacity=".055"
                   strokeWidth=".8"
                 />
@@ -292,7 +292,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                 cy="511"
                 rx="268"
                 ry="65"
-                fill="#486b62"
+                fill="#283783"
                 opacity=".14"
                 filter="url(#sups-ground-shadow)"
               />
@@ -303,13 +303,13 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                 depth={5}
                 z={-20}
                 height={20}
-                fill="#d8d4c6"
-                left="#bfbbad"
-                right="#a8b8ad"
+                fill="#fff3ca"
+                left="#dfae55"
+                right="#6d85cf"
               />
               <polygon
                 points={plane(0.16, 0.15, 7.68, 4.7, 1)}
-                fill="#e8e3d7"
+                fill="#fff4d4"
               />
               <Block
                 x={0}
@@ -317,9 +317,9 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                 width={8}
                 depth={0.16}
                 height={42}
-                fill="#d9d3c5"
-                left="#c1bbad"
-                right="#a6b4a8"
+                fill="#fff3ca"
+                left="#dfae55"
+                right="#6d85cf"
               />
               <Block
                 x={0}
@@ -327,9 +327,9 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                 width={0.16}
                 depth={4.84}
                 height={42}
-                fill="#d9d3c5"
-                left="#c1bbad"
-                right="#a6b4a8"
+                fill="#fff3ca"
+                left="#dfae55"
+                right="#6d85cf"
               />
             </motion.g>
 
@@ -348,12 +348,12 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
               >
                 <polygon
                   points={plane(0.16, 0.16, 3.84, 4.68, 2)}
-                  fill="#dda18e"
+                  fill="#df674f"
                   opacity=".22"
                 />
                 <polygon
                   points={plane(4, 0.16, 3.84, 4.68, 2)}
-                  fill="#7caca1"
+                  fill="#667edf"
                   opacity=".19"
                 />
                 <line
@@ -361,7 +361,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                   y1={point(4, 0.4)[1]}
                   x2={point(4, 4.6)[0]}
                   y2={point(4, 4.6)[1]}
-                  stroke="#718b80"
+                  stroke="#3047b9"
                   strokeWidth="2"
                   strokeDasharray="7 6"
                 />
@@ -372,7 +372,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                       y1={point(x, 2.55, 2)[1]}
                       x2={point(x + 1.1, 2.55, 2)[0]}
                       y2={point(x + 1.1, 2.55, 2)[1]}
-                      stroke="#698d83"
+                      stroke="#3047b9"
                       strokeWidth="6"
                       strokeLinecap="round"
                     />
@@ -382,7 +382,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                         point(x + 0.87, 2.29, 2),
                         point(x + 0.87, 2.81, 2),
                       ])}
-                      fill="#698d83"
+                      fill="#3047b9"
                     />
                   </g>
                 ))}
@@ -390,7 +390,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                   x={point(2.1, 2.45)[0]}
                   y={point(2.1, 2.45)[1] - 23}
                   className="sups-zone-text"
-                  fill="#a77364"
+                  fill="#993d2c"
                 >
                   A
                 </text>
@@ -398,7 +398,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                   x={point(6, 2.45)[0]}
                   y={point(6, 2.45)[1] - 23}
                   className="sups-zone-text"
-                  fill="#4f7a78"
+                  fill="#3047b9"
                 >
                   B
                 </text>
@@ -430,8 +430,8 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                       <g key={`${row}-${column}`}>
                         <polygon
                           points={plane(x, y, 1.08, 1.17, 3)}
-                          fill={column % 2 === 0 ? "#d8e1d6" : "#dce3db"}
-                          stroke="#6d9386"
+                          fill={column % 2 === 0 ? "#e7eafa" : "#fff3cd"}
+                          stroke="#3047b9"
                           strokeWidth="1.2"
                         />
                         <text
@@ -478,9 +478,9 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                   width={0.25}
                   depth={0.25}
                   height={116}
-                  fill="#e5dfd0"
-                  left="#c1b6a4"
-                  right="#a8b5a4"
+                  fill="#fff3ca"
+                  left="#dfae55"
+                  right="#6d85cf"
                 />
               </motion.g>
             ))}
@@ -506,7 +506,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                   y1={point(4.25, 0.55)[1]}
                   x2={point(4.25, 0.55, 90)[0]}
                   y2={point(4.25, 0.55, 90)[1]}
-                  stroke="#87958a"
+                  stroke="#3047b9"
                   strokeWidth="3"
                 />
                 <g transform={`translate(${point(4.25, 0.55, 94).join(" ")})`}>
@@ -515,7 +515,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                     y="-16"
                     width="74"
                     height="29"
-                    fill="#4f7a78"
+                    fill="#3047b9"
                     rx="2"
                   />
                   <text
@@ -527,7 +527,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                   </text>
                   <path
                     d="M -36 14 L 38 14 L 42 9 L 42 -14 L 38 -16 L 38 13"
-                    fill="#355d5b"
+                    fill="#202d5f"
                   />
                 </g>
               </motion.g>
@@ -557,13 +557,13 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                   depth={5.24}
                   z={118}
                   height={12}
-                  fill="#9eb8ac"
-                  left="#829e91"
-                  right="#6d8b7f"
+                  fill="#7d94ec"
+                  left="#526bca"
+                  right="#3047b9"
                 />
                 <polygon
                   points={plane(0.1, 0.08, 7.82, 4.82, 131)}
-                  fill="#b9cabc"
+                  fill="#a9b8f4"
                 />
                 {[1.75, 3.45].map((y) => (
                   <line
@@ -572,7 +572,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                     y1={point(0.12, y, 132)[1]}
                     x2={point(7.9, y, 132)[0]}
                     y2={point(7.9, y, 132)[1]}
-                    stroke="#7e9b8d"
+                    stroke="#283783"
                     strokeOpacity=".65"
                     strokeWidth="1.2"
                   />
@@ -582,7 +582,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                   y1={point(4, 0.12, 132)[1]}
                   x2={point(4, 4.84, 132)[0]}
                   y2={point(4, 4.84, 132)[1]}
-                  stroke="#7e9b8d"
+                  stroke="#283783"
                   strokeOpacity=".65"
                   strokeWidth="1.2"
                 />

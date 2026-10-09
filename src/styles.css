@@ -14,7 +14,7 @@
   font-weight: 400;
   --mono: "IBM Plex Mono", monospace;
   --ink: #232a45;
-  --blue: #4a55db;
+  --blue: #304de8;
   --paper: #f3f0e8;
 }
 * {
@@ -332,7 +332,7 @@ img {
 .personal-hero {
   padding-top: 72px;
   overflow: hidden;
-  background: radial-gradient(ellipse at 75% 35%, #e0ded400, #f3f0e8 72%);
+  background: radial-gradient(ellipse at 75% 35%, #f1f4ff, #dce7ff 72%);
   min-height: 100svh;
 }
 .hero-grid {
@@ -701,8 +701,8 @@ img {
   flex-shrink: 0;
 }
 .origins-chapter {
-  background: #e8e1d5;
-  color: #3f3b35;
+  background: #f8b48c;
+  color: #432c25;
   overflow: hidden;
 }
 .origins-heading {
@@ -2133,3 +2133,14 @@ html[data-language="en"] .rail-stop-label {
 .archive-chapter {
   overflow: hidden;
 }
+
+/* Each chapter has its own surface and ink pair. */
+.personal-hero .identity-paper, .personal-hero .identity-tabs button[aria-selected="true"] { background: #304de8; }
+.personal-hero .identity-paper:after { background: linear-gradient(45deg, #2034a3, #7088ff 50%, #dce7ff 50%); }
+.personal-hero .hero-location { color: #79503e; }
+.origins-chapter .origins-heading h2 span { color: #8a3a27; }
+.origins-chapter .origins-heading > p, .origins-chapter .chapter-kicker { color: #674337; }
+.origins-chapter .origin-record p, .origins-chapter .origin-record small { color: #674337; }
+.origins-chapter .origin-record > span { color: #8a3a27; }
+.mask-connection-node-6.is-current { border-left-color: #c24725; }
+.mask-connection-node-6.is-current strong { color: #a53820; }

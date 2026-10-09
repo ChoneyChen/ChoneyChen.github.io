@@ -180,7 +180,7 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
     >
       <div className="chapter-inner mask-inner">
         <header className="mask-heading">
-          <p className="chapter-kicker">05 / BUILDING A SYSTEM</p>
+          <p className="chapter-kicker">06 / BUILDING A SYSTEM</p>
           <p className="mask-eyebrow">
             {t(
               "智能光疗面罩 · MEC202 · 2026",
@@ -240,7 +240,7 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
                         refY="3"
                         orient="auto"
                       >
-                        <path d="M0 0L6 3L0 6" fill="#c2b5a6" />
+                        <path d="M0 0L6 3L0 6" fill="#9eafd2" />
                       </marker>
                     </defs>
                     {[

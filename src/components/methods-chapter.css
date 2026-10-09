@@ -1,11 +1,16 @@
 .methods-chapter {
-  background: #e9e5d9;
-  color: #393d39;
+  background: #b9dde7;
+  color: #163a52;
   overflow: hidden;
 }
 .methods-inner {
   padding-top: 75px;
   padding-bottom: 90px;
+}
+.methods-next {
+  margin-top: 28px;
+  color: #285baf;
+  font-size: 11px;
 }
 .methods-heading {
   display: flex;
@@ -15,7 +20,7 @@
   margin-bottom: 38px;
 }
 .methods-heading .chapter-kicker {
-  color: #80847c;
+  color: #36576b;
   margin-bottom: 20px;
 }
 .methods-heading h2 {
@@ -28,7 +33,7 @@
 .methods-heading h2 span {
   display: block;
   font-family: "Kaiti SC", "STKaiti", "KaiTi", serif;
-  color: #6c83a0;
+  color: #285baf;
 }
 .methods-title-scribble {
   display: block;
@@ -38,31 +43,31 @@
 }
 .methods-title-scribble path {
   fill: none;
-  stroke: #6c83a066;
+  stroke: #285baf66;
   stroke-width: 1.2;
   stroke-linecap: round;
 }
 .methods-heading > p {
-  color: #7f857c;
+  color: #36576b;
   font-size: 12px;
   line-height: 1.9;
   margin: 0 0 4px;
 }
 .methods-notebook {
   position: relative;
-  background: #f7f2e6;
+  background: #fff6df;
   padding: 25px 35px 17px;
   border-radius: 2px 2px 8px 2px;
   box-shadow:
-    2px 6px 16px #514e3820,
-    1px 1px 0 #d4cfbf;
+    2px 6px 16px #163a5220,
+    1px 1px 0 #bdc5bd;
 }
 .methods-notebook::before {
   content: "";
   position: absolute;
   width: 83px;
   height: 19px;
-  background: #d2c6a17d;
+  background: #dcbf777d;
   top: -9px;
   left: 42px;
   transform: rotate(-3deg);
@@ -74,7 +79,7 @@
   left: 24px;
   top: 62px;
   bottom: 46px;
-  border-left: 1px solid #b778661c;
+  border-left: 1px solid #c04e351c;
   pointer-events: none;
 }
 .methods-paper-top {
@@ -82,15 +87,15 @@
   justify-content: space-between;
   gap: 15px;
   padding-bottom: 14px;
-  border-bottom: 1px solid #7c837922;
-  color: #929487;
+  border-bottom: 1px solid #36576b22;
+  color: #526459;
   font:
     9px "IBM Plex Mono",
     monospace;
 }
 .methods-paper-top span:last-child {
   font: 10px sans-serif;
-  color: #848d81;
+  color: #36576b;
 }
 .methods-illustration {
   margin: 6px 0 10px;
@@ -104,13 +109,13 @@
   display: none;
 }
 .methods-ground {
-  stroke: #848d8155;
+  stroke: #36576b55;
   fill: none;
   stroke-width: 1;
   stroke-linecap: round;
 }
 .methods-station-props {
-  stroke: #6d786b;
+  stroke: #315946;
   stroke-width: 1.7;
   fill: none;
   stroke-linecap: round;
@@ -121,30 +126,30 @@
   transition: none;
 }
 .methods-station-props .methods-drawn-paper {
-  fill: #e8ebde;
-  stroke: #858f7b;
+  fill: #edf2da;
+  stroke: #526459;
 }
 .methods-station-props text {
-  fill: #6b7d69;
+  fill: #315946;
   stroke: none;
   font:
     9px "IBM Plex Mono",
     monospace;
 }
 .methods-check-mark {
-  stroke: #8caa70;
+  stroke: #7eaa50;
   stroke-width: 3;
 }
 .methods-handoff {
-  fill: #d7c4d8;
+  fill: #deb9e1;
 }
 .methods-success-rays {
-  stroke: #a77d64;
+  stroke: #ad5636;
   stroke-width: 1.5;
 }
 .methods-hand-lines {
   fill: none;
-  stroke: #454b44;
+  stroke: #163a52;
   stroke-width: 2.2;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -157,17 +162,17 @@
   stroke-width: 1;
 }
 .methods-magnifier {
-  stroke: #6c83a0;
+  stroke: #285baf;
   stroke-width: 2;
 }
 .methods-magnifier circle {
-  fill: #d4e0e752;
+  fill: #c5d8f252;
 }
 .methods-scene-labels {
   font:
     9px "IBM Plex Mono",
     monospace;
-  fill: #939a8a;
+  fill: #526459;
 }
 .methods-steps {
   display: grid;
@@ -187,7 +192,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #85877b;
+  color: #526459;
   min-width: 0;
   touch-action: pan-y;
 }
@@ -213,23 +218,23 @@
   pointer-events: none;
 }
 .methods-steps button svg path {
-  fill: #e9e7d930;
-  stroke: #89917c66;
+  fill: #edf2da30;
+  stroke: #52645966;
   stroke-width: 1.2;
 }
 .methods-steps button.is-selected {
-  color: #3f564a;
+  color: #315946;
 }
 .methods-steps button.is-selected svg path {
-  stroke: #637a61;
-  fill: #d9e1cf33;
+  stroke: #315946;
+  fill: #dfebc633;
 }
 .methods-steps button:focus-visible {
-  outline: 2px solid #6c83a0;
+  outline: 2px solid #285baf;
   outline-offset: 3px;
 }
 .methods-evidence {
-  border-top: 1px solid #7c837922;
+  border-top: 1px solid #36576b22;
   padding-top: 26px;
   padding-bottom: 27px;
   min-height: 232px;
@@ -256,13 +261,13 @@
   font:
     9px "IBM Plex Mono",
     monospace;
-  color: #99988a;
+  color: #526459;
   line-height: 1.8;
 }
 .methods-evidence-source > .methods-evidence-role {
   font-family: inherit;
   font-size: 10px;
-  color: #808778;
+  color: #36576b;
   margin-top: 6px;
 }
 .methods-evidence-source > a {
@@ -270,7 +275,7 @@
   align-items: center;
   gap: 5px;
   font-size: 10px;
-  color: #6c83a0;
+  color: #285baf;
   text-decoration: none;
   margin-top: 17px;
 }
@@ -287,7 +292,7 @@
   margin: 0 0 11px;
 }
 .methods-evidence-copy > .methods-evidence-detail {
-  color: #898d7f;
+  color: #36576b;
   font-size: 11px;
   line-height: 1.85;
 }
@@ -296,10 +301,10 @@
   justify-content: space-between;
   gap: 12px;
   padding-top: 12px;
-  border-top: 1px solid #7c837915;
+  border-top: 1px solid #36576b15;
   font-size: 8px;
   line-height: 1.7;
-  color: #b0af9e;
+  color: #6d7972;
 }
 .methods-paper-foot > span:last-child {
   font-family: "IBM Plex Mono", monospace;

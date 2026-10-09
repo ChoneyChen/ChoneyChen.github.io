@@ -34,7 +34,7 @@ const makeToolFiles = (t: Translate) => [
       "我的主要工作是 Qwen 训练与实验分析；团队 Cosmos 指标另行署明。",
       "My main contributions were Qwen training and experiment analysis. Cosmos team results are attributed separately.",
     ),
-    color: "#235757",
+    color: "#2347AA",
   },
   {
     name: "MATLAB / EEG",
@@ -56,7 +56,7 @@ const makeToolFiles = (t: Translate) => [
       "这些是特定课程实验，不推广为诊断模型表现。",
       "These are specific course experiments, without claims about diagnostic model performance.",
     ),
-    color: "#65767a",
+    color: "#15514D",
   },
   {
     name: t("FastAPI / 嵌入式", "FastAPI / embedded"),
@@ -81,7 +81,7 @@ const makeToolFiles = (t: Translate) => [
       "这里记录我的工具应用和团队工作，不是设备性能或临床效果声明。",
       "This records my tool use and team contribution, without claims about device performance or clinical outcomes.",
     ),
-    color: "#846957",
+    color: "#B63D32",
   },
   {
     name: "Document AI",
@@ -103,7 +103,7 @@ const makeToolFiles = (t: Translate) => [
       "模块已在工程中整合，真实质量评测和完整发布闭环仍需推进。",
       "The modules have been integrated into the engineering workflow. Evaluation on real data and the complete release process remain in progress.",
     ),
-    color: "#45695b",
+    color: "#6C183C",
   },
   {
     name: "SUPS / SVL",
@@ -129,7 +129,7 @@ const makeToolFiles = (t: Translate) => [
       "不是从零开发模拟器；完整数据规模和公开数据集发布尚未确认。",
       "This extends an existing simulator. The full dataset scale and public dataset release have not been confirmed.",
     ),
-    color: "#4e626b",
+    color: "#254CC7",
   },
   {
     name: t("Python / 统计", "Python / statistics"),
@@ -155,7 +155,7 @@ const makeToolFiles = (t: Translate) => [
       "保留方法与工作内容，不补写缺少可靠记录的预测精度。",
       "The methods and work are documented. Prediction accuracy is omitted where reliable records are unavailable.",
     ),
-    color: "#827f70",
+    color: "#F2D169",
   },
 ];
 type ToolFile = ReturnType<typeof makeToolFiles>[number];
@@ -174,11 +174,49 @@ function paintBookCover(
   file: ToolFile,
 ) {
   const context = surface.getContext("2d")!;
-  context.fillStyle = "#e4e3da";
+  const coverColors = [
+    {
+      paper: "#FFF4D7",
+      ink: "#2347AA",
+      grid: "#2347AA26",
+      footerInk: "#FFF4D7",
+    },
+    {
+      paper: "#F2D169",
+      ink: "#103338",
+      grid: "#10333826",
+      footerInk: "#FFF4D7",
+    },
+    {
+      paper: "#2347AA",
+      ink: "#FFF4D7",
+      grid: "#FFF4D726",
+      footerInk: "#FFF4D7",
+    },
+    {
+      paper: "#DDF3E4",
+      ink: "#6C183C",
+      grid: "#6C183C26",
+      footerInk: "#FFF4D7",
+    },
+    {
+      paper: "#F2D169",
+      ink: "#103338",
+      grid: "#254CC726",
+      footerInk: "#FFF4D7",
+    },
+    {
+      paper: "#103338",
+      ink: "#FFF4D7",
+      grid: "#FFF4D726",
+      footerInk: "#103338",
+    },
+  ][index];
+  context.fillStyle = coverColors.paper;
   context.fillRect(0, 0, 512, 768);
   context.fillStyle = file.color;
   context.fillRect(0, 0, 22, 768);
-  context.strokeStyle = "#c5c8bf";
+  context.strokeStyle = coverColors.grid;
   context.lineWidth = 1;
   for (let x = 62; x <= 450; x += 97) {
     context.beginPath();
@@ -186,7 +224,7 @@ function paintBookCover(
     context.lineTo(x, 580);
     context.stroke();
   }
-  context.fillStyle = file.color;
+  context.fillStyle = coverColors.ink;
   context.font = '23px "IBM Plex Mono", monospace';
   context.fillText("CHONEY / WORK FILE", 53, 66);
   context.font = '50px "Space Grotesk", sans-serif';
@@ -202,7 +240,7 @@ function paintBookCover(
   context.fillText(file.label, 52, 491, 409);
   context.fillStyle = file.color;
   context.fillRect(0, 600, 512, 168);
-  context.fillStyle = "#f0eee4";
+  context.fillStyle = coverColors.footerInk;
   context.font = '30px "Space Grotesk", "PingFang SC", sans-serif';
   context.fillText(file.action, 45, 661, 420);
   context.font = '20px "IBM Plex Mono", monospace';
@@ -295,11 +333,11 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
       const camera = new THREE.PerspectiveCamera(37, 1, 0.1, 30);
       camera.position.set(0, 1.7, 7.6);
       camera.lookAt(0, 0, 0);
-      scene.add(new THREE.HemisphereLight(0xf4f3e8, 0x184445, 2.5));
-      const key = new THREE.DirectionalLight(0xfff6e6, 3.2);
+      scene.add(new THREE.HemisphereLight(0xfff4d7, 0x103338, 2.5));
+      const key = new THREE.DirectionalLight(0xfff4d7, 3.2);
       key.position.set(-3, 5, 5);
       scene.add(key);
-      const rim = new THREE.DirectionalLight(0x71aeac, 1.5);
+      const rim = new THREE.DirectionalLight(0xffad86, 1.5);
       rim.position.set(3, 1, -4);
       scene.add(rim);
 
@@ -320,7 +358,7 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
         const texture = makeBookTexture(THREE, index, file);
         coverTextures.push(texture);
         const side = new THREE.MeshStandardMaterial({
-          color: "#d2d0c5",
+          color: "#FFF4D7",
           roughness: 0.83,
         });
         const binding = new THREE.MeshStandardMaterial({
@@ -358,7 +396,7 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
 
       const baseGeometry = new THREE.CylinderGeometry(2.2, 2.23, 0.09, 64);
       const baseMaterial = new THREE.MeshStandardMaterial({
-        color: "#b7c4bd",
+        color: "#FFF4D7",
         roughness: 0.42,
         metalness: 0.64,
       });
@@ -367,7 +405,7 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
       scene.add(base);
       const ringGeometry = new THREE.TorusGeometry(2.04, 0.011, 5, 72);
       const ringMaterial = new THREE.MeshStandardMaterial({
-        color: "#1b5555",
+        color: "#2347AA",
         roughness: 0.4,
         metalness: 0.5,
       });
@@ -389,8 +427,8 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
         64,
         64,
       );
-      gradient.addColorStop(0, "#17434435");
-      gradient.addColorStop(1, "#17434400");
+      gradient.addColorStop(0, "#10333845");
+      gradient.addColorStop(1, "#10333800");
       shadowContext.fillStyle = gradient;
       shadowContext.fillRect(0, 0, 128, 128);
       const shadowTexture = new THREE.CanvasTexture(shadowCanvas);
@@ -743,7 +781,7 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
     >
       <div className="chapter-inner tools-inner">
         <div className="tools-heading-line">
-          <p className="chapter-kicker">09 / TOOLS IN MY WORK</p>
+          <p className="chapter-kicker">10 / TOOLS IN MY WORK</p>
           <span>CHONEY CHEN’S WORKING LIBRARY</span>
         </div>
         <header className="tools-heading">

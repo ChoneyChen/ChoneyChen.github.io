@@ -155,7 +155,7 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
         <div className="chapter-inner">
           <div className="fg-heading-row">
             <p className="chapter-kicker">
-              {t("07 / 我的毕业研究", "07 / MY FINAL-YEAR RESEARCH")}
+              {t("08 / 我的毕业研究", "08 / MY FINAL-YEAR RESEARCH")}
             </p>
             <span className="fg-status">
               <span />
@@ -637,7 +637,7 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
         <div className="chapter-inner">
           <div className="fa-heading-row">
             <p className="chapter-kicker">
-              {t("08 / 团队里的持续研究", "08 / ONGOING TEAM RESEARCH")}
+              {t("09 / 团队里的持续研究", "09 / ONGOING TEAM RESEARCH")}
             </p>
             <span>{t("2026 — 至今", "2026 — present")}</span>
           </div>

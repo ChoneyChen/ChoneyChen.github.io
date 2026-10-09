@@ -32,7 +32,7 @@ const getRecords = (t: (zh: string, en: string) => string) => [
       t("场景适配", "Scene suitability"),
       t("训练可行性", "Training feasibility"),
     ],
-    color: "#b8acd9",
+    color: "#cbb1ff",
   },
   {
     label: t("训练", "Qwen"),
@@ -50,7 +50,7 @@ const getRecords = (t: (zh: string, en: string) => string) => [
       "LoRA",
       t("过程监控", "Process monitoring"),
     ],
-    color: "#d6e68e",
+    color: "#dfff57",
   },
   {
     label: t("比较", "Tune"),
@@ -68,7 +68,7 @@ const getRecords = (t: (zh: string, en: string) => string) => [
       t("图像分辨率", "Image resolution"),
       t("模型规模", "Model size"),
     ],
-    color: "#a6bfcc",
+    color: "#83d9ed",
   },
   {
     label: t("评估", "Review"),
@@ -86,7 +86,7 @@ const getRecords = (t: (zh: string, en: string) => string) => [
       t("吞吐量", "Throughput"),
       t("延迟", "Latency"),
     ],
-    color: "#d7a789",
+    color: "#ff8eab",
   },
 ];
 
@@ -154,7 +154,7 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
       <div className="chapter-inner cosmos-inner">
         <div className="cosmos-masthead">
           <p className="chapter-kicker">
-            {t("03 / 我的空间研究", "03 / MY WORK IN SPATIAL RESEARCH")}
+            {t("04 / 我的空间研究", "04 / MY WORK IN SPATIAL RESEARCH")}
           </p>
           <p className="cosmos-date">2025.12 — 2026.09</p>
         </div>
