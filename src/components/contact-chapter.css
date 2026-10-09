@@ -1,0 +1,312 @@
+.contact-chapter {
+  background: #202831;
+  color: #f5f1e7;
+  padding: 100px 0 60px;
+  overflow: hidden;
+}
+.contact-inner {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 68px;
+  align-items: center;
+}
+.contact-intro .chapter-kicker {
+  color: #c2ad89;
+}
+.contact-intro h2 {
+  font-size: clamp(40px, 4.7vw, 70px);
+  letter-spacing: -0.055em;
+  line-height: 1.15;
+  font-weight: 500;
+  margin: 38px 0 27px;
+}
+.contact-intro h2 em {
+  font-family: Georgia, "Songti SC", serif;
+  color: #d2bf9c;
+  font-weight: 400;
+}
+.contact-intro > p:not(.chapter-kicker) {
+  font-size: 13px;
+  line-height: 1.95;
+  max-width: 360px;
+  color: #aeb7bb;
+}
+.contact-signature {
+  font:
+    58px/1 "Great Vibes",
+    cursive;
+  margin-top: 38px;
+  color: #eee4cf;
+}
+.contact-signature > span {
+  display: block;
+  font: 8px/1.5 var(--mono);
+  color: #a9a08e;
+  margin-top: 8px;
+  letter-spacing: 0.16em;
+}
+.contact-postmark {
+  width: 147px;
+  height: 147px;
+  border: 1px solid #ac98715c;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 35px 0 0 135px;
+  transform: rotate(-14deg);
+  color: #b5a17c;
+  position: relative;
+}
+.contact-postmark:after {
+  content: "";
+  border: 1px solid #ac987133;
+  border-radius: 50%;
+  position: absolute;
+  inset: 7px;
+}
+.contact-postmark span {
+  font: 6px var(--mono);
+  letter-spacing: 0.07em;
+}
+.contact-postmark strong {
+  font:
+    42px/1 Georgia,
+    serif;
+  font-weight: 400;
+}
+.contact-envelope {
+  position: relative;
+  padding: 24px 18px 46px;
+  perspective: 900px;
+}
+.contact-envelope-lining {
+  position: absolute;
+  inset: 0 0 0;
+  background: repeating-linear-gradient(135deg, #8b7a5d 0 2px, #ac9671 2px 5px);
+  border-radius: 3px;
+  clip-path: polygon(0 17%, 50% 0, 100% 17%, 100% 100%, 0 100%);
+}
+.contact-letter {
+  position: relative;
+  z-index: 1;
+  padding: 27px 26px 34px;
+  background: #f5f1e7;
+  color: #28313b;
+  box-shadow: 0 8px 28px #12192245;
+}
+.contact-letter-head {
+  display: flex;
+  justify-content: space-between;
+  font: 7px var(--mono);
+  letter-spacing: 0.02em;
+  color: #8f7d61;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #b9ad9740;
+}
+.contact-channel {
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr) 20px;
+  gap: 13px;
+  align-items: center;
+  border-bottom: 1px solid #b9ad9740;
+  padding: 20px 0;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+}
+.contact-channel-kind {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: 8px var(--mono);
+  color: #8c795d;
+}
+.contact-channel > div {
+  min-width: 0;
+}
+.contact-address {
+  display: block;
+  font-size: clamp(13px, 1.32vw, 19px);
+  letter-spacing: -0.025em;
+  overflow-wrap: anywhere;
+}
+.contact-channel small {
+  display: block;
+  font: 8px/1.5 var(--mono);
+  color: #939188;
+  margin-top: 6px;
+}
+.contact-channel > svg {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  color: #8b7756;
+}
+.contact-channel:hover > svg {
+  transform: translate(3px, -3px);
+}
+.contact-channel:before {
+  content: "";
+  height: 1px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  background: #927443;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.contact-channel:hover:before,
+.contact-channel:focus-visible:before {
+  transform: scaleX(1);
+}
+.contact-wechat {
+  grid-template-columns: 82px minmax(0, 1fr) 47px;
+}
+.contact-wechat button {
+  color: #8b7756;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  padding: 6px;
+  border-radius: 4px;
+}
+.contact-wechat button:hover {
+  background: #a48c6320;
+}
+.contact-wechat button span {
+  font: 7px var(--mono);
+}
+.contact-copy-status {
+  margin: 19px 0 0;
+  font-size: 9px;
+  color: #8c7f68;
+  line-height: 1.7;
+  min-height: 30px;
+}
+.contact-envelope-front {
+  pointer-events: none;
+  position: absolute;
+  z-index: 2;
+  inset: auto 0 0;
+  height: 50px;
+  background: #bda987;
+  clip-path: polygon(0 0, 48% 15px, 100% 0, 100% 100%, 0 100%);
+  padding: 23px 22px 8px;
+  transform-origin: bottom;
+}
+.contact-envelope-front > span {
+  font: 7px var(--mono);
+  color: #5f513c;
+  letter-spacing: 0.09em;
+}
+.contact-websites {
+  grid-column: 1/-1;
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  border-top: 1px solid #bac2c020;
+  padding-top: 26px;
+}
+.contact-websites > span {
+  font: 8px var(--mono);
+  color: #ac9671;
+}
+.contact-websites a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  text-decoration: none;
+  color: #bdc4c6;
+}
+.contact-websites a:last-child {
+  margin-left: auto;
+}
+@media (max-width: 1000px) {
+  .contact-inner {
+    gap: 35px;
+  }
+  .contact-letter {
+    padding: 23px 17px 28px;
+  }
+  .contact-channel,
+  .contact-wechat {
+    grid-template-columns: 68px minmax(0, 1fr) 32px;
+    gap: 8px;
+  }
+}
+@media (max-width: 700px) {
+  .contact-chapter {
+    padding: 65px 0 42px;
+  }
+  .contact-inner {
+    display: block;
+  }
+  .contact-intro h2 {
+    font-size: 45px;
+    margin: 26px 0 22px;
+  }
+  .contact-intro > p:not(.chapter-kicker) {
+    font-size: 12px;
+  }
+  .contact-signature {
+    font-size: 52px;
+  }
+  .contact-postmark {
+    position: absolute;
+    width: 103px;
+    height: 103px;
+    right: 35px;
+    margin-top: -96px;
+  }
+  .contact-postmark strong {
+    font-size: 29px;
+  }
+  .contact-postmark span {
+    font-size: 5px;
+  }
+  .contact-envelope {
+    margin-top: 45px;
+    padding: 20px 12px 43px;
+  }
+  .contact-letter-head {
+    font-size: 6px;
+    gap: 5px;
+  }
+  .contact-address {
+    font-size: 14px;
+  }
+  .contact-channel-kind {
+    font-size: 7px;
+    gap: 4px;
+  }
+  .contact-channel-kind svg {
+    width: 10px;
+  }
+  .contact-channel small {
+    font-size: 7px;
+  }
+  .contact-channel,
+  .contact-wechat {
+    grid-template-columns: 60px minmax(0, 1fr) 24px;
+    gap: 7px;
+    padding: 18px 0;
+  }
+  .contact-wechat button {
+    padding: 0;
+  }
+  .contact-websites {
+    margin-top: 38px;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .contact-websites a:last-child {
+    margin-left: 0;
+    width: 100%;
+    padding-top: 6px;
+  }
+}

@@ -1,58 +1,40 @@
-# 陈天一 · Choney Chen
+# Choney Chen · Tianyi Chen
 
-个人主页的源代码。以可探索的物件呈现研究、软件与软硬件项目，让像素、玻璃、形变和文字在同一次交互中相互转换。
+A personal homepage about my work, built around a continuous reading thread and thirteen independently designed chapters. Pixel research cartridges, isometric simulation layers, a two-dimensional systems diagram, document files, glass research blueprints, overprinted perspectives, hand-drawn working notes, original 3D tool books, and a cubist collage each reveal real experiences through different interactions.
 
-访问：[Vercel](https://choney-between-states.vercel.app) · [GitHub Pages](https://choneychen.github.io/)
+Visit: [Vercel](https://choney-between-states.vercel.app) · [GitHub Pages](https://choneychen.github.io/)
 
-网站使用 Vite、React、Three.js 与 Motion 免费核心构建。Three.js 负责原创场景及材质，Motion 负责界面转换；图标和字体的完整许可见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。同一份许可随静态网站分发到 `/project-assets/third-party-notices.txt`。
+English is the default on a first visit. The EN/ZH control switches the complete content and retains the current reading selections. Language preferences are stored locally. The contact chapter includes WeChat, phone, email, and GitHub links supplied for publication by the author.
 
-## 本地开发
+## Development
 
-推荐 Node.js 24 与 npm。
+Node.js 24 and npm are recommended.
 
 ```sh
-npm install
+npm ci
 npm run dev
-```
-
-生成并检查静态网站：
-
-```sh
 npm run build
 npm run preview
 ```
 
-构建结果位于 `dist/`。生产和 CI 使用已提交的 `package-lock.json`，可通过 `npm ci` 重现依赖。
+The static build is generated in `dist/`. React and Motion power the interface and chapter-specific entrance animations. Three.js is loaded on demand for the original research-tool books. Native scrolling, chapter deep links, keyboard alternatives, and reduced-motion settings keep the information accessible.
 
-## 内容与项目素材
+## Content and assets
 
-经历和项目介绍来自本人提供的资料及可核查的公开项目。进行中的研究、工程原型和已完成工作分别按实际状态描述。
+Chinese source content is in `src/data/content.ts`; the matching English content is in `src/data/content.en.ts`. Chapter prose is translated through `src/i18n.tsx`. Preserve the distinction between personal contributions, team results, engineering prototypes, and ongoing research when editing either language.
 
-网站中的交互物件、粒子、数据结构和实验场景属于视觉示意，不是设备实拍、实验结果图或产品运行截图。面罩原型 PNG 直接从团队项目公开的 [真实 shell STL](https://github.com/ChoneyChen/XJTLU_MEC202_25-26_IND3G2_Vision-Model-Based-Intelligent-Phototherapy-Mask-System/blob/main/3d_model/Mask/phototherapy_mask_shell_v4_0_thin.stl) 生成；正面、斜面和内侧是同一机械设计原型的不同视角，来源记录位于 [public/project-assets/render-provenance.json](public/project-assets/render-provenance.json)。
+Diagrams, paper layouts, character sketches, geometric collage fragments, and tool-book models are original visual explanations. They are not experimental outputs or equipment photographs. No phototherapy-mask 3D model or rendered model image is displayed or included in the published assets.
 
-更新项目介绍时保留本人角色、团队背景、工作状态和可公开来源。公开资源目录只放已选用的展示素材。
+Fonts are self-hosted. Complete licenses for production dependencies and fonts are preserved in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md), also distributed at `/project-assets/third-party-notices.txt`. Private research notes, source attachments, account configuration, and retired assets are excluded from publication.
 
-## Vercel 部署
+## Vercel
 
-当前项目已通过 Vercel CLI 发布。更新时执行 `vercel deploy --prod`；生产主域名公开，预览部署保留身份验证。Vercel 账户的 GitHub 登录连接尚未完成，因此当前 main 推送不会自动触发 Vercel 部署。
+The project is published through Vercel CLI. To update production, run `vercel deploy --prod`. The production domain is public; preview deployments retain authentication. GitHub integration is not currently connected, so pushing `main` does not automatically deploy Vercel.
 
-在 Vercel 导入 [ChoneyChen/ChoneyChen.github.io](https://github.com/ChoneyChen/ChoneyChen.github.io)，使用以下设置：
+When connecting [ChoneyChen/ChoneyChen.github.io](https://github.com/ChoneyChen/ChoneyChen.github.io), use Vite, repository root, `npm ci`, `npm run build`, output directory `dist`, and Node.js 24.x. See [Vercel’s Vite documentation](https://vercel.com/docs/frameworks/frontend/vite).
 
-| 设置 | 值 |
-| --- | --- |
-| Framework Preset | Vite |
-| Root Directory | 仓库根目录 |
-| Install Command | `npm ci` |
-| Build Command | `npm run build` |
-| Output Directory | `dist` |
-| Node.js | 24.x |
+## GitHub Pages
 
-Vercel 可自动识别 Vite。连接仓库后，预览与生产部署按 Vercel 项目所选分支配置运行。参考 [Vercel 的 Vite 文档](https://vercel.com/docs/frameworks/frontend/vite)。
+`main` contains source; `gh-pages` contains the static `dist/` build. Pages is configured with **Deploy from a branch → gh-pages → / (root)**. This is a user homepage, so Vite uses the root path.
 
-## GitHub Pages 部署
-
-当前将 `dist/` 构建产物发布到 `gh-pages` 分支，由 GitHub Pages 托管；`main` 保存网站源码。
-
-仓库 **Settings → Pages → Build and deployment** 使用 **Deploy from a branch → gh-pages → / (root)**。本仓库是用户主页仓库，地址为 `https://choneychen.github.io/`，使用根路径；如果以后改为其他仓库名下的项目页面，需要同步调整 Vite `base`。
-
-已准备可选的 [GitHub Actions 工作流模板](deployment/github-actions/deploy-pages.yml)。GitHub 授权允许管理工作流后，将模板放入 `.github/workflows/deploy-pages.yml` 并将 Pages Source 改为 GitHub Actions，即可在 main 更新时自动构建。当前授权缺少 workflow 权限，模板尚未启用。参考 [Vite 静态部署指南](https://vite.dev/guide/static-deploy.html)。
+An optional [GitHub Actions template](deployment/github-actions/deploy-pages.yml) is included. Current GitHub authentication lacks workflow permission, so the template has not been enabled. With that permission, copy it to `.github/workflows/deploy-pages.yml` and select GitHub Actions in Pages settings. See [Vite’s static deployment guide](https://vite.dev/guide/static-deploy.html).

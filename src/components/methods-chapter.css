@@ -1,0 +1,422 @@
+.methods-chapter {
+  background: #e9e5d9;
+  color: #393d39;
+  overflow: hidden;
+}
+.methods-inner {
+  padding-top: 75px;
+  padding-bottom: 90px;
+}
+.methods-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 40px;
+  margin-bottom: 38px;
+}
+.methods-heading .chapter-kicker {
+  color: #80847c;
+  margin-bottom: 20px;
+}
+.methods-heading h2 {
+  margin: 0;
+  font-size: clamp(35px, 4.7vw, 61px);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -0.055em;
+}
+.methods-heading h2 span {
+  display: block;
+  font-family: "Kaiti SC", "STKaiti", "KaiTi", serif;
+  color: #6c83a0;
+}
+.methods-title-scribble {
+  display: block;
+  width: 230px;
+  height: 20px;
+  margin-top: 1px;
+}
+.methods-title-scribble path {
+  fill: none;
+  stroke: #6c83a066;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+}
+.methods-heading > p {
+  color: #7f857c;
+  font-size: 12px;
+  line-height: 1.9;
+  margin: 0 0 4px;
+}
+.methods-notebook {
+  position: relative;
+  background: #f7f2e6;
+  padding: 25px 35px 17px;
+  border-radius: 2px 2px 8px 2px;
+  box-shadow:
+    2px 6px 16px #514e3820,
+    1px 1px 0 #d4cfbf;
+}
+.methods-notebook::before {
+  content: "";
+  position: absolute;
+  width: 83px;
+  height: 19px;
+  background: #d2c6a17d;
+  top: -9px;
+  left: 42px;
+  transform: rotate(-3deg);
+  clip-path: polygon(1% 10%, 99% 0, 96% 96%, 0 100%);
+}
+.methods-notebook::after {
+  content: "";
+  position: absolute;
+  left: 24px;
+  top: 62px;
+  bottom: 46px;
+  border-left: 1px solid #b778661c;
+  pointer-events: none;
+}
+.methods-paper-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #7c837922;
+  color: #929487;
+  font:
+    9px "IBM Plex Mono",
+    monospace;
+}
+.methods-paper-top span:last-child {
+  font: 10px sans-serif;
+  color: #848d81;
+}
+.methods-illustration {
+  margin: 6px 0 10px;
+}
+.methods-scene {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+.methods-scene-mobile {
+  display: none;
+}
+.methods-ground {
+  stroke: #848d8155;
+  fill: none;
+  stroke-width: 1;
+  stroke-linecap: round;
+}
+.methods-station-props {
+  stroke: #6d786b;
+  stroke-width: 1.7;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: opacity 0.2s;
+}
+.methods-notebook[data-still="true"] .methods-station-props {
+  transition: none;
+}
+.methods-station-props .methods-drawn-paper {
+  fill: #e8ebde;
+  stroke: #858f7b;
+}
+.methods-station-props text {
+  fill: #6b7d69;
+  stroke: none;
+  font:
+    9px "IBM Plex Mono",
+    monospace;
+}
+.methods-check-mark {
+  stroke: #8caa70;
+  stroke-width: 3;
+}
+.methods-handoff {
+  fill: #d7c4d8;
+}
+.methods-success-rays {
+  stroke: #a77d64;
+  stroke-width: 1.5;
+}
+.methods-hand-lines {
+  fill: none;
+  stroke: #454b44;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.methods-actor {
+  transform-origin: 0 55px;
+}
+.methods-secondary-line {
+  opacity: 0.2;
+  stroke-width: 1;
+}
+.methods-magnifier {
+  stroke: #6c83a0;
+  stroke-width: 2;
+}
+.methods-magnifier circle {
+  fill: #d4e0e752;
+}
+.methods-scene-labels {
+  font:
+    9px "IBM Plex Mono",
+    monospace;
+  fill: #939a8a;
+}
+.methods-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding-bottom: 29px;
+}
+.methods-step-writing {
+  min-width: 0;
+}
+.methods-steps button {
+  background: transparent;
+  border: 0;
+  padding: 16px 15px;
+  position: relative;
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #85877b;
+  min-width: 0;
+  touch-action: pan-y;
+}
+.methods-step-writing > button {
+  width: 100%;
+}
+.methods-steps button > span {
+  font:
+    9px "IBM Plex Mono",
+    monospace;
+}
+.methods-steps button strong {
+  font-family: "Kaiti SC", "STKaiti", "KaiTi", serif;
+  font-size: 16px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+.methods-steps button svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.methods-steps button svg path {
+  fill: #e9e7d930;
+  stroke: #89917c66;
+  stroke-width: 1.2;
+}
+.methods-steps button.is-selected {
+  color: #3f564a;
+}
+.methods-steps button.is-selected svg path {
+  stroke: #637a61;
+  fill: #d9e1cf33;
+}
+.methods-steps button:focus-visible {
+  outline: 2px solid #6c83a0;
+  outline-offset: 3px;
+}
+.methods-evidence {
+  border-top: 1px solid #7c837922;
+  padding-top: 26px;
+  padding-bottom: 27px;
+  min-height: 232px;
+}
+.methods-evidence-grid {
+  display: grid;
+  grid-template-columns: 0.8fr 1.4fr;
+  gap: 45px;
+}
+.methods-evidence-source > p {
+  font-size: 10px;
+  margin: 0 0 14px;
+}
+.methods-evidence-source h3 {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.6;
+  margin: 0 0 10px;
+  letter-spacing: -0.025em;
+  max-width: 260px;
+}
+.methods-evidence-source > span {
+  display: block;
+  font:
+    9px "IBM Plex Mono",
+    monospace;
+  color: #99988a;
+  line-height: 1.8;
+}
+.methods-evidence-source > .methods-evidence-role {
+  font-family: inherit;
+  font-size: 10px;
+  color: #808778;
+  margin-top: 6px;
+}
+.methods-evidence-source > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  color: #6c83a0;
+  text-decoration: none;
+  margin-top: 17px;
+}
+.methods-evidence-copy h4 {
+  font-size: 24px;
+  line-height: 1.45;
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  margin: 0 0 13px;
+}
+.methods-evidence-copy > p {
+  font-size: 14px;
+  line-height: 1.95;
+  margin: 0 0 11px;
+}
+.methods-evidence-copy > .methods-evidence-detail {
+  color: #898d7f;
+  font-size: 11px;
+  line-height: 1.85;
+}
+.methods-paper-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #7c837915;
+  font-size: 8px;
+  line-height: 1.7;
+  color: #b0af9e;
+}
+.methods-paper-foot > span:last-child {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 7px;
+  white-space: nowrap;
+}
+.methods-chapter.is-english .methods-heading h2 span {
+  font-family: Georgia, serif;
+  font-style: italic;
+  letter-spacing: -0.055em;
+}
+.methods-chapter.is-english .methods-steps button strong {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: 16px;
+}
+@media (max-width: 760px) {
+  .methods-inner {
+    padding-top: 58px;
+    padding-bottom: 67px;
+  }
+  .methods-heading {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+    margin-bottom: 30px;
+  }
+  .methods-heading h2 {
+    font-size: 40px;
+  }
+  .methods-heading .chapter-kicker {
+    margin-bottom: 16px;
+  }
+  .methods-heading > p {
+    font-size: 12px;
+  }
+  .methods-heading > p br {
+    display: none;
+  }
+  .methods-notebook {
+    padding: 22px 18px 15px;
+  }
+  .methods-notebook::after {
+    left: 10px;
+  }
+  .methods-paper-top {
+    font-size: 7px;
+    gap: 9px;
+    align-items: center;
+  }
+  .methods-paper-top span:last-child {
+    font-size: 8px;
+  }
+  .methods-scene-desktop {
+    display: none;
+  }
+  .methods-scene-mobile {
+    display: block;
+    height: 222px;
+    margin-top: 12px;
+  }
+  .methods-illustration {
+    margin-bottom: 16px;
+  }
+  .methods-steps {
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+    padding-bottom: 21px;
+  }
+  .methods-steps button {
+    padding: 13px 9px;
+    gap: 6px;
+  }
+  .methods-steps button strong {
+    font-size: 15px;
+  }
+  .methods-chapter.is-english .methods-steps button strong {
+    font-size: 14px;
+  }
+  .methods-steps button > span {
+    font-size: 8px;
+  }
+  .methods-evidence {
+    min-height: 370px;
+    padding-top: 22px;
+    padding-bottom: 23px;
+  }
+  .methods-evidence-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .methods-evidence-source > p {
+    font-size: 9px;
+    margin-bottom: 9px;
+  }
+  .methods-evidence-source h3 {
+    font-size: 19px;
+    max-width: none;
+  }
+  .methods-evidence-source > .methods-evidence-role {
+    font-size: 10px;
+  }
+  .methods-evidence-source > a {
+    margin-top: 11px;
+  }
+  .methods-evidence-copy h4 {
+    font-size: 22px;
+  }
+  .methods-evidence-copy > p {
+    font-size: 13px;
+  }
+  .methods-evidence-copy > .methods-evidence-detail {
+    font-size: 11px;
+  }
+  .methods-paper-foot {
+    flex-direction: column;
+    gap: 6px;
+    font-size: 8px;
+  }
+}

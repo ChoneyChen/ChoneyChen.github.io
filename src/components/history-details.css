@@ -1,0 +1,548 @@
+.history-steampunk {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  padding: 26px 24px 18px;
+  color: #e4c9a3;
+  background: #2e2420;
+  background-image: linear-gradient(
+    140deg,
+    #4f3b2c 0%,
+    #30251f 30%,
+    #241e1c 72%,
+    #443128 100%
+  );
+  border: 1px solid #947152;
+  box-shadow:
+    inset 0 0 0 4px #2d231e,
+    inset 0 0 0 5px #8b664331,
+    0 7px 15px #45301f0c;
+  container-type: inline-size;
+}
+.history-steampunk .steam-rivet {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border: 1px solid #b68b58;
+  border-radius: 50%;
+  background: linear-gradient(140deg, #cba475, #6c4a31);
+  box-shadow: 0 1px 1px #100b0b;
+}
+.history-steampunk .steam-rivet::after {
+  content: "";
+  display: block;
+  height: 1px;
+  width: 3px;
+  background: #322015;
+  transform: rotate(-35deg);
+  margin-top: 1px;
+}
+.history-steampunk .steam-rivet-one {
+  top: 10px;
+  left: 10px;
+}
+.history-steampunk .steam-rivet-two {
+  top: 10px;
+  right: 10px;
+}
+.history-steampunk .steam-rivet-three {
+  bottom: 10px;
+  left: 10px;
+}
+.history-steampunk .steam-rivet-four {
+  bottom: 10px;
+  right: 10px;
+}
+.history-steampunk .steam-header > span {
+  display: block;
+  font:
+    8px "IBM Plex Mono",
+    monospace;
+  color: #a4825e;
+  letter-spacing: 0.09em;
+}
+.history-steampunk .steam-title {
+  margin: 12px 0 9px;
+  font-size: 23px;
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  color: #ebd5b6;
+}
+.history-steampunk .steam-company {
+  margin: 0;
+  font-size: 10px;
+  line-height: 1.7;
+  color: #bd9c79;
+}
+.history-steampunk .steam-role {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 15px;
+  padding: 14px 0 17px;
+  font:
+    8px/1.6 "IBM Plex Mono",
+    monospace;
+  color: #ac8c6a;
+  border-bottom: 1px solid #9e794747;
+}
+.history-steampunk .steam-console {
+  margin-top: 19px;
+}
+.history-steampunk .steam-gear-track {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  position: relative;
+  gap: 14px;
+}
+.history-steampunk .steam-track-line {
+  position: absolute;
+  top: 32px;
+  left: 17%;
+  right: 17%;
+  height: 1px;
+  background: #8c69454f;
+}
+.history-steampunk .steam-gear-track button {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0 15px;
+  font: inherit;
+  background: none;
+  border: 0;
+  color: #9d7650;
+  cursor: pointer;
+}
+.history-steampunk .steam-gear {
+  display: block;
+  width: 64px;
+  height: 64px;
+  color: #977550;
+}
+.history-steampunk .steam-gear-track button[aria-pressed="true"] .steam-gear {
+  color: #d3ad77;
+}
+.history-steampunk .steam-gear svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.history-steampunk .steam-gear-number {
+  position: absolute;
+  top: 26px;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  text-align: center;
+  color: #e6c594;
+  font:
+    7px "IBM Plex Mono",
+    monospace;
+}
+.history-steampunk .steam-gear-track button strong {
+  font-weight: 400;
+  font-size: 10px;
+  margin-top: 10px;
+  color: #bd9871;
+}
+.history-steampunk .steam-gear-track button[aria-pressed="true"] strong {
+  color: #e2c395;
+}
+.history-steampunk .steam-gear-track button[aria-pressed="true"]::after {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  width: 22px;
+  height: 2px;
+  background: #be9965;
+}
+.history-steampunk .steam-gear-track button:focus-visible {
+  outline: 1px solid #d3ad77;
+  outline-offset: 4px;
+}
+.history-steampunk .steam-duty-window {
+  position: relative;
+  overflow: hidden;
+  min-height: 217px;
+  margin-top: 9px;
+  border: 1px solid #80603e73;
+  background: #251d19;
+  box-shadow: inset 0 2px 9px #130e0a55;
+}
+.history-steampunk .steam-duty-plate {
+  padding: 21px 18px;
+  background: linear-gradient(155deg, #75523812, #4d352119);
+}
+.history-steampunk .steam-duty-index {
+  display: block;
+  font:
+    8px "IBM Plex Mono",
+    monospace;
+  letter-spacing: 0.1em;
+  color: #a27e57;
+}
+.history-steampunk .steam-duty-plate h4 {
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: #e3c5a1;
+  margin: 12px 0 0;
+}
+.history-steampunk .steam-duty-plate p {
+  font-size: 12px;
+  line-height: 1.95;
+  color: #ba9b7c;
+  margin: 14px 0 0;
+}
+.history-steampunk .steam-duty-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-top: 17px;
+}
+.history-steampunk .steam-duty-tags span {
+  color: #93765d;
+  font:
+    8px/1.5 "IBM Plex Mono",
+    monospace;
+  border-bottom: 1px solid #80603e67;
+  padding-bottom: 3px;
+}
+.history-steampunk .steam-bottom {
+  display: flex;
+  gap: 15px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 21px 0 11px;
+  border-bottom: 1px solid #8c67403c;
+}
+.history-steampunk .steam-signature {
+  font-family: "Great Vibes", "Brush Script MT", cursive;
+  font-size: 25px;
+  line-height: 1.2;
+  color: #bb9466;
+  transform: rotate(-3deg);
+}
+.history-steampunk .steam-bottom > span:last-child {
+  font:
+    7px "IBM Plex Mono",
+    monospace;
+  color: #8b6c50;
+}
+.history-steampunk .steam-boundary {
+  font-size: 8px;
+  line-height: 1.85;
+  color: #9c7d60;
+  margin: 11px 0 0;
+}
+.history-steampunk .steam-duty-tags span,
+.history-steampunk .steam-boundary {
+  color: #b59472;
+}
+
+.history-roman {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  color: #624d3b;
+  background: #f2e9d6;
+  background-image:
+    linear-gradient(
+      144deg,
+      transparent 0%,
+      transparent 42%,
+      #cdbda515 42.2%,
+      transparent 42.5%
+    ),
+    linear-gradient(
+      32deg,
+      transparent 0%,
+      transparent 70%,
+      #cdbda51c 70.2%,
+      transparent 70.8%
+    );
+  border: 1px solid #c7b49680;
+  padding: 23px 28px 18px;
+  box-shadow:
+    inset 0 0 0 5px #f2e9d6,
+    inset 0 0 0 6px #cab9974d;
+  container-type: inline-size;
+}
+.history-roman .roman-topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  font:
+    8px "IBM Plex Mono",
+    monospace;
+  letter-spacing: 0.07em;
+  color: #ab8a64;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #bda48059;
+}
+.history-roman .roman-layout {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr);
+  gap: 25px;
+  align-items: center;
+  margin-top: 18px;
+}
+.history-roman .roman-column {
+  width: 100%;
+  align-self: center;
+}
+.history-roman .roman-column svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.history-roman .roman-column > span {
+  display: block;
+  margin-top: 8px;
+  text-align: center;
+  font:
+    7px "IBM Plex Mono",
+    monospace;
+  color: #b4a082;
+}
+.history-roman .roman-degree {
+  margin: 0;
+  font:
+    44px/0.95 Georgia,
+    "Times New Roman",
+    serif;
+  font-weight: 400;
+  color: #9a4c3f;
+  letter-spacing: -0.04em;
+  text-shadow: 0 1px 0 #fff8;
+}
+.history-roman .roman-title {
+  margin: 16px 0 4px;
+  font-size: 23px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: -0.025em;
+  color: #66513e;
+}
+.history-roman .roman-school-name {
+  margin: 0;
+  font:
+    9px/1.65 "IBM Plex Mono",
+    monospace;
+  color: #a08b6a;
+}
+.history-roman .roman-programme {
+  font-size: 12px;
+  line-height: 1.8;
+  color: #766247;
+  margin: 16px 0 0;
+}
+.history-roman .roman-programme > span {
+  font:
+    9px/1.6 "IBM Plex Mono",
+    monospace;
+  color: #9a8466;
+}
+.history-roman .roman-study-status {
+  display: flex;
+  gap: 28px;
+  margin-top: 19px;
+  padding-top: 16px;
+  border-top: 1px solid #bda48046;
+}
+.history-roman .roman-study-status > div {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.history-roman .roman-study-status span {
+  font-size: 8px;
+  color: #a79372;
+}
+.history-roman .roman-study-status strong {
+  font-size: 12px;
+  font-weight: 500;
+  color: #826247;
+  margin-top: 6px;
+}
+.history-roman .roman-study-status small {
+  font-size: 8px;
+  color: #b2997b;
+  margin-top: 4px;
+  line-height: 1.6;
+}
+.history-roman .roman-foundation {
+  font-size: 11px;
+  line-height: 1.9;
+  margin: 18px 0 0;
+  color: #9a8267;
+}
+.history-roman .roman-course-strip {
+  display: flex;
+  gap: 20px;
+  padding-top: 19px;
+  margin-top: 22px;
+  border-top: 1px solid #bda48059;
+}
+.history-roman .roman-course-strip > span {
+  flex-shrink: 0;
+  font-size: 8px;
+  line-height: 1.8;
+  color: #a48b68;
+}
+.history-roman .roman-course-strip > p {
+  font-size: 10px;
+  line-height: 1.8;
+  color: #8f785b;
+  margin: 0;
+}
+.history-roman .roman-note {
+  margin: 14px 0 0;
+  font-size: 8px;
+  line-height: 1.75;
+  color: #b8a185;
+}
+.history-roman .roman-school-name,
+.history-roman .roman-programme > span,
+.history-roman .roman-study-status span,
+.history-roman .roman-study-status small,
+.history-roman .roman-foundation,
+.history-roman .roman-course-strip > span,
+.history-roman .roman-course-strip > p,
+.history-roman .roman-note {
+  color: #806c52;
+}
+
+@container (max-width: 480px) {
+  .history-roman .roman-layout {
+    grid-template-columns: 83px minmax(0, 1fr);
+    gap: 17px;
+  }
+  .history-roman .roman-degree {
+    font-size: 35px;
+  }
+  .history-roman .roman-title {
+    font-size: 19px;
+    margin-top: 12px;
+  }
+  .history-roman .roman-study-status {
+    display: block;
+    margin-top: 14px;
+    padding-top: 13px;
+  }
+  .history-roman .roman-study-status > div + div {
+    margin-top: 13px;
+  }
+  .history-roman .roman-foundation {
+    font-size: 10px;
+  }
+  .history-roman .roman-course-strip {
+    display: block;
+  }
+  .history-roman .roman-course-strip > p {
+    margin-top: 7px;
+  }
+}
+
+@container (max-width: 270px) {
+  .history-roman .roman-layout {
+    grid-template-columns: 1fr;
+    gap: 17px;
+  }
+  .history-roman .roman-column {
+    width: 67px;
+    position: absolute;
+    top: 56px;
+    right: 18px;
+    opacity: 0.65;
+  }
+  .history-roman .roman-column > span {
+    font-size: 6px;
+  }
+  .history-roman .roman-degree {
+    max-width: calc(100% - 68px);
+  }
+  .history-roman .roman-title {
+    font-size: 18px;
+    margin-top: 17px;
+    max-width: calc(100% - 38px);
+  }
+  .history-roman .roman-school-name {
+    max-width: calc(100% - 26px);
+    font-size: 8px;
+  }
+  .history-roman .roman-programme {
+    margin-top: 25px;
+  }
+  .history-roman .roman-topline {
+    font-size: 7px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .history-steampunk .steam-title {
+    font-size: 20px;
+  }
+  .history-steampunk .steam-gear-track {
+    gap: 9px;
+  }
+  .history-steampunk .steam-gear {
+    width: 52px;
+    height: 52px;
+  }
+  .history-steampunk .steam-gear-number {
+    top: 21px;
+    font-size: 6px;
+  }
+  .history-steampunk .steam-track-line {
+    top: 26px;
+  }
+  .history-steampunk .steam-duty-plate {
+    padding: 18px 13px;
+  }
+  .history-steampunk .steam-duty-plate h4 {
+    font-size: 15px;
+  }
+  .history-steampunk .steam-duty-plate p {
+    font-size: 11px;
+  }
+  .history-steampunk .steam-duty-window {
+    min-height: 250px;
+  }
+}
+
+@media (max-width: 620px) {
+  .history-steampunk {
+    padding: 24px 18px 16px;
+  }
+  .history-steampunk .steam-title {
+    font-size: 21px;
+  }
+  .history-steampunk .steam-gear {
+    width: 58px;
+    height: 58px;
+  }
+  .history-steampunk .steam-gear-number {
+    top: 23px;
+  }
+  .history-steampunk .steam-track-line {
+    top: 29px;
+  }
+  .history-steampunk .steam-duty-plate h4 {
+    font-size: 16px;
+  }
+  .history-steampunk .steam-bottom {
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+  .history-roman {
+    padding: 21px 18px 17px;
+  }
+  .history-roman .roman-title {
+    font-size: 19px;
+  }
+  .history-roman .roman-note {
+    font-size: 7px;
+  }
+}
