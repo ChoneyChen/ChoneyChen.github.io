@@ -1,3 +1,4 @@
+import { slowMotion, slowDragRelease } from "../lib/motionTiming";
 import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
 import { useRef, useState } from "react";
 import {
@@ -265,9 +266,9 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
           whileInView={{ x: 0, opacity: 1 }}
           viewport={{ once: false, amount: 0.25 }}
           transition={
-            reduced
+            slowMotion(reduced
               ? { duration: 0 }
-              : { duration: 0.55, ease: [0.22, 1, 0.36, 1] }
+              : { duration: 0.55, ease: [0.22, 1, 0.36, 1] })
           }
         >
           <h2 id="portrait-title">
@@ -303,9 +304,9 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
                   opacity: collageReady ? 1 : 0,
                 }}
                 transition={
-                  reduced
+                  slowMotion(reduced
                     ? { duration: 0 }
-                    : { duration: 0.6, ease: [0.22, 1, 0.36, 1] }
+                    : { duration: 0.6, ease: [0.22, 1, 0.36, 1] })
                 }
               >
                 <path
@@ -368,13 +369,13 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
                     opacity: collageReady ? 1 : 0,
                   }}
                   transition={
-                    reduced
+                    slowMotion(reduced
                       ? { duration: 0 }
                       : {
                           duration: 0.68,
                           delay: (collageReady ? index : 2 - index) * 0.14,
                           ease: [0.22, 1, 0.36, 1],
-                        }
+                        })
                   }
                 >
                   <motion.button
@@ -396,11 +397,11 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
                       bottom: 24,
                     }}
                     dragElastic={0.16}
-                    dragSnapToOrigin
+                    dragSnapToOrigin dragTransition={slowDragRelease}
                     onDragStart={() => selectDirection(index)}
                     whileHover={reduced ? undefined : { scale: 1.025 }}
                     whileTap={reduced ? undefined : { scale: 0.985 }}
-                    transition={{ type: "spring", stiffness: 210, damping: 25 }}
+                    transition={slowMotion(reduced ? { duration: 0 } : { type: "spring", stiffness: 210, damping: 25 })}
                   >
                     {fragmentDrawings[index]}
                   </motion.button>
@@ -431,13 +432,13 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
                     opacity: collageReady ? 1 : 0,
                   }}
                   transition={
-                    reduced
+                    slowMotion(reduced
                       ? { duration: 0 }
                       : {
                           duration: 0.4,
                           delay: index * 0.14 + 0.2,
                           ease: [0.22, 1, 0.36, 1],
-                        }
+                        })
                   }
                 >
                   <span>{item.index}</span>
@@ -464,9 +465,9 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
             whileInView={{ x: 0, opacity: 1 }}
             viewport={{ once: false, amount: 0.2 }}
             transition={
-              reduced
+              slowMotion(reduced
                 ? { duration: 0 }
-                : { duration: 0.58, ease: [0.22, 1, 0.36, 1] }
+                : { duration: 0.58, ease: [0.22, 1, 0.36, 1] })
             }
           >
             <AnimatePresence mode="wait" initial={false}>
@@ -475,7 +476,7 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
                 initial={reduced ? false : { opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: reduced ? 0 : -8 }}
-                transition={transition}
+                transition={slowMotion(transition)}
               >
                 {opened ? <>
                 <button type="button" className="portrait-close" aria-label={t("合上个人方向", "Close personal direction")} onClick={() => setOpened(false)}><X size={18}/></button>

@@ -1,3 +1,4 @@
+import { slowMotion } from "../lib/motionTiming";
 import { useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "motion/react";
 import { ArrowUpRight, Check, Copy, Github, Mail, Phone } from "lucide-react";
@@ -82,9 +83,9 @@ export function ContactChapter({ quiet = false }: { quiet?: boolean }) {
               opacity: ready ? 1 : 0,
             }}
             transition={
-              reduced
+              slowMotion(reduced
                 ? { duration: 0 }
-                : { duration: 0.72, ease: [0.16, 1, 0.3, 1] }
+                : { duration: 0.72, ease: [0.16, 1, 0.3, 1] })
             }
           >
             <div className="contact-letter-head">
@@ -176,9 +177,9 @@ export function ContactChapter({ quiet = false }: { quiet?: boolean }) {
             initial={reduced ? false : { rotateX: -12 }}
             animate={{ rotateX: ready ? 0 : -12 }}
             transition={
-              reduced
+              slowMotion(reduced
                 ? { duration: 0 }
-                : { duration: 0.65, delay: 0.08, ease: [0.16, 1, 0.3, 1] }
+                : { duration: 0.65, delay: 0.08, ease: [0.16, 1, 0.3, 1] })
             }
           >
             <span>CHONEY / PERSONAL ADDRESS BOOK</span>

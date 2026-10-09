@@ -119,9 +119,9 @@
   box-shadow: 3px 6px 13px #17203808;
   cursor: pointer;
   transition:
-    border-color 0.3s,
-    color 0.3s,
-    box-shadow 0.3s;
+    border-color calc(0.3s * var(--motion-time-scale, 1)),
+    color calc(0.3s * var(--motion-time-scale, 1)),
+    box-shadow calc(0.3s * var(--motion-time-scale, 1));
 }
 .mask-connection-node-1 {
   left: 5%;
@@ -315,7 +315,7 @@
   color: #172038;
   text-align: left;
   cursor: pointer;
-  transition: border-color 0.3s, background-color 0.3s;
+  transition: border-color calc(0.3s * var(--motion-time-scale, 1)), background-color calc(0.3s * var(--motion-time-scale, 1));
 }
 .mask-story-step::before {
   content: "";
@@ -327,8 +327,8 @@
   background: #ccd8ee;
   border-radius: 50%;
   transition:
-    background 0.3s,
-    box-shadow 0.3s;
+    background calc(0.3s * var(--motion-time-scale, 1)),
+    box-shadow calc(0.3s * var(--motion-time-scale, 1));
 }
 .mask-story-step.is-current {
   border-left-color: #2458f2;

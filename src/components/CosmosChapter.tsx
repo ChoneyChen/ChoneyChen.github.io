@@ -1,3 +1,4 @@
+import { slowMotion, slowDragRelease } from "../lib/motionTiming";
 import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
 import {
   useRef,
@@ -173,7 +174,7 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
                   ? "inset(0 0% 0 0)"
                   : "inset(0 100% 0 0)",
               }}
-              transition={{ duration: still ? 0 : 0.56, ease: pixelStep }}
+              transition={slowMotion({ duration: still ? 0 : 0.56, ease: pixelStep })}
             >
               COSMOS<span>— LOC</span>
             </motion.h2>
@@ -218,11 +219,11 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
             animate={{
               clipPath: deskReady ? "inset(0 0 0% 0)" : "inset(0 0 100% 0)",
             }}
-            transition={{
+            transition={slowMotion({
               duration: still ? 0 : deskReady ? 0.52 : 0.4,
               delay: still || deskReady ? 0 : 0.12,
               ease: pixelStep,
-            }}
+            })}
           >
             <div className="cosmos-record-topline">
               <span>{t("CHONEY 的贡献记录", "CHONEY’S CONTRIBUTIONS")}</span>
@@ -258,7 +259,7 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
                   initial={still ? false : { opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: still ? 0 : 0.3 }}
+                  transition={slowMotion({ duration: still ? 0 : 0.3 })}
                 >
                   <button
                     className="cosmos-record-close"
@@ -293,7 +294,7 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
                   initial={still ? false : { opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: still ? 0 : 0.25 }}
+                  transition={slowMotion({ duration: still ? 0 : 0.25 })}
                 >
                   <p className="cosmos-reader-label">{t("等待一份研究记录", "READY FOR A RESEARCH RECORD")}</p>
                   <h3>{t("抽出一块，看看我做了什么。", "Pull a cartridge. Explore my contribution.")}</h3>
@@ -322,11 +323,11 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
                       ? "inset(-70px -40px -40px -40px)"
                       : "inset(85% 0 0 0)",
                   }}
-                  transition={{
+                  transition={slowMotion({
                     duration: still ? 0 : deskReady ? 0.32 : 0.24,
                     delay: still ? 0 : deskReady ? 0.28 + index * 0.06 : (records.length - 1 - index) * 0.03,
                     ease: pixelStep,
-                  }}
+                  })}
                 >
                   <span className="cosmos-slot-number" aria-hidden="true">
                     0{index + 1}
@@ -346,7 +347,7 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
                     }}
                     onClick={() => setSelected((current) => current === index ? null : index)}
                     drag
-                    dragSnapToOrigin
+                    dragSnapToOrigin dragTransition={slowDragRelease}
                     dragElastic={0.25}
                     dragConstraints={{
                       left: -28,
@@ -374,9 +375,9 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
                       y: selected === index && dragging !== index ? -9 : 0,
                     }}
                     transition={
-                      still
+                      slowMotion(still
                         ? { duration: 0 }
-                        : { type: "spring", stiffness: 420, damping: 32 }
+                        : { type: "spring", stiffness: 420, damping: 32 })
                     }
                   >
                     <span
@@ -421,7 +422,7 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
                           scale: 0.8,
                         }}
                         animate={{ y: pixel.y + 24, opacity: 0, scale: 0.2 }}
-                        transition={{ duration: 0.36 }}
+                        transition={slowMotion({ duration: 0.36 })}
                         onAnimationComplete={() =>
                           setTrails((items) =>
                             items.filter((item) => item.id !== pixel.id),
@@ -470,11 +471,11 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
                   ? "inset(0 0 0% 0)"
                   : "inset(0 0 100% 0)",
               }}
-              transition={{
+              transition={slowMotion({
                 duration: still ? 0 : resultsReady ? 0.32 : 0.28,
                 delay: still ? 0 : resultsReady ? index * 0.07 : (project.results.length - 1 - index) * 0.03,
                 ease: pixelStep,
-              }}
+              })}
             >
               <strong>{result.value}</strong>
               <span>{result.label}</span>

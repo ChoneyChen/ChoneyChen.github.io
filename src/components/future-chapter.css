@@ -125,9 +125,9 @@
   font-size: 12px;
   cursor: pointer;
   transition:
-    background 0.2s,
-    color 0.2s,
-    border-color 0.2s;
+    background calc(0.2s * var(--motion-time-scale, 1)),
+    color calc(0.2s * var(--motion-time-scale, 1)),
+    border-color calc(0.2s * var(--motion-time-scale, 1));
 }
 .fg-route-switch button span {
   font:
@@ -571,7 +571,7 @@
   display: flex;
   flex-direction: column;
   mix-blend-mode: multiply;
-  transition: transform 0.16s ease-out;
+  transition: transform calc(0.16s * var(--motion-time-scale, 1)) ease-out;
   color: #241732;
 }
 .fa-print-observation {
@@ -747,8 +747,8 @@
   color: #DFC4D0;
   cursor: pointer;
   transition:
-    color 0.2s,
-    border-color 0.2s;
+    color calc(0.2s * var(--motion-time-scale, 1)),
+    border-color calc(0.2s * var(--motion-time-scale, 1));
 }
 .fa-focus-buttons button[aria-pressed="true"] {
   border-top-color: #FFC767;

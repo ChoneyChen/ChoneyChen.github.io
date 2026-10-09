@@ -1,3 +1,5 @@
+import { ReadingReveal } from "./ReadingReveal";
+import { slowMotion, slowDragRelease } from "../lib/motionTiming";
 import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
 import { useRef, useState, type CSSProperties } from "react";
 import {
@@ -197,10 +199,10 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                   ? "inset(0 0 0% 0)"
                   : "inset(0 0 100% 0)",
               }}
-              transition={{
+              transition={slowMotion({
                 duration: still ? 0 : 0.58,
                 ease: [0.22, 1, 0.36, 1],
-              }}
+              })}
             >
               SUPS / SVL
               <span>{t("仿真场景扩展", "Scene Extensions")}</span>
@@ -278,11 +280,11 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
               className="sups-build-base"
               initial={false}
               animate={{ y: assembled ? 0 : 34, opacity: assembled ? 1 : 0 }}
-              transition={{
+              transition={slowMotion({
                 duration: still ? 0 : assembled ? 0.34 : 0.4,
                 delay: buildDelay(0, 0.36),
                 ease: [0.22, 1, 0.36, 1],
-              }}
+              })}
             >
               <ellipse
                 cx="503"
@@ -334,14 +336,14 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
               className="sups-build-road"
               initial={false}
               animate={{ opacity: assembled ? 1 : 0 }}
-              transition={{
+              transition={slowMotion({
                 duration: still ? 0 : 0.3,
                 delay: buildDelay(0.24, 0.25),
-              }}
+              })}
             >
               <motion.g
                 animate={{ opacity: selected === "signs" ? 1 : 0.34 }}
-                transition={transition}
+                transition={slowMotion(transition)}
               >
                 <polygon
                   points={plane(0.16, 0.16, 3.84, 4.68, 2)}
@@ -406,18 +408,18 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
               className="sups-build-numbers"
               initial={false}
               animate={{ y: assembled ? 0 : 15, opacity: assembled ? 1 : 0 }}
-              transition={{
+              transition={slowMotion({
                 duration: still ? 0 : 0.34,
                 delay: buildDelay(0.27, 0.22),
                 ease: [0.22, 1, 0.36, 1],
-              }}
+              })}
             >
               <motion.g
                 animate={{
                   y: selected === "numbers" ? -9 : 0,
                   opacity: selected === null || selected === "numbers" ? 1 : 0.48,
                 }}
-                transition={transition}
+                transition={slowMotion(transition)}
               >
                 {[0.48, 3.35].flatMap((y, row) =>
                   Array.from({ length: 5 }, (_, column) => {
@@ -463,11 +465,11 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                   scaleY: assembled ? 1 : 0.03,
                   opacity: assembled ? 1 : 0,
                 }}
-                transition={{
+                transition={slowMotion({
                   duration: still ? 0 : 0.32,
                   delay: buildDelay(0.23 + index * 0.035, 0.13 + (4 - index) * 0.025),
                   ease: [0.22, 1, 0.36, 1],
-                }}
+                })}
               >
                 <Block
                   x={x}
@@ -486,17 +488,17 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
               className="sups-build-signs"
               initial={false}
               animate={{ y: assembled ? 0 : 12, opacity: assembled ? 1 : 0 }}
-              transition={{
+              transition={slowMotion({
                 duration: still ? 0 : 0.32,
                 delay: buildDelay(0.48, 0.08),
-              }}
+              })}
             >
               <motion.g
                 animate={{
                   y: selected === "signs" ? -10 : 0,
                   opacity: selected === null || selected === "signs" ? 1 : 0.54,
                 }}
-                transition={transition}
+                transition={slowMotion(transition)}
               >
                 <line
                   x1={point(4.25, 0.55)[0]}
@@ -534,18 +536,18 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
               className="sups-build-roof"
               initial={false}
               animate={{ y: assembled ? 0 : -57, opacity: assembled ? 1 : 0 }}
-              transition={{
+              transition={slowMotion({
                 duration: still ? 0 : 0.4,
                 delay: buildDelay(0.53, 0),
                 ease: [0.22, 1, 0.36, 1],
-              }}
+              })}
             >
               <motion.g
                 animate={{
                   y: roofY,
                   opacity: selected === null || selected === "roof" ? 0.95 : 0.24,
                 }}
-                transition={transition}
+                transition={slowMotion(transition)}
               >
                 <Block
                   x={-0.12}
@@ -588,10 +590,10 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
             <motion.g
               initial={false}
               animate={{ opacity: assembled ? 1 : 0 }}
-              transition={{
+              transition={slowMotion({
                 duration: still ? 0 : 0.25,
                 delay: buildDelay(0.74, 0),
-              }}
+              })}
               className="sups-layer-callout"
             >
               {selected === "numbers" ? (
@@ -671,7 +673,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
               aria-controls="sups-work-reading"
               onClick={() => setSelected((current) => current === layer.id ? null : layer.id)}
               drag="y"
-              dragSnapToOrigin
+              dragSnapToOrigin dragTransition={slowDragRelease}
               dragConstraints={{ top: -44, bottom: 8 }}
               dragElastic={0.16}
               onDragEnd={(_, info) => {
@@ -680,10 +682,10 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
               style={{ "--layer-color": layer.color } as CSSProperties}
               initial={still ? false : { y: 10, opacity: 0 }}
               animate={{ y: selectorReady ? 0 : 10, opacity: selectorReady ? 1 : 0 }}
-              transition={{
+              transition={slowMotion({
                 duration: still ? 0 : 0.3,
                 delay: still ? 0 : selectorReady ? index * 0.055 : (layerRecords.length - 1 - index) * 0.035,
-              }}
+              })}
             >
               <span className="sups-layer-button-number">0{index + 1}</span>
               <span>
@@ -697,16 +699,16 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
         <p className="sups-operation">{t("向上抽取一层 / 点击 · 再点收回", "Pull a layer upward / click · Click again to close")}</p>
         <div id="sups-work-reading" aria-live="polite">
           <AnimatePresence initial={false}>
-          {active && <motion.div
+          {active && <ReadingReveal
             className="sups-work-reading"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{
+            initial={{ gridTemplateRows: "0fr", opacity: 0 }}
+            animate={{ gridTemplateRows: "1fr", opacity: 1 }}
+            exit={{ gridTemplateRows: "0fr", opacity: 0 }}
+            transition={slowMotion({
               duration: still ? 0 : 0.44,
               delay: still ? 0 : 0.08,
               ease: [0.22, 1, 0.36, 1],
-            }}
+            })}
           >
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
@@ -715,7 +717,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                 initial={still ? false : { opacity: 0, y: 9 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: still ? 0 : 0.18 }}
+                transition={slowMotion({ duration: still ? 0 : 0.18 })}
               >
                 <div className="sups-work-title">
                   <p style={{ color: active.color }}>
@@ -735,7 +737,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                 </div>
               </motion.div>
             </AnimatePresence>
-          </motion.div>}
+          </ReadingReveal>}
           </AnimatePresence>
         </div>
         <div className="sups-foundation">

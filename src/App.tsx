@@ -1,9 +1,12 @@
+import { ReadingReveal } from "./components/ReadingReveal";
+import { slowMotion, slowDragRelease, slowSpring, motionTimingStyle } from "./lib/motionTiming";
 import { useCollapseOnLeave, useReadingExit } from "./hooks/useCollapseOnLeave";
 import {
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
+  memo,
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
 import {
@@ -42,7 +45,14 @@ import { PersonalPortrait } from "./components/PersonalPortrait";
 import { ContactChapter } from "./components/ContactChapter";
 import { ResearchDirections } from "./components/ResearchDirections";
 import { useChapterAnchors } from "./hooks/useChapterAnchors";
-import { useSectionPaging } from "./hooks/useSectionPaging";
+import { useChapterSnap } from "./hooks/useChapterSnap";
+
+const presentationTransition = slowMotion({
+  type: "spring",
+  stiffness: 140,
+  damping: 22,
+});
+const quietTransition = { type: "tween", duration: 0 } as const;
 
 function getChapters(t: (zh: string, en: string) => string) {
   return [
@@ -262,9 +272,9 @@ function IdentityFold({ quiet, entered }: { quiet: boolean; entered: boolean }) 
       initial={quiet ? false : { opacity: 0, rotateX: -16, y: 36 }}
       animate={quiet || entered ? { opacity: 1, rotateX: 0, y: 0 } : { opacity: 0, rotateX: -10, y: 28 }}
       transition={
-        quiet
+        slowMotion(quiet
           ? { duration: 0 }
-          : { duration: 0.9, delay: 0.22, ease: [0.16, 1, 0.3, 1] }
+          : { duration: 0.9, delay: 0.22, ease: [0.16, 1, 0.3, 1] })
       }
     >
       <div className="identity-underleaf" aria-hidden="true">
@@ -303,7 +313,7 @@ function IdentityFold({ quiet, entered }: { quiet: boolean; entered: boolean }) 
         animate={{
           rotate: quiet ? 0 : identity === 1 ? -2 : identity === 2 ? 2 : -4,
         }}
-        transition={{ type: "spring", stiffness: 130, damping: 20 }}
+        transition={slowMotion(quiet ? { duration: 0 } : { type: "spring", stiffness: 130, damping: 20 })}
       >
         <div className="identity-paper-top">
           <span>CHONEY CHEN</span>
@@ -319,7 +329,7 @@ function IdentityFold({ quiet, entered }: { quiet: boolean; entered: boolean }) 
             initial={{ opacity: 0, y: quiet ? 0 : 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: quiet ? 0 : -10 }}
-            transition={{ duration: 0.22 }}
+            transition={slowMotion({ duration: quiet ? 0 : 0.22 })}
           >
             <button className="reading-close identity-close" onClick={() => setIdentity(null)} aria-label={t("合上身份档案", "Close role file")}><X size={16} /></button>
             <div className="identity-title">{page.title}</div>
@@ -336,7 +346,7 @@ function IdentityFold({ quiet, entered }: { quiet: boolean; entered: boolean }) 
               {page.linkLabel}
               <ArrowUpRight size={18} />
             </a>
-          </motion.div> : <motion.div key="cover" className="identity-cover" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: quiet ? 0 : 0.18 }}>
+          </motion.div> : <motion.div key="cover" className="identity-cover" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={slowMotion({ duration: quiet ? 0 : 0.18 })}>
             <span className="identity-cover-index">THREE WAYS IN</span>
             <div className="identity-cover-name">Tianyi<br /><em>Chen.</em></div>
             <p>{t("学生、研究者、实践者。", "Student. Researcher. Practitioner.")}</p>
@@ -408,13 +418,13 @@ function Hero({ quiet }: { quiet: boolean }) {
                   }
                   animate={quiet || entered ? { y: 0, opacity: 1, filter: "blur(0px)" } : { y: 22, opacity: 0, filter: "blur(4px)" }}
                   transition={
-                    quiet
+                    slowMotion(quiet
                       ? { duration: 0 }
                       : {
                           duration: 0.75,
                           delay: index * 0.075,
                           ease: [0.16, 1, 0.3, 1],
-                        }
+                        })
                   }
                 >
                   {letter}
@@ -426,9 +436,9 @@ function Hero({ quiet }: { quiet: boolean }) {
               initial={quiet ? false : { clipPath: "inset(0 100% 0 0)" }}
               animate={{ clipPath: quiet || entered ? "inset(-12% -20% -18% -12%)" : "inset(0 100% 0 0)" }}
               transition={
-                quiet
+                slowMotion(quiet
                   ? { duration: 0 }
-                  : { duration: 1.05, delay: 0.25, ease: [0.25, 0.1, 0.25, 1] }
+                  : { duration: 1.05, delay: 0.25, ease: [0.25, 0.1, 0.25, 1] })
               }
             >
               Choney
@@ -577,12 +587,12 @@ function Origins({ quiet }: { quiet: boolean }) {
             <div className="origin-paper-slots" role="tablist" aria-label={t("我的早期经历文件", "Files from my early experiences")} onKeyDown={event => cycleTabs(event, selected ?? 0, originIds.length, setSelected)}>
               {originIds.map((id, index) => {
                 const item = experienceTimeline.find(entry => entry.id === id)!;
-                return <motion.div key={id} className="origin-paper-slot" initial={quiet ? false : { y: 58, opacity: 0 }} animate={{ y: quiet || entered ? 0 : 58, opacity: quiet || entered ? 1 : 0 }} transition={{ duration: quiet ? 0 : 0.7, delay: quiet ? 0 : index * 0.09, ease: [0.16, 1, 0.3, 1] }}>
+                return <motion.div key={id} className="origin-paper-slot" initial={quiet ? false : { y: 58, opacity: 0 }} animate={{ y: quiet || entered ? 0 : 58, opacity: quiet || entered ? 1 : 0 }} transition={slowMotion({ duration: quiet ? 0 : 0.7, delay: quiet ? 0 : index * 0.09, ease: [0.16, 1, 0.3, 1] })}>
                   <motion.button role="tab" aria-selected={index === selected} aria-expanded={index === selected} tabIndex={selected === index || (selected === null && index === 0) ? 0 : -1} aria-controls="origin-record" id={`origin-tab-${index}`} className={`origin-file origin-file-${index} ${selected === index ? "is-open" : ""}`}
                     onClick={() => setSelected(selected === index ? null : index)}
-                    drag={!quiet ? "y" : false} dragConstraints={{ top: -62, bottom: 0 }} dragElastic={0.08} dragSnapToOrigin
+                    drag={!quiet ? "y" : false} dragConstraints={{ top: -62, bottom: 0 }} dragElastic={0.08} dragSnapToOrigin dragTransition={slowDragRelease}
                     onDragEnd={(_, info) => { if (info.offset.y < -20) setSelected(index); }}
-                    animate={{ y: selected === index ? -48 : 0, rotate: quiet ? 0 : [-4, 1, 5][index] }} transition={{ type: "spring", stiffness: 150, damping: 26 }}>
+                    animate={{ y: selected === index ? -48 : 0, rotate: quiet ? 0 : [-4, 1, 5][index] }} transition={slowMotion(quiet ? { duration: 0 } : { type: "spring", stiffness: 150, damping: 26 })}>
                     <span className="origin-tab-label">FILE 0{index + 1}</span><span className="origin-file-date">{item.year}</span><h3>{originNames[index]}</h3>
                     <div className="origin-file-drawing">{originIcons[index]}</div>
                   </motion.button>
@@ -594,7 +604,7 @@ function Origins({ quiet }: { quiet: boolean }) {
           </div>
           <div className="origin-reading-slot">
             <AnimatePresence mode="wait" initial={false}>
-              {selectedExperience && selected !== null ? <motion.article id="origin-record" className="origin-record" role="tabpanel" aria-labelledby={`origin-tab-${selected}`} key={selectedExperience.id} initial={{ opacity: 0, x: quiet ? 0 : -16, clipPath: "inset(0 100% 0 0)" }} animate={{ opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)" }} exit={{ opacity: 0, x: quiet ? 0 : 10 }} transition={{ duration: quiet ? 0 : 0.38, ease: [0.22, 1, 0.36, 1] }}>
+              {selectedExperience && selected !== null ? <motion.article id="origin-record" className="origin-record" role="tabpanel" aria-labelledby={`origin-tab-${selected}`} key={selectedExperience.id} initial={{ opacity: 0, x: quiet ? 0 : -16, clipPath: "inset(0 100% 0 0)" }} animate={{ opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)" }} exit={{ opacity: 0, x: quiet ? 0 : 10 }} transition={slowMotion({ duration: quiet ? 0 : 0.38, ease: [0.22, 1, 0.36, 1] })}>
                 <div className="origin-record-top"><span className="record-number">RECORD / 0{selected + 1}</span><button className="reading-close" onClick={() => setSelected(null)} aria-label={t("合上经历文件", "Close experience file")}><X size={17} /></button></div>
                 {selected === 1 ? <SteampunkWork quiet={quiet} /> : <><h3>{selectedExperience.title}</h3><p className="record-role">{selectedExperience.role}</p><p>{selectedExperience.description}</p><div className="record-tags">{selectedExperience.tags.map(tag => <span key={tag}>{tag}</span>)}</div>{selectedExperience.boundary && <details className="support-notes"><summary>{t("记录说明", "Record context")}</summary><p>{selectedExperience.boundary}</p></details>}</>}
               </motion.article> : <motion.div key="closed" className="origin-closed" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><span>2023 — 2025</span><h3>{t("三个起点，", "Three beginnings,")}<br />{t("同一份好奇。", "one curiosity.")}</h3><p>{t("抽出一份文件，读我的实际工作。", "Open a file to read what I worked on.")}</p></motion.div>}
@@ -673,13 +683,13 @@ function PersonalArchive({ quiet }: { quiet: boolean }) {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: false, amount: 0.2 }}
               transition={
-                quiet
+                slowMotion(quiet
                   ? { duration: 0 }
                   : {
                       duration: 0.55,
                       delay: (index % 3) * 0.045,
                       ease: [0.16, 1, 0.3, 1],
-                    }
+                    })
               }
             >
               <button
@@ -698,13 +708,13 @@ function PersonalArchive({ quiet }: { quiet: boolean }) {
               </button>
               <AnimatePresence initial={false}>
                 {open === item.id && (
-                  <motion.div
+                  <ReadingReveal
                     id={`record-${item.id}`}
                     className="archive-ticket-body"
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: quiet ? 0 : 0.28 }}
+                    initial={{ gridTemplateRows: "0fr", opacity: 0 }}
+                    animate={{ gridTemplateRows: "1fr", opacity: 1 }}
+                    exit={{ gridTemplateRows: "0fr", opacity: 0 }}
+                    transition={slowMotion({ duration: quiet ? 0 : 0.28 })}
                   >
                     <div
                       className={
@@ -731,7 +741,7 @@ function PersonalArchive({ quiet }: { quiet: boolean }) {
                         </>
                       )}
                     </div>
-                  </motion.div>
+                  </ReadingReveal>
                 )}
               </AnimatePresence>
             </motion.article>
@@ -775,6 +785,29 @@ function PersonalFooter() {
   );
 }
 
+// Scroll navigation can update its label without rebuilding every chapter.
+// A language context change still reaches the chapter components normally.
+const MainChapters = memo(function MainChapters({ quiet }: { quiet: boolean }) {
+  return (
+    <main>
+      <Hero quiet={quiet} />
+      <Origins quiet={quiet} />
+      <MethodsChapter quiet={quiet} />
+      <ResearchDirections quiet={quiet} />
+      <CosmosChapter quiet={quiet} />
+      <SupsChapter quiet={quiet} />
+      <MaskChapter quiet={quiet} />
+      <ESGChapter quiet={quiet} />
+      <FutureChapter quiet={quiet} />
+      <ToolsChapter quiet={quiet} />
+      <PersonalArchive quiet={quiet} />
+      <PersonalPortrait quiet={quiet} />
+      <ContactChapter quiet={quiet} />
+      <PersonalFooter />
+    </main>
+  );
+});
+
 export default function App() {
   const { t, language, setLanguage } = useI18n();
   const chapters = getChapters(t);
@@ -784,17 +817,18 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   useChapterAnchors();
   useReadingExit(!menuOpen);
-  useSectionPaging({ enabled: !menuOpen, reduced: quiet });
+  useChapterSnap({ enabled: !menuOpen, reduced: quiet });
   const [active, setActive] = useState("home");
   const menuButton = useRef<HTMLButtonElement>(null);
   const menuContainer = useRef<HTMLDivElement>(null);
   const readingAnchor = useRef<{ id: string; top: number } | null>(null);
   const { scrollYProgress } = useScroll();
-  const progress = useSpring(scrollYProgress, {
+  const progress = useSpring(scrollYProgress, slowSpring({
     stiffness: 100,
     damping: 30,
     restDelta: 0.001,
-  });
+    restSpeed: 0.01,
+  }));
   const activeIndex = Math.max(
     0,
     chapters.findIndex((chapter) => chapter.id === active),
@@ -886,11 +920,9 @@ export default function App() {
   return (
     <MotionConfig
       reducedMotion={quiet ? "always" : "user"}
-      transition={quiet
-        ? { type: "tween", duration: 0 }
-        : { type: "spring", stiffness: 140, damping: 22 }}
+      transition={quiet ? quietTransition : presentationTransition}
     >
-      <div className="personal-site" data-quiet={quiet}>
+      <div className="personal-site" data-quiet={quiet} style={motionTimingStyle}>
         <a href="#home" className="skip-link">
           {t("跳到个人介绍", "Skip to my introduction")}
         </a>
@@ -962,9 +994,9 @@ export default function App() {
               animate={{ clipPath: "inset(0 0 0% 0)" }}
               exit={{ clipPath: "inset(0 0 100% 0)" }}
               transition={
-                quiet
+                slowMotion(quiet
                   ? { duration: 0 }
-                  : { duration: 0.5, ease: [0.16, 1, 0.3, 1] }
+                  : { duration: 0.5, ease: [0.16, 1, 0.3, 1] })
               }
             >
               <div className="directory-intro">
@@ -1016,22 +1048,7 @@ export default function App() {
             </motion.div>
           )}
         </AnimatePresence>
-        <main>
-          <Hero quiet={quiet} />
-          <Origins quiet={quiet} />
-          <MethodsChapter quiet={quiet} />
-          <ResearchDirections quiet={quiet} />
-          <CosmosChapter quiet={quiet} />
-          <SupsChapter quiet={quiet} />
-          <MaskChapter quiet={quiet} />
-          <ESGChapter quiet={quiet} />
-          <FutureChapter quiet={quiet} />
-          <ToolsChapter quiet={quiet} />
-          <PersonalArchive quiet={quiet} />
-          <PersonalPortrait quiet={quiet} />
-          <ContactChapter quiet={quiet} />
-          <PersonalFooter />
-        </main>
+        <MainChapters quiet={quiet} />
         <nav
           className="chapter-rail"
           aria-label={t("浏览主轴", "Main browsing thread")}

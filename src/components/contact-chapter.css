@@ -145,7 +145,7 @@
   margin-top: 6px;
 }
 .contact-channel > svg {
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform calc(0.35s * var(--motion-time-scale, 1)) cubic-bezier(0.16, 1, 0.3, 1);
   color: #8b7756;
 }
 .contact-channel:hover > svg {
@@ -161,7 +161,7 @@
   background: #927443;
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform calc(0.4s * var(--motion-time-scale, 1)) cubic-bezier(0.16, 1, 0.3, 1);
 }
 .contact-channel:hover:before,
 .contact-channel:focus-visible:before {

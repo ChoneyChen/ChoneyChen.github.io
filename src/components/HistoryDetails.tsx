@@ -1,3 +1,4 @@
+import { slowMotion } from "../lib/motionTiming";
 import { useRef, useState } from "react";
 import {
   AnimatePresence,
@@ -169,14 +170,14 @@ export function SteampunkWork({ quiet = false }: HistoryDetailProps) {
                   y: installed ? 0 : -6,
                 }}
                 transition={
-                  reduced
+                  slowMotion(reduced
                     ? { duration: 0 }
                     : {
                         type: "spring",
                         stiffness: 110,
                         damping: 18,
                         delay: index * 0.07,
-                      }
+                      })
                 }
               >
                 <GearMark />
@@ -195,9 +196,9 @@ export function SteampunkWork({ quiet = false }: HistoryDetailProps) {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: reduced ? 0 : -30, opacity: reduced ? 1 : 0.55 }}
               transition={
-                reduced
+                slowMotion(reduced
                   ? { duration: 0 }
-                  : { duration: 0.24, ease: [0.22, 1, 0.36, 1] }
+                  : { duration: 0.24, ease: [0.22, 1, 0.36, 1] })
               }
             >
               <span className="steam-duty-index">DUTY / {duty.number}</span>
@@ -251,7 +252,7 @@ export function RomanEducation({ quiet = false }: HistoryDetailProps) {
             <motion.g
               initial={reduced ? false : { y: 7, opacity: 0.5 }}
               animate={{ y: formed ? 0 : 7, opacity: formed ? 1 : 0.5 }}
-              transition={reduced ? { duration: 0 } : { duration: 0.35 }}
+              transition={slowMotion(reduced ? { duration: 0 } : { duration: 0.35 })}
             >
               <path d="M28 267H152V278H28Z" fill="#ddd0b6" stroke="#a68b68" />
               <path d="M22 278H158V285H22Z" fill="#cbbb9b" stroke="#a68b68" />
@@ -261,9 +262,9 @@ export function RomanEducation({ quiet = false }: HistoryDetailProps) {
               initial={reduced ? false : { scaleY: 0.08 }}
               animate={{ scaleY: formed ? 1 : 0.08 }}
               transition={
-                reduced
+                slowMotion(reduced
                   ? { duration: 0 }
-                  : { duration: 0.52, delay: 0.08, ease: [0.22, 1, 0.36, 1] }
+                  : { duration: 0.52, delay: 0.08, ease: [0.22, 1, 0.36, 1] })
               }
             >
               <path
@@ -287,9 +288,9 @@ export function RomanEducation({ quiet = false }: HistoryDetailProps) {
                 opacity: formed ? 1 : 0.45,
               }}
               transition={
-                reduced
+                slowMotion(reduced
                   ? { duration: 0 }
-                  : { duration: 0.48, delay: 0.3, ease: [0.22, 1, 0.36, 1] }
+                  : { duration: 0.48, delay: 0.3, ease: [0.22, 1, 0.36, 1] })
               }
             >
               <path d="M23 31H157V40H23Z" fill="#e7d9bf" stroke="#a68b68" />

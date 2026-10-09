@@ -1,3 +1,4 @@
+import { slowMotion, PRESENTATION_SPEED } from "../lib/motionTiming";
 import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
 import { useEffect, useRef, useState } from "react";
 import type * as Three from "three";
@@ -501,7 +502,8 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
           ? Math.min((time - lastTime) / 1000, 0.045)
           : 1 / 60;
         lastTime = time;
-        const damping = 1 - Math.exp(-10 * delta);
+        const animationDelta = delta * PRESENTATION_SPEED;
+        const damping = 1 - Math.exp(-10 * animationDelta);
         let moving = false;
         if (
           !dragging &&
@@ -509,8 +511,8 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
           Math.abs(velocity) > 0.018 &&
           !quietRef.current
         ) {
-          rotation += velocity * delta;
-          velocity *= Math.exp(-6.5 * delta);
+          rotation += velocity * animationDelta;
+          velocity *= Math.exp(-6.5 * animationDelta);
           moving = true;
         } else if (!dragging && target === null) {
           target = Math.round(rotation / turn) * turn;
@@ -529,7 +531,7 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
             toolFiles.length;
           if (Math.abs(target - rotation) < 0.05) announce(nextFile);
         }
-        if (quietRef.current || Math.abs(tiltTarget - tilt) < 0.0005)
+        if (dragging || quietRef.current || Math.abs(tiltTarget - tilt) < 0.0005)
           tilt = tiltTarget;
         else {
           tilt += (tiltTarget - tilt) * damping;
@@ -537,7 +539,7 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
         }
         carousel.rotation.set(tilt, rotation, 0);
         if (introduction) {
-          introductionElapsed += delta;
+          introductionElapsed += animationDelta;
           let seated = true;
           books.forEach((book, index) => {
             const height = currentFile === index ? 0.12 : 0;
@@ -549,9 +551,9 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
             book.visible = true;
             if (!quietRef.current) {
               introductionVelocity[index] +=
-                (height - book.position.y) * 145 * delta;
-              introductionVelocity[index] *= Math.exp(-14.5 * delta);
-              book.position.y += introductionVelocity[index] * delta;
+                (height - book.position.y) * 145 * animationDelta;
+              introductionVelocity[index] *= Math.exp(-14.5 * animationDelta);
+              book.position.y += introductionVelocity[index] * animationDelta;
               if (book.position.y < height - 0.012) {
                 book.position.y = height - 0.012;
                 introductionVelocity[index] = 0;
@@ -798,7 +800,7 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
                 data-renderer={mode}
                 initial={lowMotion ? false : { opacity: 0, y: 16 }}
                 animate={{ opacity: sceneReady ? 1 : 0, y: sceneReady ? 0 : 16 }}
-                transition={lowMotion ? { duration: 0 } : { duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
+                transition={slowMotion(lowMotion ? { duration: 0 } : { duration: 0.48, ease: [0.22, 1, 0.36, 1] })}
                 tabIndex={0}
                 role="group"
                 aria-label={t(
@@ -825,7 +827,7 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
                 }}
               />
               {mode !== "webgl" && (
-                <motion.div className="tools-flat-file" initial={lowMotion ? false : { opacity: 0 }} animate={{ opacity: sceneReady ? 1 : 0 }} transition={{ duration: lowMotion ? 0 : 0.35 }}>
+                <motion.div className="tools-flat-file" initial={lowMotion ? false : { opacity: 0 }} animate={{ opacity: sceneReady ? 1 : 0 }} transition={slowMotion({ duration: lowMotion ? 0 : 0.35 })}>
                   <BookOpen size={35} strokeWidth={1} />
                   <span>{String(active + 1).padStart(2, "0")} / WORK FILE</span>
                   <strong>{file.name}</strong>
@@ -875,7 +877,7 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
                 initial={{ opacity: 0, y: lowMotion ? 0 : 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: lowMotion ? 0 : 0.2 }}
+                transition={slowMotion({ duration: lowMotion ? 0 : 0.2 })}
               >
                 {opened ? <>
                 <div className="tools-reading-header"><span className="tools-file-label">FILE {String(active + 1).padStart(2, "0")} / {file.label}</span><button type="button" className="tools-close" aria-label={t("合上工作档案", "Close work file")} onClick={() => setOpened(false)}><X size={18}/></button></div>

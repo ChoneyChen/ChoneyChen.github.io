@@ -1,3 +1,4 @@
+import { slowMotion, presentationBlend } from "../lib/motionTiming";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { motion, useInView } from "motion/react";
 import { MoveHorizontal, RotateCcw, RotateCw } from "lucide-react";
@@ -77,22 +78,25 @@ function SpatialPreview({ lift, dragging, visible, quiet, presence }: { lift: nu
       group.add(new THREE.Points(geometry, material));
       const grid = new THREE.GridHelper(5.3, 12, 0x859ecb, 0xb6c6df); grid.rotation.x = Math.PI / 2; grid.position.z = -1.05; group.add(grid);
       group.rotation.set(-.12, -.25, 0);
-      let raf = 0, yaw = -.25, pitch = -.12, dragging: { id: number; x: number; y: number } | null = null;
-      const render = () => {
+      let raf = 0, lastTime = 0, yaw = -.25, pitch = -.12, dragging: { id: number; x: number; y: number } | null = null;
+      const render = (time: number) => {
         raf = 0;
-        if (disposed || !current.current.visible) return;
+        if (disposed || !current.current.visible) { lastTime = 0; return; }
+        const delta = lastTime ? Math.min((time - lastTime) / 1000, .05) : 1 / 60;
+        lastTime = time;
         const goal = current.current.lift;
         material.uniforms.presence.value = current.current.presence === "present" ? 1 : current.current.presence === "absent" ? 0 : .3;
-        material.uniforms.lift.value = current.current.quiet || current.current.dragging ? goal : THREE.MathUtils.lerp(material.uniforms.lift.value, goal, .085);
-        group.rotation.y = current.current.quiet ? yaw : THREE.MathUtils.lerp(group.rotation.y, yaw, .15);
-        group.rotation.x = current.current.quiet ? pitch : THREE.MathUtils.lerp(group.rotation.x, pitch, .15);
+        material.uniforms.lift.value = current.current.quiet || current.current.dragging ? goal : THREE.MathUtils.lerp(material.uniforms.lift.value, goal, presentationBlend(.085, delta));
+        group.rotation.y = current.current.quiet || dragging ? yaw : THREE.MathUtils.lerp(group.rotation.y, yaw, presentationBlend(.15, delta));
+        group.rotation.x = current.current.quiet || dragging ? pitch : THREE.MathUtils.lerp(group.rotation.x, pitch, presentationBlend(.15, delta));
         renderer.render(scene, camera);
         node.dataset.rotation = `${group.rotation.x.toFixed(3)},${group.rotation.y.toFixed(3)}`;
         node.dataset.depthLift = String(material.uniforms.lift.value.toFixed(3));
         if (Math.abs(material.uniforms.lift.value - goal) > .002 || Math.abs(group.rotation.y - yaw) > .001 || Math.abs(group.rotation.x - pitch) > .001) raf = requestAnimationFrame(render);
+        else lastTime = 0;
       };
-      const schedule = () => { if (!raf) raf = requestAnimationFrame(render); };
-      engine.current = { draw: schedule, rotate: (x, y = 0) => { yaw = THREE.MathUtils.clamp(yaw + x, -1.25, 1.25); pitch = THREE.MathUtils.clamp(pitch + y, -.7, .7); schedule(); }, reset: () => { yaw = -.25; pitch = -.12; schedule(); } };
+      const schedule = () => { if (!raf) { lastTime = 0; raf = requestAnimationFrame(render); } };
+      engine.current = { draw: schedule, rotate: (x, y = 0) => { yaw = THREE.MathUtils.clamp(yaw + x, -1.25, 1.25); pitch = THREE.MathUtils.clamp(pitch + y, -.7, .7); if (dragging) group.rotation.set(pitch, yaw, 0); schedule(); }, reset: () => { yaw = -.25; pitch = -.12; schedule(); } };
       const resize = () => { const b = node.getBoundingClientRect(); renderer.setSize(Math.max(1,b.width),Math.max(1,b.height),false); camera.aspect = b.width / Math.max(1,b.height); camera.updateProjectionMatrix(); schedule(); };
       const observer = new ResizeObserver(resize); observer.observe(node); resize();
       const down = (event: PointerEvent) => { if (event.button !== 0) return; node.focus({preventScroll:true}); node.setPointerCapture(event.pointerId); dragging = {id:event.pointerId,x:event.clientX,y:event.clientY}; };
@@ -106,7 +110,7 @@ function SpatialPreview({ lift, dragging, visible, quiet, presence }: { lift: nu
     return () => { disposed=true;cleanup(); };
   }, []);
   useEffect(() => { engine.current?.draw(); }, [lift,dragging,visible,quiet,presence]);
-  return <div className="gp-space" data-ready={ready} data-lifted={lift>0} data-paging-ignore>
+  return <div className="gp-space" data-ready={ready} data-lifted={lift>0}>
     {fallback ? <div className="gp-space-fallback"><PerceptionImage mode="fusion"/><p>{t("空间示意 · 你的浏览器显示二维预览", "Spatial concept · showing a 2D preview in this browser")}</p></div> : <canvas ref={canvas} tabIndex={0} aria-label={t("语义深度空间预览：拖动旋转，方向键转动", "Semantic depth preview: drag to rotate, arrow keys to turn")} onKeyDown={event=>{ const direction=event.key==="ArrowRight"? .15:event.key==="ArrowLeft"?-.15:0;const vertical=event.key==="ArrowDown"?.1:event.key==="ArrowUp"?-.1:0;if(direction||vertical){event.preventDefault();engine.current?.rotate(direction,vertical);} }}/>} 
     <div className="gp-orbit-controls"><span>{t("拖动旋转 · 方向键", "Drag to rotate · arrow keys")}</span><button onClick={()=>engine.current?.rotate(-.22)} aria-label={t("向左旋转空间", "Rotate space left")}><RotateCcw size={16}/></button><button onClick={()=>engine.current?.rotate(.22)} aria-label={t("向右旋转空间", "Rotate space right")}><RotateCw size={16}/></button><button onClick={()=>engine.current?.reset()}>{t("复位", "Reset view")}</button></div>
   </div>;
@@ -147,11 +151,11 @@ export function GlimpsePerception({ quiet = false }: { quiet?: boolean }) {
       </div>
     </div>
     <div className="gp-stage" id="glimpse-visual-stage">
-      {(["semantic","depth","normal"] as const).map((mode,index)=><motion.div key={mode} className={`gp-view gp-view-${index}`} aria-hidden={stage !== 0} animate={{left:`${index*33.333+(33.333-index*33.333)*fusion}%`,y:quiet||visible?([8,-8,8][index]*(1-fusion)):34,rotate:[-3,1,4][index]*(1-fusion),scale:1-lift*.18,opacity:quiet||visible?((1-fusion*.68)*(1-spaceOpacity)):0}} transition={{duration:quiet||dragging?0:progress===0?.5:.15,delay:quiet||dragging||progress>0?0:index*.07,ease:[.22,1,.36,1]}}>
+      {(["semantic","depth","normal"] as const).map((mode,index)=><motion.div key={mode} className={`gp-view gp-view-${index}`} aria-hidden={stage !== 0} style={{left:`${index*33.333}%`}} animate={{x:`${(1-index)*100*fusion}%`,y:quiet||visible?([8,-8,8][index]*(1-fusion)):34,rotate:[-3,1,4][index]*(1-fusion),scale:1-lift*.18,opacity:quiet||visible?((1-fusion*.68)*(1-spaceOpacity)):0}} transition={slowMotion({duration:quiet||dragging?0:progress===0?.5:.15,delay:quiet||dragging||progress>0?0:index*.07,ease:[.22,1,.36,1]})}>
         <div className="gp-view-label"><span>0{index+1}</span><strong>{[t("分割输出", "Segmentation"),t("度量深度", "Metric depth"),t("表面法线", "Surface normals")][index]}</strong></div><PerceptionImage mode={mode} presence={presence}/><span className="gp-view-caption">{[t("RGB 遮罩编码 + 状态条", "RGB mask code + status strip"),t("颜色编码 → 距离", "Colour encoding to distance"),t("RGB 通道 → 法线方向", "RGB channels to normal direction")][index]}</span>
       </motion.div>)}
-      <motion.div className="gp-fusion" animate={{opacity:quiet||visible?fusionOpacity:0,scale:.94+fusion*.06,y:-15*lift}} transition={{duration:quiet||dragging?0:.15}} aria-hidden={stage!==1}><PerceptionImage mode="fusion"/><span>{t("确定性任务解码 · 语义与度量几何融合", "Deterministic decoding · semantic-geometric fusion")}</span></motion.div>
-      {mounted && <motion.div className="gp-space-layer" animate={{opacity:spaceOpacity}} transition={{duration:quiet||dragging?0:.15}} inert={progress<70}><SpatialPreview lift={lift} dragging={dragging} visible={visible} quiet={quiet} presence={presence}/></motion.div>}
+      <motion.div className="gp-fusion" animate={{opacity:quiet||visible?fusionOpacity:0,scale:.94+fusion*.06,y:-15*lift}} transition={slowMotion({duration:quiet||dragging?0:.15})} aria-hidden={stage!==1}><PerceptionImage mode="fusion"/><span>{t("确定性任务解码 · 语义与度量几何融合", "Deterministic decoding · semantic-geometric fusion")}</span></motion.div>
+      {mounted && <motion.div className="gp-space-layer" animate={{opacity:spaceOpacity}} transition={slowMotion({duration:quiet||dragging?0:.15})} inert={progress<70}><SpatialPreview lift={lift} dragging={dragging} visible={visible} quiet={quiet} presence={presence}/></motion.div>}
     </div>
     <div className={`gp-journey${dragging?" is-dragging":""}`} style={sliderStyle}>
       <div className="gp-journey-label"><label htmlFor="glimpse-journey">{t("拖动，展开感知过程", "Drag through the perception process")}</label><MoveHorizontal size={18} aria-hidden="true"/></div>

@@ -120,7 +120,7 @@
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
-  transition: opacity 0.2s;
+  transition: opacity calc(0.2s * var(--motion-time-scale, 1));
 }
 .methods-notebook[data-still="true"] .methods-station-props {
   transition: none;

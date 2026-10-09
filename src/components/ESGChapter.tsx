@@ -1,3 +1,5 @@
+import { ReadingReveal } from "./ReadingReveal";
+import { slowMotion } from "../lib/motionTiming";
 import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
 import { useRef, useState } from "react";
 import {
@@ -243,7 +245,7 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
                     rotate: revealed ? 0 : index % 2 ? 2 : -2,
                     rotateY: revealed ? 0 : -12,
                   }}
-                  transition={{
+                  transition={slowMotion({
                     ...transition,
                     layout: transition,
                     opacity: {
@@ -263,7 +265,7 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
                       duration: lowMotion ? 0 : revealed ? 0.7 : 0.42,
                       delay: lowMotion ? 0 : revealed ? index * 0.08 : (documents.length - 1 - index) * 0.07,
                     },
-                  }}
+                  })}
                 >
                   <motion.div
                     className="esg-paper-registration"
@@ -275,10 +277,10 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
                         ? "inset(0 0% 0 0)"
                         : "inset(0 100% 0 0)",
                     }}
-                    transition={{
+                    transition={slowMotion({
                       duration: lowMotion ? 0 : revealed ? 0.35 : 0.25,
                       delay: lowMotion ? 0 : revealed ? 0.25 + index * 0.07 : (documents.length - 1 - index) * 0.05,
-                    }}
+                    })}
                   >
                     <span>{document.number} / FIELD NOTES</span>
                     <span className="esg-print-cross" aria-hidden="true">
@@ -300,7 +302,7 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
                     <motion.span
                       className="esg-paper-arrow"
                       animate={{ rotate: isOpen ? 180 : 0 }}
-                      transition={{ duration: lowMotion ? 0 : 0.25 }}
+                      transition={slowMotion({ duration: lowMotion ? 0 : 0.25 })}
                     >
                       <ChevronDown size={17} />
                     </motion.span>
@@ -309,13 +311,13 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
                   <div className="esg-paper-topic">{document.small}</div>
                   <AnimatePresence initial={false}>
                     {isOpen && (
-                      <motion.div
+                      <ReadingReveal
                         className="esg-paper-details"
                         id={`esg-page-${index}`}
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={transition}
+                        initial={{ gridTemplateRows: "0fr", opacity: 0 }}
+                        animate={{ gridTemplateRows: "1fr", opacity: 1 }}
+                        exit={{ gridTemplateRows: "0fr", opacity: 0 }}
+                        transition={slowMotion(transition)}
                       >
                         <p className="esg-paper-body">{document.body}</p>
                         <ul>
@@ -356,18 +358,18 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
                               ))}
                             </div>
                             <AnimatePresence initial={false}>
-                            {model !== null && <motion.div
+                            {model !== null && <ReadingReveal
                               className="esg-model-detail"
                               id="esg-model-detail"
                               aria-live="polite"
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: lowMotion ? 0 : 0.35 }}
+                              initial={{ gridTemplateRows: "0fr", opacity: 0 }}
+                              animate={{ gridTemplateRows: "1fr", opacity: 1 }}
+                              exit={{ gridTemplateRows: "0fr", opacity: 0 }}
+                              transition={slowMotion({ duration: lowMotion ? 0 : 0.35 })}
                             >
                               <span>{models[model].task}</span>
                               <p>{models[model].description}</p>
-                            </motion.div>}
+                            </ReadingReveal>}
                             </AnimatePresence>
                           </div>
                         )}
@@ -398,7 +400,7 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
                           <span>MY CONTRIBUTION</span>
                           <span>C. CHEN</span>
                         </div>
-                      </motion.div>
+                      </ReadingReveal>
                     )}
                   </AnimatePresence>
                 </motion.article>

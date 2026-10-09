@@ -1,3 +1,5 @@
+import { ReadingReveal } from "./ReadingReveal";
+import { slowMotion, slowDragRelease } from "../lib/motionTiming";
 import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
 import { useRef, useState } from "react";
 import {
@@ -139,7 +141,7 @@ function DrawPath({
       d={d}
       initial={still ? false : { pathLength: 0 }}
       animate={{ pathLength: ready ? 1 : 0 }}
-      transition={{ duration: still ? 0 : 0.43, delay: still ? 0 : delay }}
+      transition={slowMotion({ duration: still ? 0 : 0.43, delay: still ? 0 : delay })}
     />
   );
 }
@@ -267,10 +269,10 @@ function MethodScene({
                 d="M 48 190 Q 61 167 77 190 M 76 210 Q 60 233 48 210"
                 initial={still ? false : { pathLength: 0 }}
                 animate={{ pathLength: ready ? 1 : 0 }}
-                transition={{
+                transition={slowMotion({
                   duration: still ? 0 : 0.7,
                   delay: still ? 0 : 0.1,
-                }}
+                })}
               />
               <DrawPath
                 {...draw}
@@ -304,10 +306,10 @@ function MethodScene({
                 d="M 46 196 L 52 202 L 67 190"
                 initial={still ? false : { pathLength: 0 }}
                 animate={{ pathLength: ready ? 1 : 0 }}
-                transition={{
+                transition={slowMotion({
                   duration: still ? 0 : 0.65,
                   delay: still ? 0 : 0.18,
-                }}
+                })}
               />
             </>
           ) : (
@@ -327,10 +329,10 @@ function MethodScene({
                 d="M 8 120 L 8 109 M 20 123 L 26 114 M -4 122 L -10 113"
                 initial={still ? false : { pathLength: 0 }}
                 animate={{ pathLength: ready ? 1 : 0 }}
-                transition={{
+                transition={slowMotion({
                   duration: still ? 0 : 0.25,
                   delay: still ? 0 : 0.32,
-                }}
+                })}
               />
             </>
           )}
@@ -339,7 +341,7 @@ function MethodScene({
       <motion.g
         initial={false}
         animate={{ x: stations[selected] - 40 }}
-        transition={{ duration: still ? 0 : 0.55, ease: [0.22, 1, 0.36, 1] }}
+        transition={slowMotion({ duration: still ? 0 : 0.55, ease: [0.22, 1, 0.36, 1] })}
       >
         <g transform="translate(0 143)">
           <motion.g
@@ -353,7 +355,7 @@ function MethodScene({
                     rotate: selected === 2 ? [0, -4, 0] : [0, 2, 0],
                   }
             }
-            transition={{ duration: still ? 0 : 0.75 }}
+            transition={slowMotion({ duration: still ? 0 : 0.75 })}
           >
             <DrawPath
               {...draw}
@@ -371,19 +373,19 @@ function MethodScene({
               d={leftArms[selected]}
               initial={still ? false : { pathLength: 0 }}
               animate={{ d: leftArms[selected], pathLength: ready ? 1 : 0 }}
-              transition={{
+              transition={slowMotion({
                 duration: still ? 0 : 0.43,
                 delay: still ? 0 : 0.27,
-              }}
+              })}
             />
             <motion.path
               d={rightArms[selected]}
               initial={still ? false : { pathLength: 0 }}
               animate={{ d: rightArms[selected], pathLength: ready ? 1 : 0 }}
-              transition={{
+              transition={slowMotion({
                 duration: still ? 0 : 0.43,
                 delay: still ? 0 : 0.32,
-              }}
+              })}
             />
             <motion.path
               d="M 0 64 Q -11 78 -18 90"
@@ -399,10 +401,10 @@ function MethodScene({
                         "M 0 64 Q -11 78 -18 90",
                       ],
               }}
-              transition={{
+              transition={slowMotion({
                 duration: still ? 0 : 0.65,
                 delay: still ? 0 : 0.2,
-              }}
+              })}
             />
             <DrawPath {...draw} delay={0.37} d="M 0 64 Q 11 78 20 89" />
             <DrawPath
@@ -418,10 +420,10 @@ function MethodScene({
                   r="9"
                   initial={still ? false : { pathLength: 0 }}
                   animate={{ pathLength: ready ? 1 : 0 }}
-                  transition={{
+                  transition={slowMotion({
                     duration: still ? 0 : 0.42,
                     delay: still ? 0 : 0.3,
-                  }}
+                  })}
                 />
                 <DrawPath {...draw} delay={0.4} d="M 33 23 L 27 31" />
               </g>
@@ -497,7 +499,7 @@ export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
                 animate={still ? { pathLength: 1 } : undefined}
                 whileInView={{ pathLength: 1 }}
                 viewport={{ once: false, amount: 0.3 }}
-                transition={{ duration: still ? 0 : 0.52 }}
+                transition={slowMotion({ duration: still ? 0 : 0.52 })}
               />
             </svg>
           </div>
@@ -551,10 +553,10 @@ export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
                 animate={still ? { y: 0, rotate: 0 } : undefined}
                 whileInView={{ y: 0, rotate: 0 }}
                 viewport={{ once: false, amount: 0.3 }}
-                transition={{
+                transition={slowMotion({
                   duration: still ? 0 : 0.42,
                   delay: still ? 0 : index * 0.055,
-                }}
+                })}
               >
                 <motion.button
                   className={opened && selected === index ? "is-selected" : ""}
@@ -564,16 +566,16 @@ export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
                   aria-controls="methods-evidence"
                   onClick={() => choose(index)}
                   drag="x"
-                  dragSnapToOrigin
+                  dragSnapToOrigin dragTransition={slowDragRelease}
                   dragConstraints={{ left: -15, right: 15 }}
                   onDragStart={() => { setSelected(index); setOpened(true); setPulse(count => count + 1); }}
                   whileDrag={
                     still ? {} : { rotate: index % 2 === 0 ? -3 : 3, y: -3 }
                   }
                   transition={
-                    still
+                    slowMotion(still
                       ? { duration: 0 }
-                      : { type: "spring", stiffness: 420, damping: 32 }
+                      : { type: "spring", stiffness: 420, damping: 32 })
                   }
                 >
                   <span>0{index + 1}</span>
@@ -585,10 +587,10 @@ export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
                       animate={still ? { pathLength: 1 } : undefined}
                       whileInView={{ pathLength: 1 }}
                       viewport={{ once: false, amount: 0.25 }}
-                      transition={{
+                      transition={slowMotion({
                         duration: still ? 0 : 0.52,
                         delay: still ? 0 : index * 0.055,
-                      }}
+                      })}
                     />
                   </svg>
                 </motion.button>
@@ -596,7 +598,7 @@ export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
             ))}
           </div>
           <div ref={evidenceRef} style={{ display: "flow-root" }}>
-            <AnimatePresence initial={false}>{opened && <motion.div className="methods-reading" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: still ? 0 : 0.3 }}>
+            <AnimatePresence initial={false}>{opened && <ReadingReveal className="methods-reading" initial={{ gridTemplateRows: "0fr", opacity: 0 }} animate={{ gridTemplateRows: "1fr", opacity: 1 }} exit={{ gridTemplateRows: "0fr", opacity: 0 }} transition={slowMotion({ duration: still ? 0 : 0.3 })}>
             <motion.div
               className="methods-evidence"
               id="methods-evidence"
@@ -607,10 +609,10 @@ export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
                   ? "inset(0 0% 0 0)"
                   : "inset(0 100% 0 0)",
               }}
-              transition={{
+              transition={slowMotion({
                 duration: still ? 0 : 0.46,
                 ease: [0.22, 1, 0.36, 1],
-              }}
+              })}
             >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
@@ -619,7 +621,7 @@ export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
                   initial={still ? false : { opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: still ? 0 : 0.16 }}
+                  transition={slowMotion({ duration: still ? 0 : 0.16 })}
                 >
                   <div className="methods-evidence-source">
                     <p style={{ color: current.color }}>
@@ -643,7 +645,7 @@ export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
                 </motion.div>
               </AnimatePresence>
             </motion.div>
-            </motion.div>}</AnimatePresence>
+            </ReadingReveal>}</AnimatePresence>
           </div>
           <footer className="methods-paper-foot">
             <span>

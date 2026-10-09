@@ -147,8 +147,8 @@
   color: #3b4264;
   align-items: center;
   transition:
-    color 0.2s,
-    background 0.2s;
+    color calc(0.2s * var(--motion-time-scale, 1)),
+    background calc(0.2s * var(--motion-time-scale, 1));
   position: relative;
 }
 .sups-layer-selector button:first-child {

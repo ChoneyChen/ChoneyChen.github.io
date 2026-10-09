@@ -149,8 +149,8 @@
   text-align: left;
   cursor: pointer;
   transition:
-    color 0.2s,
-    border-color 0.2s;
+    color calc(0.2s * var(--motion-time-scale, 1)),
+    border-color calc(0.2s * var(--motion-time-scale, 1));
 }
 .portrait-selector button > span {
   font:

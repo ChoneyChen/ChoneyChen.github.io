@@ -1,3 +1,5 @@
+import { ReadingReveal } from "./ReadingReveal";
+import { slowMotion } from "../lib/motionTiming";
 import { GlimpsePerception } from "./GlimpsePerception";
 import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
 import { useRef, useState, type CSSProperties } from "react";
@@ -172,9 +174,9 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
             whileInView={{ x: 0, opacity: 1 }}
             viewport={{ once: false, amount: 0.25 }}
             transition={
-              reduced
+              slowMotion(reduced
                 ? { duration: 0 }
-                : { duration: 0.58, ease: [0.22, 1, 0.36, 1] }
+                : { duration: 0.58, ease: [0.22, 1, 0.36, 1] })
             }
           >
             <div>
@@ -252,7 +254,7 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                   aria-hidden="true"
                   initial={reduced ? false : { opacity: 0 }}
                   animate={{ opacity: glassReady ? 1 : 0 }}
-                  transition={reduced ? { duration: 0 } : { duration: 0.7 }}
+                  transition={slowMotion(reduced ? { duration: 0 } : { duration: 0.7 })}
                 />
                 <motion.div
                   className="fg-stage-label"
@@ -261,7 +263,7 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                     x: glassReady ? 0 : -12,
                     opacity: glassReady ? 1 : 0,
                   }}
-                  transition={reduced ? { duration: 0 } : { duration: 0.45 }}
+                  transition={slowMotion(reduced ? { duration: 0 } : { duration: 0.45 })}
                 >
                   <span>RESEARCH BLUEPRINT</span>
                   <span>{representation3D ? "2D → 3D" : "PIXEL-ALIGNED"}</span>
@@ -280,9 +282,9 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                     opacity: glassReady ? 1 : 0,
                   }}
                   transition={
-                    reduced
+                    slowMotion(reduced
                       ? { duration: 0 }
-                      : { duration: 0.58, delay: 0, ease: [0.22, 1, 0.36, 1] }
+                      : { duration: 0.58, delay: 0, ease: [0.22, 1, 0.36, 1] })
                   }
                 >
                   <motion.div
@@ -291,7 +293,7 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                       y: -expression * 0.15,
                       rotate: -5 - expression * 0.015,
                     }}
-                    transition={reveal}
+                    transition={slowMotion(reveal)}
                   >
                     <span className="fg-layer-index">INPUT / 01</span>
                     <strong>
@@ -319,13 +321,13 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                     opacity: glassReady ? 1 : 0,
                   }}
                   transition={
-                    reduced
+                    slowMotion(reduced
                       ? { duration: 0 }
                       : {
                           duration: 0.58,
                           delay: 0.15,
                           ease: [0.22, 1, 0.36, 1],
-                        }
+                        })
                   }
                 >
                   <motion.div
@@ -334,7 +336,7 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                       y: -expression * 0.06,
                       rotate: expression * 0.025,
                     }}
-                    transition={reveal}
+                    transition={slowMotion(reveal)}
                   >
                     <span className="fg-layer-index">GENERATION / 02</span>
                     <strong>{currentRoute.layer}</strong>
@@ -362,9 +364,9 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                     opacity: glassReady ? 1 : 0,
                   }}
                   transition={
-                    reduced
+                    slowMotion(reduced
                       ? { duration: 0 }
-                      : { duration: 0.58, delay: 0.3, ease: [0.22, 1, 0.36, 1] }
+                      : { duration: 0.58, delay: 0.3, ease: [0.22, 1, 0.36, 1] })
                   }
                 >
                   <motion.div
@@ -373,7 +375,7 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                       y: expression * 0.05,
                       rotate: 5 + expression * 0.02,
                     }}
-                    transition={reveal}
+                    transition={slowMotion(reveal)}
                   >
                     <span className="fg-layer-index">DECODING / 03</span>
                     <strong>{currentRoute.decoder}</strong>
@@ -405,13 +407,13 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                     opacity: glassReady ? 1 : 0,
                   }}
                   transition={
-                    reduced
+                    slowMotion(reduced
                       ? { duration: 0 }
                       : {
                           duration: 0.58,
                           delay: 0.45,
                           ease: [0.22, 1, 0.36, 1],
-                        }
+                        })
                   }
                 >
                   <motion.div
@@ -420,7 +422,7 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                       y: expression * 0.18,
                       rotate: 2 + expression * 0.015,
                     }}
-                    transition={reveal}
+                    transition={slowMotion(reveal)}
                   >
                     <span className="fg-layer-index">REPRESENTATION / 04</span>
                     <strong>
@@ -513,9 +515,9 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
               whileInView={{ x: 0, opacity: 1 }}
               viewport={{ once: false, amount: 0.2 }}
               transition={
-                reduced
+                slowMotion(reduced
                   ? { duration: 0 }
-                  : { duration: 0.6, ease: [0.22, 1, 0.36, 1] }
+                  : { duration: 0.6, ease: [0.22, 1, 0.36, 1] })
               }
             >
               <p className="fg-reading-number">{t("研究框架", "RESEARCH FRAMEWORK")}</p>
@@ -525,14 +527,14 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
               </div>
               <button type="button" className="future-reading-toggle" aria-expanded={researchOpen} aria-controls="glimpse-research-details" onClick={() => setResearchOpen(!researchOpen)}>{researchOpen ? t("收起研究笔记", "Close research notes") : t("阅读研究笔记", "Read research notes")}{researchOpen ? <Minus size={16}/> : <Plus size={16}/>}</button>
               <AnimatePresence mode="wait" initial={false}>
-                {researchOpen && <motion.div
+                {researchOpen && <ReadingReveal
                   id="glimpse-research-details"
                   className="future-details"
                   key={`${route}-${representation3D}`}
-                  initial={reduced ? false : { opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: reduced ? 1 : 0, height: 0 }}
-                  transition={reveal}
+                  initial={reduced ? false : { opacity: 0, gridTemplateRows: "0fr" }}
+                  animate={{ opacity: 1, gridTemplateRows: "1fr" }}
+                  exit={{ opacity: reduced ? 1 : 0, gridTemplateRows: "0fr" }}
+                  transition={slowMotion(reveal)}
                 >
                   <h3>{currentRoute.title}</h3>
                   <p>{currentRoute.description}</p>
@@ -567,7 +569,7 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                   <p className="fg-pending">{currentRoute.next}</p>
                   <p className="fg-pending">{t("拟评估：通用 / 道路 / 地下停车场，分别测试类别与环境泛化、固定与自然指令，以及正负查询。未见类别指感知微调时未见。", "Planned evaluation: general, road and underground-parking scenes; category and environment transfer; fixed and natural queries; positive and negative queries. Unseen categories are held out from perception fine-tuning.")}</p>
                   <p className="fg-supervisor">{t("Gordon Owusu Boateng 指导 · 2026.08/09 — 至今", "Supervised by Gordon Owusu Boateng · Aug/Sep 2026 — present")}</p>
-                </motion.div>}
+                </ReadingReveal>}
               </AnimatePresence>
             </motion.div>
           </div>
@@ -611,9 +613,9 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
             whileInView={{ x: 0, opacity: 1 }}
             viewport={{ once: false, amount: 0.25 }}
             transition={
-              reduced
+              slowMotion(reduced
                 ? { duration: 0 }
-                : { duration: 0.58, ease: [0.22, 1, 0.36, 1] }
+                : { duration: 0.58, ease: [0.22, 1, 0.36, 1] })
             }
           >
             <div><p className="fa-project-name">{t("协同感知与空间约束", "COLLABORATIVE PERCEPTION")}</p><h2 id="avpc-title">AVPC</h2><p className="fa-project-question">{t("多辆车的局部观察，怎样形成共同的空间约束？", "How can vehicles reconcile partial observations?")}</p></div>
@@ -658,9 +660,9 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                 opacity: printReady ? 1 : 0,
               }}
               transition={
-                reduced
+                slowMotion(reduced
                   ? { duration: 0 }
-                  : { duration: 0.7, ease: [0.22, 1, 0.36, 1] }
+                  : { duration: 0.7, ease: [0.22, 1, 0.36, 1] })
               }
             >
               <div className="fa-print-paper fa-print-observation">
@@ -690,9 +692,9 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                 opacity: printReady ? 1 : 0,
               }}
               transition={
-                reduced
+                slowMotion(reduced
                   ? { duration: 0 }
-                  : { duration: 0.7, delay: 0.12, ease: [0.22, 1, 0.36, 1] }
+                  : { duration: 0.7, delay: 0.12, ease: [0.22, 1, 0.36, 1] })
               }
             >
               <div className="fa-print-paper fa-print-coordination">
@@ -718,9 +720,9 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                 opacity: printReady ? 1 : 0,
               }}
               transition={
-                reduced
+                slowMotion(reduced
                   ? { duration: 0 }
-                  : { duration: 0.35, delay: 0.55, ease: [0.22, 1, 0.36, 1] }
+                  : { duration: 0.35, delay: 0.55, ease: [0.22, 1, 0.36, 1] })
               }
             >
               <div className="fa-overlap-label">
@@ -739,9 +741,9 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                 opacity: printReady ? 1 : 0,
               }}
               transition={
-                reduced
+                slowMotion(reduced
                   ? { duration: 0 }
-                  : { duration: 0.4, delay: 0.6, ease: [0.22, 1, 0.36, 1] }
+                  : { duration: 0.4, delay: 0.6, ease: [0.22, 1, 0.36, 1] })
               }
             >
               <span>AVPC</span>
@@ -805,17 +807,17 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
           </div>
 
           <button type="button" className="future-reading-toggle fa-reading-toggle" aria-expanded={collaborationOpen} aria-controls="avpc-work-details" onClick={() => setCollaborationOpen(!collaborationOpen)}>{collaborationOpen ? t("收起工作记录", "Close work notes") : t("阅读我的工作", "Read my work")}{collaborationOpen ? <Minus size={16}/> : <Plus size={16}/>}</button>
-          <AnimatePresence initial={false}>{collaborationOpen && <motion.div
+          <AnimatePresence initial={false}>{collaborationOpen && <ReadingReveal
             id="avpc-work-details"
             className="fa-work-reading"
             aria-live="polite"
-            initial={reduced ? false : { height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: reduced ? 1 : 0 }}
+            initial={reduced ? false : { gridTemplateRows: "0fr", opacity: 0 }}
+            animate={{ gridTemplateRows: "1fr", opacity: 1 }}
+            exit={{ gridTemplateRows: "0fr", opacity: reduced ? 1 : 0 }}
             transition={
-              reduced
+              slowMotion(reduced
                 ? { duration: 0 }
-                : { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
+                : { duration: 0.5, ease: [0.22, 1, 0.36, 1] })
             }
           >
             <span className="fa-work-number">
@@ -827,7 +829,7 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                 initial={reduced ? false : { opacity: 0, x: 12 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: reduced ? 0 : -8 }}
-                transition={reveal}
+                transition={slowMotion(reveal)}
               >
                 <h3>{currentCollaboration.title}</h3>
                 <p>{currentCollaboration.description}</p>
@@ -838,7 +840,7 @@ export function FutureChapter({ quiet = false }: FutureChapterProps) {
                 </div>
               </motion.div>
             </AnimatePresence>
-          </motion.div>}</AnimatePresence>
+          </ReadingReveal>}</AnimatePresence>
 
           <div className="fa-current-boundary">
             <span>{t("当前进展", "Current stage")}</span>

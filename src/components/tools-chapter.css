@@ -163,7 +163,7 @@
   border: 1px solid #10333866;
   color: #103338;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background calc(0.2s * var(--motion-time-scale, 1));
 }
 .tools-scene-controls button:hover {
   background: #fff4d7;
@@ -302,8 +302,8 @@
   cursor: pointer;
   text-align: left;
   transition:
-    background 0.2s,
-    color 0.2s;
+    background calc(0.2s * var(--motion-time-scale, 1)),
+    color calc(0.2s * var(--motion-time-scale, 1));
 }
 .tools-file-index > button > span {
   font-family: "IBM Plex Mono", monospace;

@@ -1,3 +1,5 @@
+import { ReadingReveal } from "./ReadingReveal";
+import { slowMotion } from "../lib/motionTiming";
 import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
 import { useRef, useState } from "react";
 import {
@@ -262,11 +264,11 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
                           pathLength: drawn ? 1 : 0,
                           opacity: drawn ? 1 : 0,
                         }}
-                        transition={{
+                        transition={slowMotion({
                           duration: lowMotion ? 0 : drawn ? 0.55 : 0.4,
                           delay: lowMotion ? 0 : drawn ? index * 0.06 : (5 - index) * 0.055,
                           ease: "easeInOut",
-                        }}
+                        })}
                       />
                     ))}
                     {drawn && !lowMotion && (
@@ -280,12 +282,12 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
                           pathOffset: [0, 0.2, 0.75, 1],
                           opacity: [0, 1, 1, 0],
                         }}
-                        transition={{
+                        transition={slowMotion({
                           duration: 1.05,
                           delay: 0.12,
                           ease: "easeInOut",
                           times: [0, 0.25, 0.8, 1],
-                        }}
+                        })}
                       />
                     )}
                   </svg>
@@ -312,11 +314,11 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
                           ? "inset(0 0 0% 0)"
                           : "inset(0 0 80% 0)",
                       }}
-                      transition={{
+                      transition={slowMotion({
                         duration: lowMotion ? 0 : drawn ? 0.55 : 0.42,
                         delay: lowMotion ? 0 : drawn ? index * 0.06 : 0.04 + (connections.length - 1 - index) * 0.035,
                         ease: [0.22, 1, 0.36, 1],
-                      }}
+                      })}
                       aria-label={`${connection.name}: ${t("查看我参与的工作", "read about my contribution")}`}
                       onClick={() => {
                         setActive(connection.stage);
@@ -361,13 +363,13 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
               </div>
               <AnimatePresence initial={false}>
                 {expanded && (
-                  <motion.div
+                  <ReadingReveal
                     id="mask-system-chain"
                     className="mask-system-chain"
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: lowMotion ? 0 : 0.5, ease: [0.22, 1, 0.36, 1] }}
+                    initial={{ gridTemplateRows: "0fr", opacity: 0 }}
+                    animate={{ gridTemplateRows: "1fr", opacity: 1 }}
+                    exit={{ gridTemplateRows: "0fr", opacity: 0 }}
+                    transition={slowMotion({ duration: lowMotion ? 0 : 0.5, ease: [0.22, 1, 0.36, 1] })}
                   >
                     <p className="mask-chain-caption">
                       <Layers3 size={14} />
@@ -397,7 +399,7 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
                       <strong>{stages[active].detail}</strong>
                       <p>{stages[active].text}</p>
                     </div>
-                  </motion.div>
+                  </ReadingReveal>
                 )}
               </AnimatePresence>
             </div>
