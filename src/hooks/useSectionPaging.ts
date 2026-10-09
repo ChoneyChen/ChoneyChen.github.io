@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import {
-  advanceReadingProgress, canSettleAfterRelease, getReleaseRadius, getSectionStops, positionBeforeInput,
-  sampleReleaseAnimation, selectReleaseTarget, type ObservedPosition, type ReleaseAnimation,
+  advanceReadingProgress, canSettleAfterRelease, getReleaseDuration, getSectionStops, positionBeforeInput,
+  sampleReleaseAnimation, selectReleaseTarget, type ObservedPosition, type ReleaseAnimation, type SectionStop,
 } from "./sectionPaging";
 
 type SectionPagingOptions = { enabled?: boolean; reduced?: boolean; headerOffset?: number };
@@ -31,7 +31,7 @@ function isNestedScroller(target: EventTarget | null): boolean {
   return false;
 }
 
-/** Browser scrolling always owns the gesture; only a close, released heading may settle. */
+/** Native scrolling owns the gesture; a released chapter top past half-screen may settle. */
 export function useSectionPaging({ enabled = true, reduced = false, headerOffset = 78 }: SectionPagingOptions = {}) {
   useEffect(() => {
     const root = document.documentElement;
@@ -43,7 +43,7 @@ export function useSectionPaging({ enabled = true, reduced = false, headerOffset
 
     const nativeScrollEnd = "onscrollend" in document;
     let disposed = false;
-    let stops: number[] = [];
+    let stops: SectionStop[] = [];
     let gesture: ReadingGesture | null = null;
     let animation: ReleaseAnimation | null = null;
     let animationFrame = 0;
@@ -84,6 +84,8 @@ export function useSectionPaging({ enabled = true, reduced = false, headerOffset
     const tick = (now: number) => {
       animationFrame = 0;
       if (!animation || disposed || held()) return;
+      // Anchor to the first painted frame, rather than skipping a delayed startup under load.
+      if (animation.since < 0) animation.since = now;
       const sample = sampleReleaseAnimation(animation, now, inputVersion);
       if (!sample) return;
       // The only writes in this hook happen after native scrolling and the gesture ended.
@@ -100,20 +102,18 @@ export function useSectionPaging({ enabled = true, reduced = false, headerOffset
       settleTimer = 0;
       if (!gesture || animation || disposed) return;
       const now = performance.now();
-      const inputQuiet = gesture.mode === "wheel" ? 180 : 80;
-      if (!canSettleAfterRelease({ now, lastInput, lastScroll, inputQuiet, held: held(), reduced,
+      if (!canSettleAfterRelease({ now, lastInput, lastScroll, held: held(), reduced,
         nativeScrollEnd, nativeEnded })) {
         // scrollend will signal the end of native inertia; never guess ahead of it.
-        if (!held() && (!nativeScrollEnd || nativeEnded)) {
-          const delay = nativeScrollEnd ? Math.max(32, inputQuiet - (now - lastInput))
-            : Math.max(32, 380 - (now - lastScroll), 300 - (now - lastInput));
+        if (!held() && !nativeScrollEnd) {
+          const delay = Math.max(32, 380 - (now - lastScroll), 300 - (now - lastInput));
           settleTimer = window.setTimeout(settle, delay);
         }
         return;
       }
       const target = selectReleaseTarget(stops, {
         origin: gesture.origin, position: window.scrollY, direction: gesture.direction,
-        radius: getReleaseRadius(window.innerHeight),
+        viewportHeight: window.innerHeight,
       });
       root.dataset.pagingOrigin = String(gesture.origin);
       root.dataset.pagingDirection = String(gesture.direction);
@@ -127,7 +127,7 @@ export function useSectionPaging({ enabled = true, reduced = false, headerOffset
         return;
       }
       const from = window.scrollY;
-      animation = { from, target, since: now, duration: 310 + Math.min(100, Math.abs(target - from) * 1.2), inputVersion };
+      animation = { from, target, since: -1, duration: getReleaseDuration(target - from), inputVersion };
       root.dataset.pagingTarget = String(target);
       root.dataset.pagingRoute = nativeScrollEnd ? "settle-native" : "settle-fallback";
       phase("released");
@@ -136,7 +136,8 @@ export function useSectionPaging({ enabled = true, reduced = false, headerOffset
     const scheduleSettle = () => {
       clearSettling();
       if (!gesture || held() || (nativeScrollEnd && !nativeEnded)) return;
-      settleTimer = window.setTimeout(settle, nativeScrollEnd ? 32 : 380);
+      // Native scrollend already means input and momentum finished; hand off on the next RAF.
+      settleTimer = window.setTimeout(settle, nativeScrollEnd ? 0 : 380);
     };
 
     const recordGesture = () => {
@@ -254,7 +255,8 @@ export function useSectionPaging({ enabled = true, reduced = false, headerOffset
             scrollMarginTop: Number.isFinite(margin) ? margin : headerOffset };
         }), window.innerHeight, headerOffset, root.scrollHeight,
       );
-      const changed = next.length !== stops.length || next.some((stop, index) => Math.abs(stop - stops[index]) > 1);
+      const changed = next.length !== stops.length || next.some((stop, index) =>
+        Math.abs(stop.position - stops[index].position) > 1 || Math.abs(stop.top - stops[index].top) > 1);
       stops = next;
       root.dataset.pagingStops = String(stops.length);
       if (changed) suppress(); // Expanding content recalibrates headings without moving the reader.

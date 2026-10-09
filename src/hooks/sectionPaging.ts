@@ -1,4 +1,5 @@
 export type SectionGeometry = { top: number; height: number; scrollMarginTop?: number };
+export type SectionStop = { position: number; top: number };
 
 /** Only real, reachable chapter headings. The document end is not an extra snap target. */
 export function getSectionStops(
@@ -6,20 +7,25 @@ export function getSectionStops(
   viewportHeight: number,
   headerOffset: number,
   documentHeight: number,
-): number[] {
+): SectionStop[] {
   const maximum = Math.max(0, documentHeight - viewportHeight);
   return sections
-    .map((section) => section.top - (section.scrollMarginTop ?? headerOffset))
-    .filter((position) => Number.isFinite(position) && position >= 0 && position < maximum - 1)
-    .sort((a, b) => a - b)
-    .reduce<number[]>((unique, position) => {
-      if (!unique.length || position - unique[unique.length - 1] > 2) unique.push(position);
+    .map((section) => ({ position: section.top - (section.scrollMarginTop ?? headerOffset), top: section.top }))
+    .filter(({ position }) => Number.isFinite(position) && position >= 0 && position < maximum - 1)
+    .sort((a, b) => a.position - b.position)
+    .reduce<SectionStop[]>((unique, stop) => {
+      if (!unique.length || stop.position - unique[unique.length - 1].position > 2) unique.push(stop);
       return unique;
     }, []);
 }
 
 export function getReleaseRadius(viewportHeight: number): number {
-  return Math.min(88, Math.max(56, viewportHeight * 0.09));
+  return Math.max(0, viewportHeight * 0.5);
+}
+
+/** Fast nearby corrections, with more travel time for a half-screen transition. */
+export function getReleaseDuration(distance: number): number {
+  return 220 + Math.min(180, Math.abs(distance) * 0.4);
 }
 
 export type ObservedPosition = { position: number; at: number };
@@ -48,20 +54,25 @@ type ReleasePosition = {
   origin: number;
   position: number;
   direction: -1 | 0 | 1;
-  radius: number;
+  viewportHeight: number;
 };
 
-/** A small finish near a heading the reader approached, never a pull back to their origin. */
-export function selectReleaseTarget(stops: number[], { origin, position, direction, radius }: ReleasePosition): number | null {
-  if (!direction || direction * (position - origin) < 6) return null;
+/** The real chapter top must cross the half-screen line; calibration only sets its destination. */
+export function selectReleaseTarget(stops: SectionStop[], { origin, position, direction, viewportHeight }: ReleasePosition): number | null {
+  if (!direction || direction * (position - origin) < 0.5) return null;
   let closest: number | null = null;
-  let distance = Math.min(88, Math.max(0, radius));
+  let distance = Infinity;
+  const radius = getReleaseRadius(viewportHeight);
+  const overshootAllowance = Math.min(88, Math.max(56, viewportHeight * 0.09));
   for (const stop of stops) {
-    const remaining = Math.abs(stop - position);
-    const initial = Math.abs(stop - origin);
-    if (direction * (stop - origin) <= 12) continue;
-    if (remaining < 0.5 || remaining > distance || remaining >= initial - 3) continue;
-    closest = stop;
+    const remaining = Math.abs(stop.position - position);
+    const initial = Math.abs(stop.position - origin);
+    if (direction * (stop.position - origin) <= 12) continue;
+    const ahead = direction * (stop.position - position);
+    // A passed opening only receives a small correction, never a half-screen pull backwards.
+    if (ahead < 0 ? remaining > overshootAllowance : direction * (stop.top - position) > radius) continue;
+    if (remaining < 0.5 || remaining > distance || remaining >= initial - 0.25) continue;
+    closest = stop.position;
     distance = remaining;
   }
   return closest;
@@ -71,7 +82,6 @@ export type ReleaseReadiness = {
   now: number;
   lastInput: number;
   lastScroll: number;
-  inputQuiet: number;
   held: boolean;
   reduced: boolean;
   nativeScrollEnd: boolean;
@@ -81,9 +91,8 @@ export type ReleaseReadiness = {
 /** Native scrollend is authoritative; the old-browser fallback deliberately waits longer. */
 export function canSettleAfterRelease(state: ReleaseReadiness): boolean {
   if (state.held || state.reduced) return false;
-  if (state.now - state.lastInput < state.inputQuiet) return false;
   return state.nativeScrollEnd
-    ? state.nativeEnded && state.now - state.lastScroll >= 32
+    ? state.nativeEnded
     : state.now - state.lastScroll >= 380 && state.now - state.lastInput >= 300;
 }
 
@@ -95,12 +104,39 @@ export type ReleaseAnimation = {
   inputVersion: number;
 };
 
-/** Normalized critical damping: monotonic, no overshoot, and an exact finite endpoint. */
-export function sampleReleaseAnimation(animation: ReleaseAnimation, now: number, inputVersion: number): { position: number; progress: number; done: boolean } | null {
+/** Zero-bounce spring from rest; an almost invisible Hermite tail reaches exact rest continuously.
+ * Apple WWDC23 "Animate with springs" motivates continuous position/velocity and natural settling.
+ * The tail is our own C2 interpolation, not Apple's implementation. duration tunes the response.
+ */
+export function sampleReleaseAnimation(animation: ReleaseAnimation, now: number, inputVersion: number): { position: number; velocity: number; progress: number; done: boolean } | null {
   if (animation.inputVersion !== inputVersion) return null;
-  const progress = Math.max(0, Math.min(1, (now - animation.since) / animation.duration));
-  if (progress >= 1) return { position: animation.target, progress: 1, done: true };
-  const damping = 7;
-  const ease = (1 - (1 + damping * progress) * Math.exp(-damping * progress)) / (1 - (1 + damping) * Math.exp(-damping));
-  return { position: animation.from + (animation.target - animation.from) * ease, progress, done: false };
+  const seconds = Math.max(0, now - animation.since) / 1000;
+  const omega = 9 / (Math.max(1, animation.duration) / 1000);
+  const phase = omega * seconds;
+  const offset = animation.from - animation.target;
+  if (offset === 0 || phase >= 11) {
+    return { position: animation.target, velocity: 0, progress: 1, done: true };
+  }
+  if (phase < 9) {
+    const decay = Math.exp(-phase);
+    const remaining = offset * (1 + phase) * decay;
+    const velocity = phase === 0 ? 0 : -offset * omega * phase * decay;
+    return { position: animation.target + remaining, velocity, progress: 1 - (1 + phase) * decay, done: false };
+  }
+  // Join at q=9; D=2/omega gives the same position, velocity AND acceleration.
+  // P(0)=0, P'(0)=1.8, P''(0)=-3.2; P(1)=1, P'(1)=P''(1)=0.
+  // P' stays nonnegative and P'' nonpositive, so the tail only decelerates and never bounces.
+  const s = (phase - 9) / 2;
+  const rest = 1 - s;
+  // Factored forms avoid cancellation close to s=1 and keep the residual/velocity nonnegative.
+  const residual = rest ** 3 * (1 + 1.2 * s + 2.2 * s * s);
+  const derivative = rest ** 2 * (1.8 + 0.4 * s + 11 * s * s);
+  const tailDecay = 10 * Math.exp(-9);
+  const tailOffset = offset * tailDecay;
+  return {
+    position: animation.target + tailOffset * residual,
+    velocity: -tailOffset * derivative * omega / 2,
+    progress: 1 - tailDecay * residual,
+    done: false,
+  };
 }
