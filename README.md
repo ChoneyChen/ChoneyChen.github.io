@@ -8,7 +8,9 @@ Three research directions have separate visual scenes and pull-out gestures: a h
 
 Project names, research questions and my role form the first reading layer. All expandable records start closed. Scene entrances reverse when they leave the viewport and replay on return. Open reading layers automatically close near the viewport exit; language preferences remain.
 
-Wheel gestures use a threshold and damped transition at chapter boundaries. Each opening strip aligns below the fixed header; longer chapters retain continuous native scrolling. Touch, keyboard, deep links and reduced motion have equivalent reading paths.
+The U-IMPROVE perception interface uses one continuous range control: drag from the three task outputs through semantic-geometric fusion into a rotatable depth scene, or reverse the motion to separate them again. Arrow keys and Home/End offer the same process. Leaving the visual resets it to its closed starting state.
+
+Wheel, trackpad, touch, scrollbar and keyboard scrolling remain native, with user input always taking priority. After the gesture and its momentum have ended, only a nearby chapter opening can receive a short, cancelable alignment. The capture zone is 56–88px; long chapter interiors remain free, and leaving an aligned opening never pulls the reader back. Native `scrollend` handles current browsers, with a conservative stillness fallback for older ones. New input immediately cancels alignment. Links and layout changes retain their own position, and reduced motion disables automatic alignment. Each opening strip remains calibrated below the fixed header.
 
 English is the default on a first visit. The EN/ZH control switches the complete content and retains the current reading selections. Language preferences are stored locally. The contact chapter includes WeChat, phone, email, and GitHub links supplied for publication by the author.
 

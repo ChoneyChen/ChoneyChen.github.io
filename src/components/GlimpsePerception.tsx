@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { motion, useInView } from "motion/react";
-import { ArrowRight, RotateCcw, RotateCw } from "lucide-react";
+import { MoveHorizontal, RotateCcw, RotateCw } from "lucide-react";
 import { useI18n } from "../i18n";
 import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
 import "./glimpse-perception.css";
@@ -33,12 +33,12 @@ function PerceptionImage({ mode, presence = "present" }: { mode: "rgb" | "semant
   </svg>;
 }
 
-function SpatialPreview({ active, visible, quiet, presence }: { active: boolean; visible: boolean; quiet: boolean; presence: Presence }) {
+function SpatialPreview({ lift, dragging, visible, quiet, presence }: { lift: number; dragging: boolean; visible: boolean; quiet: boolean; presence: Presence }) {
   const { t } = useI18n();
   const canvas = useRef<HTMLCanvasElement>(null);
   const engine = useRef<{ draw: () => void; rotate: (x: number, y?: number) => void; reset: () => void } | null>(null);
-  const current = useRef({ active, visible, quiet, presence });
-  current.current = { active, visible, quiet, presence };
+  const current = useRef({ lift, dragging, visible, quiet, presence });
+  current.current = { lift, dragging, visible, quiet, presence };
   const [ready, setReady] = useState(false);
   const [fallback, setFallback] = useState(false);
   useEffect(() => {
@@ -81,9 +81,9 @@ function SpatialPreview({ active, visible, quiet, presence }: { active: boolean;
       const render = () => {
         raf = 0;
         if (disposed || !current.current.visible) return;
-        const goal = current.current.active ? 1 : 0;
+        const goal = current.current.lift;
         material.uniforms.presence.value = current.current.presence === "present" ? 1 : current.current.presence === "absent" ? 0 : .3;
-        material.uniforms.lift.value = current.current.quiet ? goal : THREE.MathUtils.lerp(material.uniforms.lift.value, goal, .085);
+        material.uniforms.lift.value = current.current.quiet || current.current.dragging ? goal : THREE.MathUtils.lerp(material.uniforms.lift.value, goal, .085);
         group.rotation.y = current.current.quiet ? yaw : THREE.MathUtils.lerp(group.rotation.y, yaw, .15);
         group.rotation.x = current.current.quiet ? pitch : THREE.MathUtils.lerp(group.rotation.x, pitch, .15);
         renderer.render(scene, camera);
@@ -105,8 +105,8 @@ function SpatialPreview({ active, visible, quiet, presence }: { active: boolean;
     }).catch(() => { if (!disposed) setFallback(true); });
     return () => { disposed=true;cleanup(); };
   }, []);
-  useEffect(() => { engine.current?.draw(); }, [active,visible,quiet,presence]);
-  return <div className="gp-space" data-ready={ready} data-lifted={active} data-paging-ignore>
+  useEffect(() => { engine.current?.draw(); }, [lift,dragging,visible,quiet,presence]);
+  return <div className="gp-space" data-ready={ready} data-lifted={lift>0} data-paging-ignore>
     {fallback ? <div className="gp-space-fallback"><PerceptionImage mode="fusion"/><p>{t("空间示意 · 你的浏览器显示二维预览", "Spatial concept · showing a 2D preview in this browser")}</p></div> : <canvas ref={canvas} tabIndex={0} aria-label={t("语义深度空间预览：拖动旋转，方向键转动", "Semantic depth preview: drag to rotate, arrow keys to turn")} onKeyDown={event=>{ const direction=event.key==="ArrowRight"? .15:event.key==="ArrowLeft"?-.15:0;const vertical=event.key==="ArrowDown"?.1:event.key==="ArrowUp"?-.1:0;if(direction||vertical){event.preventDefault();engine.current?.rotate(direction,vertical);} }}/>} 
     <div className="gp-orbit-controls"><span>{t("拖动旋转 · 方向键", "Drag to rotate · arrow keys")}</span><button onClick={()=>engine.current?.rotate(-.22)} aria-label={t("向左旋转空间", "Rotate space left")}><RotateCcw size={16}/></button><button onClick={()=>engine.current?.rotate(.22)} aria-label={t("向右旋转空间", "Rotate space right")}><RotateCw size={16}/></button><button onClick={()=>engine.current?.reset()}>{t("复位", "Reset view")}</button></div>
   </div>;
@@ -114,18 +114,26 @@ function SpatialPreview({ active, visible, quiet, presence }: { active: boolean;
 
 export function GlimpsePerception({ quiet = false }: { quiet?: boolean }) {
   const { t } = useI18n();
-  const [stage,setStage] = useState(0);
+  const [progress,setProgress] = useState(0);
+  const [dragging,setDragging] = useState(false);
+  const stage=progress<35?0:progress<65?1:2;
+  const fusion=Math.min(1,progress/50);
+  const lift=Math.max(0,(progress-50)/50);
+  const smooth=(value:number)=>value*value*(3-2*value);
+  const spaceOpacity=smooth(Math.min(1,lift*4));
+  const fusionOpacity=smooth(Math.max(0,(fusion-.25)/.75))*(1-spaceOpacity);
   const [presence,setPresence] = useState<Presence>("present");
   const [mounted,setMounted] = useState(false);
   const host=useRef<HTMLDivElement>(null);
   const visible=useInView(host,{amount:.08});
-  useCollapseOnLeave("glimpse",()=>{setStage(0);setPresence("present");});
+  useCollapseOnLeave("glimpse",()=>{setProgress(0);setDragging(false);setPresence("present");});
   const labels=[t("三种任务输出", "Three task outputs"),t("语义几何融合", "Semantic-geometric fusion"),t("3D 抬升", "3D lifting")];
   const titles=[t("同一个生成模型，不同的任务指令。", "One generator, different task instructions."),t("像素对齐，将语义与几何关联。", "Pixel-aligned semantics and geometry."),t("用深度与相机模型，抬升为空间。", "Lift depth into space with a camera model.")];
   const states: Presence[]=["present","absent","uncertain"];
   const stateLabels=[t("存在", "Present"),t("不存在", "Absent"),t("不确定", "Uncertain")];
-  const advance=(next:number)=>{setStage(next);if(next===2)setMounted(true);};
-  return <div className="gp-story" ref={host} data-stage={stage} data-presence={presence} data-entry-state={quiet||visible?"present":"reset"}>
+  const advance=(next:number)=>{setProgress(next);if(next>15)setMounted(true);};
+  const sliderStyle={"--gp-progress": `${progress}%`} as CSSProperties;
+  return <div className="gp-story" ref={host} data-stage={stage} data-progress={progress} data-reading-open={progress>0} aria-controls="glimpse-visual-stage" data-presence={presence} data-entry-state={quiet||visible?"present":"reset"}>
     <div className="gp-topline"><span>{t("U-IMPROVE / 生成式感知接口", "U-IMPROVE / GENERATIVE PERCEPTION INTERFACE")}</span><span>{t("方法交互示意", "INTERACTIVE METHOD CONCEPT")}</span></div>
     <h3>{titles[stage]}</h3>
     <div className="gp-input-story">
@@ -139,14 +147,18 @@ export function GlimpsePerception({ quiet = false }: { quiet?: boolean }) {
       </div>
     </div>
     <div className="gp-stage" id="glimpse-visual-stage">
-      {(["semantic","depth","normal"] as const).map((mode,index)=><motion.div key={mode} className={`gp-view gp-view-${index}`} aria-hidden={stage !== 0} animate={{left:stage===0?`${index*33.333}%`:"33.333%",y:quiet||visible?(stage===0?index===1?-8:8:0):34,rotate:stage===0?[-3,1,4][index]:0,scale:stage===2?.82:1,opacity:quiet||visible?(stage===2?0:stage===1?.32:1):0}} transition={{duration:quiet?0:.65,delay:quiet?0:stage===0?index*.09:0,ease:[.22,1,.36,1]}}>
+      {(["semantic","depth","normal"] as const).map((mode,index)=><motion.div key={mode} className={`gp-view gp-view-${index}`} aria-hidden={stage !== 0} animate={{left:`${index*33.333+(33.333-index*33.333)*fusion}%`,y:quiet||visible?([8,-8,8][index]*(1-fusion)):34,rotate:[-3,1,4][index]*(1-fusion),scale:1-lift*.18,opacity:quiet||visible?((1-fusion*.68)*(1-spaceOpacity)):0}} transition={{duration:quiet||dragging?0:progress===0?.5:.15,delay:quiet||dragging||progress>0?0:index*.07,ease:[.22,1,.36,1]}}>
         <div className="gp-view-label"><span>0{index+1}</span><strong>{[t("分割输出", "Segmentation"),t("度量深度", "Metric depth"),t("表面法线", "Surface normals")][index]}</strong></div><PerceptionImage mode={mode} presence={presence}/><span className="gp-view-caption">{[t("RGB 遮罩编码 + 状态条", "RGB mask code + status strip"),t("颜色编码 → 距离", "Colour encoding to distance"),t("RGB 通道 → 法线方向", "RGB channels to normal direction")][index]}</span>
       </motion.div>)}
-      <motion.div className="gp-fusion" animate={{opacity:stage===1?1:0,scale:stage===1?1:.94,y:stage===2?-15:0}} transition={{duration:quiet?0:.45,delay:stage===1&&!quiet?.3:0}} aria-hidden={stage!==1}><PerceptionImage mode="fusion"/><span>{t("确定性任务解码 · 语义与度量几何融合", "Deterministic decoding · semantic-geometric fusion")}</span></motion.div>
-      {mounted && <motion.div className="gp-space-layer" animate={{opacity:stage===2?1:0}} transition={{duration:quiet?0:.55}} inert={stage!==2}><SpatialPreview active={stage===2} visible={visible} quiet={quiet} presence={presence}/></motion.div>}
+      <motion.div className="gp-fusion" animate={{opacity:quiet||visible?fusionOpacity:0,scale:.94+fusion*.06,y:-15*lift}} transition={{duration:quiet||dragging?0:.15}} aria-hidden={stage!==1}><PerceptionImage mode="fusion"/><span>{t("确定性任务解码 · 语义与度量几何融合", "Deterministic decoding · semantic-geometric fusion")}</span></motion.div>
+      {mounted && <motion.div className="gp-space-layer" animate={{opacity:spaceOpacity}} transition={{duration:quiet||dragging?0:.15}} inert={progress<70}><SpatialPreview lift={lift} dragging={dragging} visible={visible} quiet={quiet} presence={presence}/></motion.div>}
     </div>
-    <div className="gp-controls" role="group" aria-label={t("探索 U-IMPROVE 的可视化过程", "Explore the U-IMPROVE visual process")}>
-      {labels.map((label,index)=><button key={index} className={stage===index?"is-active":""} aria-pressed={stage===index} aria-expanded={index>0 && stage===index} aria-controls="glimpse-visual-stage" onClick={()=>advance(index)}><span>0{index+1}</span>{label}{index<2&&<ArrowRight size={14}/>}</button>)}
+    <div className={`gp-journey${dragging?" is-dragging":""}`} style={sliderStyle}>
+      <div className="gp-journey-label"><label htmlFor="glimpse-journey">{t("拖动，展开感知过程", "Drag through the perception process")}</label><MoveHorizontal size={18} aria-hidden="true"/></div>
+      <div className="gp-journey-track">
+        <input id="glimpse-journey" className="gp-journey-range" type="range" min="0" max="100" step="1" value={progress} aria-controls="glimpse-visual-stage" aria-valuetext={`${progress}% · ${labels[stage]}`} onChange={event=>advance(Number(event.target.value))} onPointerDown={()=>setDragging(true)} onPointerUp={()=>setDragging(false)} onPointerCancel={()=>setDragging(false)} onBlur={()=>setDragging(false)}/>
+      </div>
+      <div className="gp-journey-milestones" aria-hidden="true">{labels.map((label,index)=><span key={index} className={stage===index?"is-current":""}><small>0{index+1}</small>{label}</span>)}</div>
     </div>
     <p className="gp-context">{stage===2?t("抬升原理：p = d K⁻¹ [u, v, 1]ᵀ；附加语义后形成可查询的 3D 点。此预览使用示意深度与相机模型，遮挡区域留空。", "Lifting principle: p = d K⁻¹ [u, v, 1]ᵀ. Semantics attach to each 3D point. This preview uses illustrative depth and a camera model; occluded regions remain unobserved."):t("RGB 与语言指令经共享生成骨干输出任务图像，再确定性解码为分割、深度与法线。", "RGB and language instructions condition a shared generator. Its task images decode deterministically into segmentation, depth and normals.")}</p>
     <p className="gp-demo-note">{t("原创方法示意，非模型实验输出；训练、泛化与定量评估仍待验证。", "Original method illustration, not model experiment outputs. Training, generalisation and quantitative evaluation remain to be validated.")}</p>

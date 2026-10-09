@@ -1,388 +1,271 @@
 import { useEffect } from "react";
-import { accumulateWheel, adjacentStop, getSectionStops, nearestStop, shouldCaptureHeading, type WheelGesture } from "./sectionPaging";
+import {
+  advanceReadingProgress, canSettleAfterRelease, getReleaseRadius, getSectionStops, positionBeforeInput,
+  sampleReleaseAnimation, selectReleaseTarget, type ObservedPosition, type ReleaseAnimation,
+} from "./sectionPaging";
 
-type SectionPagingOptions = {
-  enabled?: boolean;
-  reduced?: boolean;
-  headerOffset?: number;
-};
+type SectionPagingOptions = { enabled?: boolean; reduced?: boolean; headerOffset?: number };
+type ReadingGesture = { mode: "wheel" | "touch" | "pointer" | "keyboard"; origin: number; lastPosition: number; direction: -1 | 0 | 1 };
 
-type PageAnimation = {
-  kind: "preview" | "snap" | "return";
-  from: number;
-  target: number;
-  since: number;
-  duration: number;
-};
-
-const wheelControls = "input, textarea, select, [contenteditable='true'], [role='slider'], [role='dialog'], canvas, [data-paging-ignore]";
-const keyboardControls = `${wheelControls}, button, a, summary, [role='button'], [role='tab'], [role='checkbox'], [role='radio'], [role='listbox']`;
+const gestureControls = "input, textarea, select, [contenteditable='true'], [role='slider'], [role='dialog'], canvas, [data-paging-ignore]";
+const keyboardControls = `${gestureControls}, button, a, summary, [role='button'], [role='tab'], [role='checkbox'], [role='radio'], [role='listbox']`;
+const scrollKeys = new Set(["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "]);
 
 function closestControl(target: EventTarget | null, selector: string): Element | null {
   return target instanceof Element ? target.closest(selector) : null;
 }
 
-function nestedScroller(target: EventTarget | null, direction: number): boolean {
+function eventTime(event: Event): number {
+  // Old WebKit used epoch timestamps; current event timestamps share performance.now's clock.
+  const timestamp = event.timeStamp > 1e12 ? event.timeStamp - performance.timeOrigin : event.timeStamp;
+  return Number.isFinite(timestamp) && timestamp > 0 ? timestamp : performance.now();
+}
+
+function isNestedScroller(target: EventTarget | null): boolean {
   let element = target instanceof Element ? target : null;
   while (element && element !== document.body && element !== document.documentElement) {
-    if (element instanceof HTMLElement && element.scrollHeight > element.clientHeight + 2) {
-      const style = getComputedStyle(element);
-      if (/auto|scroll/.test(style.overflowY)) {
-        const canScroll = direction > 0
-          ? element.scrollTop + element.clientHeight < element.scrollHeight - 1
-          : element.scrollTop > 1;
-        if (canScroll || /contain|none/.test(style.overscrollBehaviorY)) return true;
-      }
-    }
+    if (element instanceof HTMLElement && element.scrollHeight > element.clientHeight + 2
+      && /auto|scroll/.test(getComputedStyle(element).overflowY)) return true;
     element = element.parentElement;
   }
   return false;
 }
 
-/** Continuous document reading with a damped capture near the next chapter heading. */
+/** Browser scrolling always owns the gesture; only a close, released heading may settle. */
 export function useSectionPaging({ enabled = true, reduced = false, headerOffset = 78 }: SectionPagingOptions = {}) {
   useEffect(() => {
     const root = document.documentElement;
-    if (!enabled) {
-      root.dataset.paging = "paused";
+    if (!enabled || reduced) {
+      root.dataset.paging = enabled ? "native" : "paused";
       root.style.setProperty("--paging-progress", "0");
-      return () => { delete root.dataset.paging; };
+      return () => { delete root.dataset.paging; root.style.removeProperty("--paging-progress"); };
     }
 
+    const nativeScrollEnd = "onscrollend" in document;
     let disposed = false;
     let stops: number[] = [];
-    let frame = Math.max(1, window.innerHeight - headerOffset);
-    let animation: PageAnimation | null = null;
+    let gesture: ReadingGesture | null = null;
+    let animation: ReleaseAnimation | null = null;
     let animationFrame = 0;
     let measureFrame = 0;
     let settleTimer = 0;
-    let wheelTimer = 0;
-    let gesture: WheelGesture | null = null;
-    let nativeBoundary: { target: number; direction: 1 | -1 } | null = null;
-    let origin = window.scrollY;
+    let inputVersion = 0;
+    let lastInput = -Infinity;
+    let lastScroll = -Infinity;
+    let nativeEnded = false;
     let expectedY = window.scrollY;
-    let pointerDown = false;
     let touchDown = false;
-    let touchOrigin = window.scrollY;
-    let touchMoved = false;
-    let inputMode: "external" | "wheel" | "touch" | "free" = "external";
-    let externalUntil = performance.now() + 900;
+    const pointers = new Set<number>();
+    const keys = new Set<string>();
+    const observations: ObservedPosition[] = [{ position: window.scrollY, at: 0 }];
 
     const phase = (name: string, progress = 0) => {
       root.dataset.paging = name;
       root.style.setProperty("--paging-progress", String(progress));
     };
-
+    const clearSettling = () => { window.clearTimeout(settleTimer); settleTimer = 0; };
     const cancelAnimation = () => {
+      inputVersion += 1;
       if (animationFrame) cancelAnimationFrame(animationFrame);
       animationFrame = 0;
       animation = null;
+      delete root.dataset.pagingTarget;
+    };
+    const suppress = () => {
+      cancelAnimation();
+      clearSettling();
+      gesture = null;
+      nativeEnded = false;
+      root.dataset.pagingRoute = "external";
+      phase("ready");
     };
 
-    const writePosition = (position: number) => {
-      // Explicit instant behavior avoids stacking the site's native smooth hash navigation.
-      window.scrollTo({ top: position, behavior: "instant" });
-      expectedY = window.scrollY;
-    };
-
+    const held = () => touchDown || pointers.size > 0 || keys.size > 0;
     const tick = (now: number) => {
       animationFrame = 0;
-      if (!animation || disposed) return;
-      if (animation.kind === "preview") {
-        const difference = animation.target - window.scrollY;
-        if (Math.abs(difference) <= 0.6) {
-          writePosition(animation.target);
-          animation = null;
-          return;
-        }
-        writePosition(window.scrollY + difference * 0.24);
-      } else {
-        const progress = Math.min(1, (now - animation.since) / animation.duration);
-        const ease = progress * progress * progress * (progress * (progress * 6 - 15) + 10);
-        writePosition(animation.from + (animation.target - animation.from) * ease);
-        if (progress >= 1) {
-          writePosition(animation.target);
-          animation = null;
-          phase("settled");
-          return;
-        }
-      }
-      animationFrame = requestAnimationFrame(tick);
+      if (!animation || disposed || held()) return;
+      const sample = sampleReleaseAnimation(animation, now, inputVersion);
+      if (!sample) return;
+      // The only writes in this hook happen after native scrolling and the gesture ended.
+      window.scrollTo({ top: sample.position, behavior: "instant" });
+      expectedY = window.scrollY;
+      phase("snapping", sample.progress);
+      if (sample.done) {
+        animation = null;
+        phase("settled", 1);
+      } else animationFrame = requestAnimationFrame(tick);
     };
 
-    const animateTo = (target: number, kind: "snap" | "return" = "snap") => {
-      cancelAnimation();
-      const from = window.scrollY;
-      expectedY = from;
-      if (reduced || Math.abs(target - from) <= 1) {
-        writePosition(target);
-        phase("settled");
+    const settle = () => {
+      settleTimer = 0;
+      if (!gesture || animation || disposed) return;
+      const now = performance.now();
+      const inputQuiet = gesture.mode === "wheel" ? 180 : 80;
+      if (!canSettleAfterRelease({ now, lastInput, lastScroll, inputQuiet, held: held(), reduced,
+        nativeScrollEnd, nativeEnded })) {
+        // scrollend will signal the end of native inertia; never guess ahead of it.
+        if (!held() && (!nativeScrollEnd || nativeEnded)) {
+          const delay = nativeScrollEnd ? Math.max(32, inputQuiet - (now - lastInput))
+            : Math.max(32, 380 - (now - lastScroll), 300 - (now - lastInput));
+          settleTimer = window.setTimeout(settle, delay);
+        }
         return;
       }
-      animation = {
-        kind, from, target, since: performance.now(),
-        duration: kind === "return" ? 340 : Math.min(780, Math.max(500, 360 + Math.abs(target - from) * 0.35)),
-      };
-      phase(kind === "return" ? "returning" : "snapping");
+      const target = selectReleaseTarget(stops, {
+        origin: gesture.origin, position: window.scrollY, direction: gesture.direction,
+        radius: getReleaseRadius(window.innerHeight),
+      });
+      root.dataset.pagingOrigin = String(gesture.origin);
+      root.dataset.pagingDirection = String(gesture.direction);
+      root.dataset.pagingReleasePosition = String(window.scrollY);
+      root.dataset.pagingReleaseTarget = target === null ? "none" : String(target);
+      gesture = null;
+      nativeEnded = false;
+      if (target === null) {
+        root.dataset.pagingRoute = "free";
+        phase("ready");
+        return;
+      }
+      const from = window.scrollY;
+      animation = { from, target, since: now, duration: 310 + Math.min(100, Math.abs(target - from) * 1.2), inputVersion };
+      root.dataset.pagingTarget = String(target);
+      root.dataset.pagingRoute = nativeScrollEnd ? "settle-native" : "settle-fallback";
+      phase("released");
       animationFrame = requestAnimationFrame(tick);
     };
-
-    const previewTo = (target: number) => {
-      if (reduced) return;
-      if (animation?.kind === "preview") animation.target = target;
-      else {
-        cancelAnimation();
-        expectedY = window.scrollY;
-        animation = { kind: "preview", from: window.scrollY, target, since: 0, duration: 0 };
-      }
-      if (!animationFrame) animationFrame = requestAnimationFrame(tick);
+    const scheduleSettle = () => {
+      clearSettling();
+      if (!gesture || held() || (nativeScrollEnd && !nativeEnded)) return;
+      settleTimer = window.setTimeout(settle, nativeScrollEnd ? 32 : 380);
     };
+
+    const recordGesture = () => {
+      if (!gesture) return;
+      root.dataset.pagingOrigin = String(gesture.origin);
+      root.dataset.pagingDirection = String(gesture.direction);
+    };
+    const beginInput = (mode: ReadingGesture["mode"], eligible: boolean, inputAt: number) => {
+      const now = performance.now();
+      const fresh = !gesture || gesture.mode !== mode || now - lastInput > 420 || Boolean(animation);
+      // Every new input cancels our RAF immediately. Nothing consumes the input event.
+      cancelAnimation();
+      clearSettling();
+      nativeEnded = false;
+      lastInput = now;
+      if (!eligible) {
+        gesture = null;
+        root.dataset.pagingRoute = "external";
+        phase("ready");
+        return;
+      }
+      if (fresh) {
+        const origin = positionBeforeInput(observations, inputAt, window.scrollY);
+        gesture = { mode, origin, lastPosition: origin, direction: 0 };
+      }
+      if (gesture) {
+        const progress = advanceReadingProgress(gesture, window.scrollY);
+        if (progress.lastPosition !== gesture.lastPosition) lastScroll = now;
+        gesture = { ...gesture, ...progress };
+        recordGesture();
+      }
+      root.dataset.pagingRoute = "native";
+      phase("reading");
+      if (!nativeScrollEnd) scheduleSettle();
+    };
+
+    const onScroll = (event: Event) => {
+      const position = window.scrollY;
+      // Keep actual document observations even for a fragment or a focus-driven movement.
+      // They establish the next user's starting point without starting a snap session.
+      const lastObservation = observations[observations.length - 1];
+      if (Math.abs(position - lastObservation.position) >= 0.5) {
+        observations.push({ position, at: eventTime(event) });
+        if (observations.length > 80) observations.shift();
+      }
+      if (animation) {
+        if (Math.abs(window.scrollY - expectedY) <= 2) return;
+        suppress(); // Focus navigation or an external scroll owns its own endpoint.
+        return;
+      }
+      if (!gesture) return;
+      const progress = advanceReadingProgress(gesture, position);
+      if (progress.lastPosition === gesture.lastPosition) return;
+      gesture = { ...gesture, ...progress };
+      recordGesture();
+      lastScroll = performance.now();
+      nativeEnded = false;
+      phase("reading");
+      if (!nativeScrollEnd) scheduleSettle();
+    };
+    const onScrollEnd = (event: Event) => {
+      if (event.target !== document || animation || !gesture) return;
+      nativeEnded = true;
+      scheduleSettle();
+    };
+    const onWheel = (event: WheelEvent) => {
+      const eligible = !event.defaultPrevented && !event.ctrlKey && !event.metaKey && !event.shiftKey
+        && Math.abs(event.deltaY) > Math.abs(event.deltaX) && event.deltaY !== 0
+        && !closestControl(event.target, gestureControls) && !isNestedScroller(event.target);
+      beginInput("wheel", eligible, eventTime(event));
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      const eligible = scrollKeys.has(event.key) && !event.defaultPrevented && !event.ctrlKey && !event.metaKey && !event.altKey
+        && !closestControl(event.target, keyboardControls) && !isNestedScroller(event.target);
+      if (eligible) keys.add(event.key);
+      beginInput("keyboard", eligible, eventTime(event));
+    };
+    const onKeyUp = (event: KeyboardEvent) => {
+      if (!keys.delete(event.key)) return;
+      lastInput = performance.now();
+      scheduleSettle();
+    };
+    const onPointerDown = (event: PointerEvent) => {
+      pointers.add(event.pointerId);
+      const mode = event.pointerType === "touch" ? "touch" : "pointer";
+      beginInput(mode, !closestControl(event.target, keyboardControls) && !isNestedScroller(event.target), eventTime(event));
+    };
+    const onPointerEnd = (event: PointerEvent) => {
+      pointers.delete(event.pointerId);
+      lastInput = performance.now();
+      scheduleSettle();
+    };
+    const onTouchStart = (event: TouchEvent) => {
+      touchDown = true;
+      beginInput("touch", !closestControl(event.target, keyboardControls) && !isNestedScroller(event.target), eventTime(event));
+    };
+    const onTouchEnd = (event: TouchEvent) => {
+      touchDown = event.touches.length > 0;
+      lastInput = performance.now();
+      scheduleSettle();
+    };
+    const onClick = (event: MouseEvent) => {
+      if (closestControl(event.target, keyboardControls)) suppress();
+    };
+    const onBlur = () => { pointers.clear(); keys.clear(); touchDown = false; suppress(); };
 
     const measure = () => {
       measureFrame = 0;
       if (disposed) return;
-      frame = Math.max(1, window.innerHeight - headerOffset);
-      const sections = [...document.querySelectorAll<HTMLElement>("main > section.chapter")];
       const next = getSectionStops(
-        sections.map((section) => {
+        [...document.querySelectorAll<HTMLElement>("main > section.chapter")].map((section) => {
           const bounds = section.getBoundingClientRect();
           const margin = parseFloat(getComputedStyle(section).scrollMarginTop);
-          return {
-            top: bounds.top + window.scrollY,
-            height: bounds.height,
-            scrollMarginTop: Number.isFinite(margin) ? margin : headerOffset,
-          };
-        }),
-        window.innerHeight, headerOffset, root.scrollHeight,
+          return { top: bounds.top + window.scrollY, height: bounds.height,
+            scrollMarginTop: Number.isFinite(margin) ? margin : headerOffset };
+        }), window.innerHeight, headerOffset, root.scrollHeight,
       );
       const changed = next.length !== stops.length || next.some((stop, index) => Math.abs(stop - stops[index]) > 1);
       stops = next;
       root.dataset.pagingStops = String(stops.length);
-      if (changed && (animation || nativeBoundary || gesture)) {
-        // Expanding a report changes downstream stops. Re-measure without moving the reader.
-        cancelAnimation();
-        gesture = null;
-        nativeBoundary = null;
-        inputMode = "external";
-        externalUntil = performance.now() + 450;
-        phase("ready");
-      }
+      if (changed) suppress(); // Expanding content recalibrates headings without moving the reader.
     };
-
-    const queueMeasure = () => {
-      if (!measureFrame) measureFrame = requestAnimationFrame(measure);
-    };
-
-    const clearSettling = () => {
-      window.clearTimeout(settleTimer);
-      window.clearTimeout(wheelTimer);
-    };
-
-    const suspend = (duration = 750) => {
-      cancelAnimation();
-      clearSettling();
-      gesture = null;
-      nativeBoundary = null;
-      inputMode = "external";
-      externalUntil = performance.now() + duration;
-      phase("ready");
-    };
-
-    const scheduleNativeSettle = () => {
-      window.clearTimeout(settleTimer);
-      settleTimer = window.setTimeout(() => {
-        if (pointerDown || touchDown || animation || performance.now() < externalUntil) return;
-        if (inputMode === "touch" && !touchMoved) return;
-        if (inputMode !== "touch" && inputMode !== "free") return;
-        // Only a heading approached by this input can attract it. Moving away from a long
-        // chapter's opening must not repeatedly pull the reader backwards to that opening.
-        const touchDirection = window.scrollY > touchOrigin ? 1 : -1;
-        const target = inputMode === "touch"
-          ? adjacentStop(stops, touchOrigin, touchDirection)
-          : nativeBoundary?.target;
-        inputMode = "external";
-        nativeBoundary = null;
-        if (target === undefined || Math.abs(target - window.scrollY) > 180) return;
-        animateTo(target);
-      }, 190);
-    };
-
-    const onScroll = () => {
-      if (animation) {
-        // A native anchor, focus move or external scroll may interrupt our RAF animation.
-        if (Math.abs(window.scrollY - expectedY) > 4) suspend(550);
-        else return;
-      }
-      if (inputMode === "free" && nativeBoundary) {
-        const crossed = nativeBoundary.direction > 0
-          ? window.scrollY > nativeBoundary.target + 2
-          : window.scrollY < nativeBoundary.target - 2;
-        if (crossed) {
-          // A non-cancelable inertia tail may cross its first heading; never let it skip two.
-          const { target, direction } = nativeBoundary;
-          nativeBoundary = null;
-          gesture = { direction, energy: 100, lastEvent: performance.now(), committed: true, reverseEnergy: 0 };
-          inputMode = "wheel";
-          root.dataset.pagingTarget = String(Math.round(target));
-          writePosition(target);
-          phase("settled");
-          return;
-        }
-      }
-      if (inputMode === "touch" && Math.abs(window.scrollY - touchOrigin) > 12) touchMoved = true;
-      if (inputMode === "touch" || inputMode === "free") scheduleNativeSettle();
-    };
-
-    const onWheel = (event: WheelEvent) => {
-      const vertical = Math.abs(event.deltaY) > Math.abs(event.deltaX);
-      if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.shiftKey || !vertical || !event.deltaY || pointerDown
-        || closestControl(event.target, wheelControls) || nestedScroller(event.target, event.deltaY)) {
-        if (animation) suspend();
-        return;
-      }
-      const unit = event.deltaMode === WheelEvent.DOM_DELTA_LINE ? 18
-        : event.deltaMode === WheelEvent.DOM_DELTA_PAGE ? frame : 1;
-      const delta = event.deltaY * unit;
-      const direction = delta > 0 ? 1 : -1;
-      const threshold = Math.min(90, Math.max(55, frame * 0.1));
-      const now = performance.now();
-      root.dataset.pagingWheelDelta = String(delta);
-
-      if (gesture?.committed && (animation || now - gesture.lastEvent <= 230)) {
-        const tail = accumulateWheel(gesture, delta, now, threshold, Boolean(animation));
-        if (!tail.fresh) {
-          root.dataset.pagingRoute = "inertia";
-          gesture = tail.gesture;
-          if (event.cancelable) event.preventDefault();
-          else {
-            cancelAnimation();
-            const lockedTarget = Number(root.dataset.pagingTarget);
-            nativeBoundary = { target: Number.isFinite(lockedTarget) ? lockedTarget : window.scrollY, direction: gesture.direction };
-            inputMode = "free";
-          }
-          return;
-        }
-        cancelAnimation();
-        gesture = null;
-      }
-
-      const nextHeading = adjacentStop(stops, window.scrollY, direction);
-      root.dataset.pagingCandidate = String(nextHeading);
-      if (!event.cancelable) {
-        root.dataset.pagingRoute = "native-sequence";
-        // Some browsers cannot cancel the later events in a wheel sequence; let them scroll.
-        cancelAnimation();
-        gesture = null;
-        nativeBoundary = { target: nextHeading, direction };
-        inputMode = "free";
-        externalUntil = 0;
-        scheduleNativeSettle();
-        return;
-      }
-
-      const captureHeading = shouldCaptureHeading(
-        window.scrollY, nextHeading, nearestStop(stops, window.scrollY), window.innerHeight, delta,
-      );
-      if (!captureHeading) {
-        root.dataset.pagingRoute = "reading";
-        // Read the middle of a long chapter with the browser's native wheel/trackpad motion.
-        cancelAnimation();
-        clearSettling();
-        gesture = null;
-        nativeBoundary = { target: nextHeading, direction };
-        inputMode = "free";
-        externalUntil = 0;
-        phase("reading");
-        return;
-      }
-
-      event.preventDefault();
-      root.dataset.pagingRoute = "capture";
-      clearSettling();
-      inputMode = "wheel";
-      nativeBoundary = null;
-      externalUntil = 0;
-      const locked = animation?.kind === "snap";
-      const result = accumulateWheel(gesture, delta, now, threshold, locked);
-      if (result.fresh) {
-        cancelAnimation();
-        origin = window.scrollY;
-      }
-      gesture = result.gesture;
-      const target = adjacentStop(stops, origin, gesture.direction);
-
-      if (result.commit) {
-        root.dataset.pagingTarget = String(Math.round(target));
-        animateTo(target);
-      } else if (!gesture.committed) {
-        const progress = Math.min(1, gesture.energy / threshold);
-        const distance = Math.abs(target - origin);
-        const displacement = Math.min(86, distance * 0.13) * progress;
-        phase("damping", gesture.direction * progress);
-        previewTo(origin + gesture.direction * displacement);
-      }
-
-      // Keep every same-direction inertia event within the original committed gesture.
-      wheelTimer = window.setTimeout(() => {
-        if (gesture && !gesture.committed) animateTo(origin, "return");
-      }, 240);
-    };
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey) return;
-      if (closestControl(event.target, keyboardControls)) {
-        if (animation) suspend();
-        return;
-      }
-      const direction = event.key === "PageDown" || (event.code === "Space" && !event.shiftKey) ? 1
-        : event.key === "PageUp" || (event.code === "Space" && event.shiftKey) ? -1 : 0;
-      if (!direction) {
-        if (["ArrowUp", "ArrowDown", "Home", "End", "Escape"].includes(event.key)) suspend();
-        return;
-      }
-      event.preventDefault();
-      if (event.repeat) return;
-      suspend(0);
-      const heading = adjacentStop(stops, window.scrollY, direction);
-      const target = Math.abs(heading - window.scrollY) <= window.innerHeight + 12
-        ? heading : window.scrollY + direction * frame;
-      root.dataset.pagingTarget = String(Math.round(target));
-      animateTo(target);
-    };
-
-    const onPointerDown = (event: PointerEvent) => {
-      if (event.pointerType === "touch") return;
-      pointerDown = true;
-      suspend();
-    };
-    const onPointerUp = () => { pointerDown = false; };
-    const onTouchStart = (event: TouchEvent) => {
-      cancelAnimation();
-      clearSettling();
-      gesture = null;
-      nativeBoundary = null;
-      touchDown = true;
-      touchMoved = false;
-      touchOrigin = window.scrollY;
-      const element = event.target instanceof Element ? event.target : null;
-      const action = element ? getComputedStyle(element).touchAction : "auto";
-      const widgetGesture = action === "none" || action === "pan-x" || closestControl(event.target, wheelControls);
-      inputMode = widgetGesture ? "external" : "touch";
-      externalUntil = widgetGesture ? performance.now() + 750 : 0;
-      phase("ready");
-    };
-    const onTouchEnd = (event: TouchEvent) => {
-      touchDown = event.touches.length > 0;
-      if (!touchDown && inputMode === "touch") scheduleNativeSettle();
-    };
-    const onClick = (event: MouseEvent) => {
-      if (closestControl(event.target, keyboardControls)) suspend();
-    };
-    const onHashChange = () => { suspend(1000); queueMeasure(); };
-    const onBlur = () => { pointerDown = false; touchDown = false; suspend(); };
+    const queueMeasure = () => { if (!measureFrame) measureFrame = requestAnimationFrame(measure); };
+    const onHashChange = () => { suppress(); queueMeasure(); };
+    const onResize = () => { suppress(); queueMeasure(); };
 
     measure();
     phase("ready");
+    root.dataset.pagingNativeScrollEnd = String(nativeScrollEnd);
     const observer = new ResizeObserver(queueMeasure);
     observer.observe(root);
     document.querySelectorAll("main, main > section.chapter").forEach((element) => observer.observe(element));
@@ -390,19 +273,22 @@ export function useSectionPaging({ enabled = true, reduced = false, headerOffset
     document.querySelectorAll("main > section.chapter").forEach((element) => {
       calibrationObserver.observe(element, { attributes: true, attributeFilter: ["data-page-inset"] });
     });
-    window.addEventListener("wheel", onWheel, { passive: false });
+    window.addEventListener("wheel", onWheel, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("keydown", onKeyDown);
-    window.addEventListener("resize", queueMeasure);
-    window.addEventListener("hashchange", onHashChange);
-    window.addEventListener("blur", onBlur);
+    document.addEventListener("scrollend", onScrollEnd, { passive: true });
+    window.addEventListener("keydown", onKeyDown, true);
+    window.addEventListener("keyup", onKeyUp, true);
     window.addEventListener("pointerdown", onPointerDown, { capture: true, passive: true });
-    window.addEventListener("pointerup", onPointerUp, { capture: true, passive: true });
-    window.addEventListener("pointercancel", onPointerUp, { capture: true, passive: true });
+    window.addEventListener("pointerup", onPointerEnd, { capture: true, passive: true });
+    window.addEventListener("pointercancel", onPointerEnd, { capture: true, passive: true });
     window.addEventListener("touchstart", onTouchStart, { passive: true });
     window.addEventListener("touchend", onTouchEnd, { passive: true });
     window.addEventListener("touchcancel", onTouchEnd, { passive: true });
     window.addEventListener("click", onClick, true);
+    window.addEventListener("focusin", suppress, true);
+    window.addEventListener("hashchange", onHashChange);
+    window.addEventListener("resize", onResize);
+    window.addEventListener("blur", onBlur);
 
     return () => {
       disposed = true;
@@ -413,23 +299,29 @@ export function useSectionPaging({ enabled = true, reduced = false, headerOffset
       calibrationObserver.disconnect();
       window.removeEventListener("wheel", onWheel);
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("keydown", onKeyDown);
-      window.removeEventListener("resize", queueMeasure);
-      window.removeEventListener("hashchange", onHashChange);
-      window.removeEventListener("blur", onBlur);
+      document.removeEventListener("scrollend", onScrollEnd);
+      window.removeEventListener("keydown", onKeyDown, true);
+      window.removeEventListener("keyup", onKeyUp, true);
       window.removeEventListener("pointerdown", onPointerDown, true);
-      window.removeEventListener("pointerup", onPointerUp, true);
-      window.removeEventListener("pointercancel", onPointerUp, true);
+      window.removeEventListener("pointerup", onPointerEnd, true);
+      window.removeEventListener("pointercancel", onPointerEnd, true);
       window.removeEventListener("touchstart", onTouchStart);
       window.removeEventListener("touchend", onTouchEnd);
       window.removeEventListener("touchcancel", onTouchEnd);
       window.removeEventListener("click", onClick, true);
+      window.removeEventListener("focusin", suppress, true);
+      window.removeEventListener("hashchange", onHashChange);
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("blur", onBlur);
       delete root.dataset.paging;
       delete root.dataset.pagingStops;
       delete root.dataset.pagingTarget;
-      delete root.dataset.pagingWheelDelta;
       delete root.dataset.pagingRoute;
-      delete root.dataset.pagingCandidate;
+      delete root.dataset.pagingNativeScrollEnd;
+      delete root.dataset.pagingOrigin;
+      delete root.dataset.pagingDirection;
+      delete root.dataset.pagingReleasePosition;
+      delete root.dataset.pagingReleaseTarget;
       root.style.removeProperty("--paging-progress");
     };
   }, [enabled, reduced, headerOffset]);

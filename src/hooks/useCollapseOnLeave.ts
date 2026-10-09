@@ -31,7 +31,7 @@ export function useReadingExit(enabled: boolean) {
       for (const section of document.querySelectorAll<HTMLElement>("main > section.chapter")) {
         const bounds = section.getBoundingClientRect();
         const chapterLeaving = delta > 0 ? bounds.bottom < bottomLimit : bounds.top > topLimit;
-        const controls = [...section.querySelectorAll<HTMLElement>("[aria-expanded='true'][aria-controls]")];
+        const controls = [...section.querySelectorAll<HTMLElement>("[aria-expanded='true'][aria-controls], [data-reading-open='true'][aria-controls]")];
         let layerLeaving = false;
         for (const control of controls) {
           const panel = document.getElementById(control.getAttribute("aria-controls")!);
