@@ -28,7 +28,7 @@
   font-weight: 400;
 }
 .contact-intro > p:not(.chapter-kicker) {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.95;
   max-width: 360px;
   color: #aeb7bb;
@@ -42,7 +42,7 @@
 }
 .contact-signature > span {
   display: block;
-  font: 8px/1.5 var(--mono);
+  font: 14px/1.5 var(--mono);
   color: #a9a08e;
   margin-top: 8px;
   letter-spacing: 0.16em;
@@ -72,7 +72,7 @@
   inset: 7px;
 }
 .contact-postmark span {
-  font: 6px var(--mono);
+  font: 14px var(--mono);
   letter-spacing: 0.07em;
 }
 .contact-postmark strong {
@@ -104,7 +104,7 @@
 .contact-letter-head {
   display: flex;
   justify-content: space-between;
-  font: 7px var(--mono);
+  font: 14px var(--mono);
   letter-spacing: 0.02em;
   color: #8f7d61;
   padding-bottom: 22px;
@@ -125,7 +125,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font: 9px var(--mono);
+  font: 14px var(--mono);
   color: #706047;
 }
 .contact-channel > div {
@@ -140,7 +140,7 @@
 }
 .contact-channel small {
   display: block;
-  font: 8px/1.5 var(--mono);
+  font: 14px/1.5 var(--mono);
   color: #6e675d;
   margin-top: 6px;
 }
@@ -183,11 +183,11 @@
   background: #a48c6320;
 }
 .contact-wechat button span {
-  font: 7px var(--mono);
+  font: 14px var(--mono);
 }
 .contact-copy-status {
   margin: 19px 0 0;
-  font-size: 9px;
+  font-size: 14px;
   color: #8c7f68;
   line-height: 1.7;
   min-height: 16px;
@@ -204,7 +204,7 @@
   transform-origin: bottom;
 }
 .contact-envelope-front > span {
-  font: 7px var(--mono);
+  font: 14px var(--mono);
   color: #5f513c;
   letter-spacing: 0.09em;
 }
@@ -218,14 +218,14 @@
   flex-wrap: wrap;
 }
 .contact-websites > span {
-  font: 8px var(--mono);
+  font: 14px var(--mono);
   color: #ac9671;
 }
 .contact-websites a {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 10px;
+  font-size: 14px;
   text-decoration: none;
   color: #bdc4c6;
 }
@@ -258,7 +258,7 @@
     margin: 26px 0 22px;
   }
   .contact-intro > p:not(.chapter-kicker) {
-    font-size: 12px;
+    font-size: 14px;
   }
   .contact-signature {
     font-size: 52px;
@@ -275,28 +275,28 @@
     font-size: 29px;
   }
   .contact-postmark span {
-    font-size: 5px;
+    font-size: 14px;
   }
   .contact-envelope {
     margin-top: 45px;
     padding: 20px 12px 43px;
   }
   .contact-letter-head {
-    font-size: 6px;
+    font-size: 14px;
     gap: 5px;
   }
   .contact-address {
     font-size: 14px;
   }
   .contact-channel-kind {
-    font-size: 8px;
+    font-size: 14px;
     gap: 4px;
   }
   .contact-channel-kind svg {
     width: 10px;
   }
   .contact-channel small {
-    font-size: 7px;
+    font-size: 14px;
   }
   .contact-channel,
   .contact-wechat {

@@ -1,11 +1,11 @@
 import { ReadingReveal } from "./ReadingReveal";
 import { slowMotion } from "../lib/motionTiming";
 import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
+import { useScenePresence as useInView } from "../hooks/useScenePresence";
 import { useRef, useState } from "react";
 import {
   AnimatePresence,
   motion,
-  useInView,
   useReducedMotion,
 } from "motion/react";
 import {
@@ -25,83 +25,83 @@ type Translate = (zh: string, en: string) => string;
 const makeDocuments = (t: Translate) => [
   {
     number: "01",
-    title: t("先读懂文档。", "Read the document."),
+    title: t("保留文档结构。", "Preserve document structure."),
     name: t("PDF 解析", "PDF parsing"),
     small: t("文本 / 表格 / 文档结构", "TEXT / TABLES / DOCUMENT STRUCTURE"),
     icon: ScanText,
     teaser: t(
-      "让原始文字、表格与解析结果保留联系。",
-      "Keep the source text, tables and parsed results connected.",
+      "识别扫描页、文字与复杂表格。",
+      "Recover text and tables from inconsistent PDF layouts.",
     ),
     body: t(
-      "我参与建设 PDF 到结构化记录的流程，保留文本、表格与解析结果之间的联系。",
-      "I helped build a PDF-to-record workflow that keeps source text, tables and parsed results connected.",
+      "参与搭建分阶段的 PDF 处理链路，并关注数万份报告的批量处理与本地部署。",
+      "Helped build a staged PDF-processing workflow, considering batch processing and local deployment for a large report collection.",
     ),
     work: [
       t(
-        "整合文档理解与解析模块",
-        "Integrate document understanding and parsing",
+        "OCR 与视觉文档理解",
+        "OCR and visual document understanding",
       ),
       t(
-        "关联原始文字、表格与抽取结果",
-        "Link source text, tables and extracted results",
+        "分配不同处理阶段的计算资源",
+        "Consider compute allocation across processing stages",
       ),
       t(
-        "考虑批量处理与本地部署",
-        "Plan for batch processing and local deployment",
+        "关注处理吞吐量与扩展性",
+        "Assess throughput and scalability requirements",
       ),
     ],
   },
   {
     number: "02",
-    title: t("再连接模型。", "Connect the models."),
+    title: t("抽取环境指标。", "Extract environmental indicators."),
     name: t("抽取与匹配", "Extraction & matching"),
     small: "NuExtract3 / OCR-VL / Embedding",
     icon: FileText,
     teaser: t(
-      "将文档理解、字段抽取与语义匹配整合起来。",
-      "Bring document understanding, field extraction and semantic matching together.",
+      "将报告内容对应到可分析的字段。",
+      "Map report content to fields for analysis.",
     ),
     body: t(
-      "我参与整合 NuExtract3、PaddleOCR-VL 与 Qwen3-Embedding，连接文档理解、结构化抽取和语义匹配。",
-      "I helped integrate NuExtract3, PaddleOCR-VL and Qwen3-Embedding for document understanding, structured extraction and semantic matching.",
+      "参与文档理解、结构化抽取与语义匹配模块的整合，处理不同报告对环境指标的不同表达。",
+      "Helped integrate document-understanding, structured-extraction and semantic-matching modules to handle differing descriptions of environmental indicators.",
     ),
     work: [
       t(
-        "整合抽取、理解与语义匹配模块",
-        "Integrate extraction, understanding and matching",
+        "碳排放与能源消耗指标",
+        "Carbon-emission and energy-use indicators",
       ),
       t(
-        "关注模型本地部署与计算资源",
-        "Consider local deployment and compute resources",
+        "微塑料与气候影响相关记录",
+        "Microplastic and climate-impact records",
       ),
-      t("建设结构化数据流程", "Build a structured data workflow"),
+      t("字段映射与文本语义匹配", "Field mapping and text semantic matching"),
     ],
   },
   {
     number: "03",
-    title: t("让结果有来处。", "Trace every result."),
+    title: t("让数据可核对、可比较。", "Make data traceable and comparable."),
     name: t("标准化与证据", "Standards & evidence"),
     small: t("主体 / 期间 / 单位 / 边界", "ENTITY / PERIOD / UNITS / SCOPE"),
     icon: Link2,
     teaser: t(
-      "保留口径、来源与版本，再谈数据比较。",
-      "Preserve definitions, sources and versions before comparing data.",
+      "统一口径，关联原始 PDF 证据。",
+      "Standardise definitions and link source PDF evidence.",
     ),
     body: t(
-      "我参与指标清洗、口径标准化与数据库建设，把主体、期间、单位和统计边界保留在可追溯记录中。",
-      "I contributed to indicator cleaning, definition standardisation and database development, retaining the entity, period, units and scope in traceable records.",
+      "参与指标清洗、数据库及分析平台建设，使抽取结果进入可审核的数据记录。",
+      "Contributed to indicator cleaning, database development and analytics-platform work, bringing extracted results into reviewable records.",
     ),
     work: [
       t(
-        "清洗指标与标准化统计口径",
-        "Clean indicators and standardise definitions",
+        "统一主体、期间、单位与统计边界",
+        "Standardise entity, period, units and reporting scope",
       ),
       t(
-        "把抽取结果关联回原文证据",
-        "Link extracted results to source evidence",
+        "关联原始文字、表格与数据版本",
+        "Link source text, tables and data versions",
       ),
-      t("保留数据版本与审核边界", "Retain data versions and review boundaries"),
+      t("探索企业对标及 ESG 与财务表现的统计关联", "Explore company comparisons and statistical links between ESG and financial performance"),
     ],
   },
 ];
@@ -111,24 +111,24 @@ const makeModels = (t: Translate) => [
     name: "NuExtract3",
     task: t("结构化抽取", "Structured extraction"),
     description: t(
-      "在整合流程中承担字段与结构化信息抽取；我参与模块整合与数据流程建设。",
-      "Extracts fields and structured information within the workflow. I contributed to module integration and data pipeline development.",
+      "在流程中提取字段与结构化信息。",
+      "Extracts fields and structured information in the workflow.",
     ),
   },
   {
     name: "PaddleOCR-VL",
     task: t("文档理解", "Document understanding"),
     description: t(
-      "用于文档理解与解析工作，支持后续文字、表格和抽取结果之间的关联。",
-      "Supports document understanding and parsing, helping connect text, tables and extracted results downstream.",
+      "理解 PDF 版面、扫描文字及复杂表格。",
+      "Supports PDF layout, scanned-text and complex-table understanding.",
     ),
   },
   {
     name: "Qwen3-Embedding",
     task: t("语义匹配", "Semantic matching"),
     description: t(
-      "用于语义匹配相关模块，为指标与文本表达的关联提供基础；质量仍需真实评测。",
-      "Supports semantic matching between indicators and text. Its quality still requires evaluation on real data.",
+      "提供文本向量表示，用于指标与报告表述的语义匹配。",
+      "Provides text embeddings for semantic matching between indicators and report language.",
     ),
   },
 ];
@@ -160,7 +160,7 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
       <div className="chapter-inner esg-inner">
         <div className="esg-filing-line">
           <p className="chapter-kicker">{t("07 / 从报告到可追溯数据", "07 / DOCUMENTS INTO EVIDENCE")}</p>
-          <span>{t("苏州 · 2026.07 — 至今", "SUZHOU · SINCE JUL 2026")}</span>
+          <span>{t("2026.07 — 至今", "2026.07 — PRESENT")}</span>
         </div>
         <header className="esg-heading">
           <div>
@@ -173,11 +173,11 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
             <p className="esg-institution">
               {t(
                 "清华大学苏州环境创新研究院",
-                "Research Institute for Environmental Innovation (Suzhou), Tsinghua University",
+                "Research Institute for Environmental Innovation, Suzhou, Tsinghua University",
               )}
               <br />
               <span>
-                {t("本人角色 · AI 与数据分析实习生", "MY ROLE · AI & data analysis intern")}
+                {t("人工智能与数据分析实习生 · 进行中", "Artificial Intelligence & Data Analytics Intern · ongoing")}
               </span>
             </p>
           </div>
@@ -189,17 +189,17 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
             </strong>
             <div>{t("任务面对的报告规模", "Reports in the task scope")}</div>
             <small>
-              {t("解析仍在推进", "Parsing ongoing")}
+              {t("处理范围，非已完成解析量", "Task scope, not reports already parsed")}
             </small>
           </div>
         </header>
 
         <div className="esg-brief">
-          <span className="esg-brief-mark">{t("我参与的工作", "MY CONTRIBUTION")}</span>
+          <span className="esg-brief-mark">{t("核心问题", "CORE QUESTION")}</span>
           <p>
             {t(
-              "连接 PDF 解析、模型整合与证据关联，让环境报告中的数字成为可检查、可追溯的数据。",
-              "Connect PDF parsing, model integration and source evidence so that environmental data can be checked and traced.",
+              "扫描页、复杂表格与不同统计口径，怎样成为可核对的环境数据？",
+              "How can scanned pages, complex tables and differing reporting definitions become environmental data we can verify?",
             )}
           </p>
         </div>
@@ -388,12 +388,6 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
                             <span>
                               {t("口径与版本", "Definitions & versions")}
                             </span>
-                            <small>
-                              {t(
-                                "每条记录保留来源、口径与版本。",
-                                "Keep sources, definitions and versions with each record.",
-                              )}
-                            </small>
                           </div>
                         )}
                         <div className="esg-paper-signature">
@@ -406,10 +400,6 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
                 </motion.article>
               );
             })}
-          </div>
-          <div className="esg-folder-bottom">
-            <span>DOCUMENT UNDERSTANDING / EXTRACTION / EVIDENCE LINKING</span>
-            <span>OPEN FILE</span>
           </div>
         </div>
 
@@ -425,8 +415,8 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
             <details className="esg-project-scope">
               <summary>{t("当前阶段", "Current stage")}</summary>
               <p>{t(
-                "模型与本地工程正在整合。真实质量评测、完整审核发布闭环与生产部署仍需推进。20,000+ 是任务面对的报告规模，非已完成解析量。",
-                "Model and local engineering integration is in progress. Evaluation on real data, the complete review and release workflow, and production deployment require further work. The 20,000+ figure is the task scope, not the number already parsed.",
+                "真实数据质量评测、完整审核发布闭环与生产部署仍需推进。ESG 与财务表现的关联分析属于探索阶段，尚无确认的显著性或因果结论。",
+                "Evaluation on real data, the review and release workflow, and production deployment require further work. ESG–financial association analysis is exploratory, with no confirmed significance or causal conclusion.",
               )}</p>
             </details>
           </div>
@@ -444,8 +434,8 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
             )}{" "}
             <ArrowUpRight size={17} />
           </a>
-          <a className="chapter-link" href="#glimpse">
-            {t("接下来：我自己的毕业研究", "Next: my final-year research")}{" "}
+          <a className="chapter-link" href="#tools">
+            {t("下一部分：我的技术工具", "Next: my technical toolkit")}{" "}
             <ArrowDown size={17} />
           </a>
         </footer>

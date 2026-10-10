@@ -1,11 +1,11 @@
 import { ReadingReveal } from "./ReadingReveal";
 import { slowMotion } from "../lib/motionTiming";
 import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
+import { useScenePresence as useInView } from "../hooks/useScenePresence";
 import { useRef, useState } from "react";
 import {
   AnimatePresence,
   motion,
-  useInView,
   useMotionValueEvent,
   useReducedMotion,
   useScroll,
@@ -37,12 +37,12 @@ const makeStages = (t: Translate) => [
     short: t("视觉与软件", "Vision & software"),
     icon: ScanLine,
     text: t(
-      "我参与将视觉分析转换为结构化控制参数，连接模型建议、软件界面、后端与本地控制。",
-      "I helped turn visual analysis into structured control parameters, connecting model recommendations, the interface, backend and local control.",
+      "参与摄像头采集、视觉模型与控制参数转换，将分析结果连接到触屏界面、FastAPI 后端及 SQLite 本地记录。",
+      "Helped connect camera input and visual-model analysis to structured control parameters, a touchscreen interface, the FastAPI backend and SQLite records.",
     ),
     detail: t(
-      "我的工作：软件开发、参数转换与接口整合。",
-      "My work: software development, parameter conversion and interface integration.",
+      "视觉分析 → 结构化参数 → 本地软件",
+      "Visual analysis → structured parameters → local software",
     ),
     label: t("分析 / 参数 / 接口", "ANALYSIS / PARAMETERS / INTERFACES"),
   },
@@ -52,12 +52,12 @@ const makeStages = (t: Translate) => [
     short: t("无线与嵌入式", "Wireless & embedded"),
     icon: Radio,
     text: t(
-      "我参与 Raspberry Pi、ESP32-S3、LED 与加热模块的联调，让软件参数进入实际控制链路。",
-      "I helped integrate Raspberry Pi, ESP32-S3, LED and heating modules, bringing software parameters into the physical control chain.",
+      "参与主控制器与无线设备的通信及跨模块联调，连接光源和加热模块的控制逻辑。",
+      "Contributed to controller-to-device communication and integration across modules, connecting light and heating control logic.",
     ),
     detail: t(
-      "我的工作：跨模块调试与嵌入式整合。",
-      "My work: debugging across modules and embedded system integration.",
+      "Raspberry Pi → ESP32-S3 → LED / 加热",
+      "Raspberry Pi → ESP32-S3 → LED / heating",
     ),
     label: "Raspberry Pi / ESP32-S3",
   },
@@ -70,12 +70,12 @@ const makeStages = (t: Translate) => [
     short: t("控制与反馈", "Control & feedback"),
     icon: Thermometer,
     text: t(
-      "我参与距离、温度与设备状态的传感联调，检查反馈、异常检测与停止条件。",
-      "I helped test distance, temperature and device-status feedback, including fault detection and stopping conditions.",
+      "参与 HC-SR04 距离传感器、DS18B20 温度传感器与设备状态的联调，检查异常检测及停止条件。",
+      "Helped integrate HC-SR04 distance sensing, DS18B20 temperature sensing and device-status feedback, checking fault detection and stopping conditions.",
     ),
     detail: t(
-      "我的工作：传感器联调、阶段测试与系统验证。",
-      "My work: sensor integration, staged testing and system verification.",
+      "传感数据 → 状态检查 → 停止条件",
+      "Sensor readings → status checks → stopping conditions",
     ),
     label: t("距离 / 温度 / 状态", "DISTANCE / TEMPERATURE / STATUS"),
   },
@@ -85,12 +85,12 @@ const makeStages = (t: Translate) => [
     short: t("统筹与交付", "Coordination & delivery"),
     icon: Workflow,
     text: t(
-      "作为组长，我统筹分工、进度、整合与交付，并参与原型建模和装配。课程后，团队继续完善原型并参加创客大赛。",
-      "I led responsibilities, progress, integration and delivery, and contributed to prototype modelling and assembly. The team later refined the prototype for a maker competition.",
+      "统筹团队分工、进度与阶段测试，协调 AI、软件、嵌入式和硬件的整合，并参与原型建模、装配及交付。",
+      "Coordinated responsibilities, progress and staged testing across AI, software, embedded and hardware work, contributing to prototype modelling, assembly and delivery.",
     ),
     detail: t(
-      "我的工作：团队协调、原型整合与竞赛准备。",
-      "My work: team coordination, prototype integration and competition preparation.",
+      "分工 → 联调 → 可演示原型",
+      "Responsibilities → integration → working prototype",
     ),
     label: t("分工 / 联调 / 交付", "RESPONSIBILITIES / INTEGRATION / DELIVERY"),
   },
@@ -100,42 +100,36 @@ const makeConnections = (t: Translate) => [
   {
     number: "01",
     name: t("视觉分析", "Visual analysis"),
-    note: t("AI 视觉分析", "AI visual analysis"),
     label: "VISUAL",
     stage: 0,
   },
   {
     number: "02",
     name: t("结构化参数", "Control parameters"),
-    note: t("建议到控制参数", "From recommendations to control"),
     label: "PARAMETERS",
     stage: 0,
   },
   {
     number: "03",
     name: t("软件界面 / 本地后端", "Interface / local backend"),
-    note: "Raspberry Pi · FastAPI",
     label: "LOCAL SOFTWARE",
     stage: 0,
   },
   {
     number: "04",
     name: "ESP32-S3",
-    note: t("无线通信与设备控制", "Wireless device control"),
     label: "WIRELESS",
     stage: 1,
   },
   {
     number: "05",
     name: t("LED / 加热", "LED / heating"),
-    note: t("光源与执行模块", "Light & actuator modules"),
     label: "ACTION",
     stage: 1,
   },
   {
     number: "06",
     name: t("传感反馈", "Sensor feedback"),
-    note: t("距离 · 温度 · 状态", "Distance · temperature · status"),
     label: "FEEDBACK",
     stage: 2,
   },
@@ -188,8 +182,8 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
           <p className="chapter-kicker">{t("06 / 从模块到系统", "06 / BUILDING A SYSTEM")}</p>
           <p className="mask-eyebrow">
             {t(
-              "工程原型 · MEC202 · 2026",
-              "ENGINEERING PROTOTYPE · MEC202 · 2026",
+              "工程原型 · MEC202 · 2026.03 — 2026.07",
+              "ENGINEERING PROTOTYPE · MEC202 · 2026.03 — 2026.07",
             )}
           </p>
           <h2 id="mask-title">
@@ -200,13 +194,13 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
           <div className="mask-introduction">
             <p>
               {t(
-                "我带领团队，把视觉分析、无线控制与传感反馈整合成可演示的原型。",
-                "I led a team that connected visual analysis, wireless control and sensor feedback in a working prototype.",
+                "怎样将面部视觉分析，接入带传感反馈的硬件控制？",
+                "How can facial visual analysis become hardware control with sensor feedback?",
               )}
             </p>
             <span className="mask-role-mark">
               <span />
-              {t("团队组长 / 系统整合", "Team leader / system integration")}
+              {t("团队组长 · 系统整合 · 原型已交付", "Team leader · system integration · prototype delivered")}
             </span>
           </div>
         </header>
@@ -218,7 +212,7 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
             >
               <div className="mask-stage-topline">
                 <span>{t("系统连接", "SYSTEM CONNECTIONS")}</span>
-                <span>2026.03 — 2026.07</span>
+                <span>{t("团队工程原型", "TEAM ENGINEERING PROTOTYPE")}</span>
               </div>
               <div className="mask-connection-visual">
                 <motion.div
@@ -273,7 +267,6 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
                     ))}
                     {drawn && !lowMotion && (
                       <motion.path
-                        key={`interface-${active}`}
                         d={interfacePaths[active]}
                         className="mask-interface-pulse"
                         initial={{ pathLength: 0, pathOffset: 0, opacity: 0 }}
@@ -329,7 +322,6 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
                         {connection.number} / {connection.label}
                       </small>
                       <strong>{connection.name}</strong>
-                      <span>{connection.note}</span>
                     </motion.button>
                   ))}
                   <span className="mask-feedback-label">
@@ -338,8 +330,8 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
                 </motion.div>
                 <p className="mask-diagram-note">
                   {t(
-                    "系统链路示意 · 非实际硬件结构",
-                    "System connection diagram · not the physical hardware layout",
+                    "软件、控制与反馈的连接示意",
+                    "Software, control and feedback connections",
                   )}
                 </p>
               </div>
@@ -374,8 +366,8 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
                     <p className="mask-chain-caption">
                       <Layers3 size={14} />
                       {t(
-                        "系统链路说明 · 选择环节，查看我参与的工作",
-                        "Choose a stage to read about my contribution",
+                        "选择环节，查看本人工作",
+                        "Choose a stage to read my work",
                       )}
                     </p>
                     <div className="mask-chain-nodes">
@@ -410,8 +402,8 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
               <ArrowDown size={17} />
               <span>
                 {t(
-                  "从一个模块，到整个系统",
-                  "From one module to a complete system",
+                  "四项本人工作",
+                  "FOUR AREAS OF MY WORK",
                 )}
               </span>
             </div>
@@ -441,7 +433,7 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
             <span>{t("MEC202 / 课程成绩", "MEC202 / COURSE GRADE")}</span>
             <strong>79</strong>
             <p>
-              {t("团队工程原型交付", "Team engineering prototype delivered")}
+              {t("工程课程项目", "Engineering course project")}
             </p>
           </div>
           <div className="mask-outcome-award">
@@ -461,13 +453,13 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
             </p>
           </div>
           <div className="mask-outcome-reflection">
-            <span>{t("本人贡献", "MY CONTRIBUTION")}</span>
+            <span>{t("课程后的推进", "AFTER THE COURSE")}</span>
             <p>
-              {t("统筹团队，", "Lead the team.")}
+              {t("继续完善原型，", "Refine the prototype.")}
               <br />
               {t(
-                "也亲自连接系统。",
-                "Connect the system.",
+                "准备竞赛展示。",
+                "Prepare the competition demo.",
               )}
             </p>
             <details className="mask-project-scope">

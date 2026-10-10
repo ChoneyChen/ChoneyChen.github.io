@@ -10,7 +10,8 @@
 .methods-next {
   margin-top: 28px;
   color: #285baf;
-  font-size: 11px;
+  font-size: 14px;
+  max-width: 100%;
 }
 .methods-heading {
   display: flex;
@@ -20,6 +21,7 @@
   margin-bottom: 38px;
 }
 .methods-heading .chapter-kicker {
+  font-size: 14px;
   color: #36576b;
   margin-bottom: 20px;
 }
@@ -49,7 +51,7 @@
 }
 .methods-heading > p {
   color: #36576b;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.9;
   margin: 0 0 4px;
 }
@@ -86,15 +88,17 @@
   display: flex;
   justify-content: space-between;
   gap: 15px;
+  flex-wrap: wrap;
+  align-items: baseline;
   padding-bottom: 14px;
   border-bottom: 1px solid #36576b22;
   color: #526459;
   font:
-    9px "IBM Plex Mono",
+    14px/1.6 "IBM Plex Mono",
     monospace;
 }
 .methods-paper-top span:last-child {
-  font: 10px sans-serif;
+  font: 14px/1.6 sans-serif;
   color: #36576b;
 }
 .methods-illustration {
@@ -133,7 +137,7 @@
   fill: #315946;
   stroke: none;
   font:
-    9px "IBM Plex Mono",
+    14px "IBM Plex Mono",
     monospace;
 }
 .methods-check-mark {
@@ -170,18 +174,20 @@
 }
 .methods-scene-labels {
   font:
-    9px "IBM Plex Mono",
+    14px "IBM Plex Mono",
     monospace;
   fill: #526459;
 }
 .methods-steps {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
   gap: 12px;
   padding-bottom: 29px;
 }
 .methods-step-writing {
   min-width: 0;
+  display: flex;
 }
 .methods-steps button {
   background: transparent;
@@ -194,21 +200,28 @@
   gap: 8px;
   color: #526459;
   min-width: 0;
+  min-height: 96px;
   touch-action: pan-y;
 }
 .methods-step-writing > button {
   width: 100%;
+  height: 100%;
 }
 .methods-steps button > span {
+  flex-shrink: 0;
   font:
-    9px "IBM Plex Mono",
+    14px/1.5 "IBM Plex Mono",
     monospace;
 }
 .methods-steps button strong {
+  flex: 1;
+  min-width: 0;
   font-family: "Kaiti SC", "STKaiti", "KaiTi", serif;
   font-size: 16px;
   font-weight: 400;
-  white-space: nowrap;
+  line-height: 1.4;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 .methods-steps button svg {
   position: absolute;
@@ -241,11 +254,12 @@
 }
 .methods-evidence-grid {
   display: grid;
-  grid-template-columns: 0.8fr 1.4fr;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
   gap: 45px;
 }
 .methods-evidence-source > p {
-  font-size: 10px;
+  font-size: 14px;
+  line-height: 1.6;
   margin: 0 0 14px;
 }
 .methods-evidence-source h3 {
@@ -259,14 +273,14 @@
 .methods-evidence-source > span {
   display: block;
   font:
-    9px "IBM Plex Mono",
+    14px "IBM Plex Mono",
     monospace;
   color: #526459;
   line-height: 1.8;
 }
 .methods-evidence-source > .methods-evidence-role {
   font-family: inherit;
-  font-size: 10px;
+  font-size: 14px;
   color: #36576b;
   margin-top: 6px;
 }
@@ -274,10 +288,16 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 10px;
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 100%;
   color: #285baf;
   text-decoration: none;
   margin-top: 17px;
+}
+.methods-evidence-source > a svg,
+.methods-next > svg {
+  flex-shrink: 0;
 }
 .methods-evidence-copy h4 {
   font-size: 24px;
@@ -293,7 +313,7 @@
 }
 .methods-evidence-copy > .methods-evidence-detail {
   color: #36576b;
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.85;
 }
 .methods-paper-foot {
@@ -302,13 +322,13 @@
   gap: 12px;
   padding-top: 12px;
   border-top: 1px solid #36576b15;
-  font-size: 8px;
+  font-size: 14px;
   line-height: 1.7;
   color: #6d7972;
 }
 .methods-paper-foot > span:last-child {
   font-family: "IBM Plex Mono", monospace;
-  font-size: 7px;
+  font-size: 14px;
   white-space: nowrap;
 }
 .methods-chapter.is-english .methods-heading h2 span {
@@ -339,7 +359,7 @@
     margin-bottom: 16px;
   }
   .methods-heading > p {
-    font-size: 12px;
+    font-size: 14px;
   }
   .methods-heading > p br {
     display: none;
@@ -351,12 +371,12 @@
     left: 10px;
   }
   .methods-paper-top {
-    font-size: 7px;
+    font-size: 14px;
     gap: 9px;
     align-items: center;
   }
   .methods-paper-top span:last-child {
-    font-size: 8px;
+    font-size: 14px;
   }
   .methods-scene-desktop {
     display: none;
@@ -370,7 +390,7 @@
     margin-bottom: 16px;
   }
   .methods-steps {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 9px;
     padding-bottom: 21px;
   }
@@ -385,7 +405,7 @@
     font-size: 14px;
   }
   .methods-steps button > span {
-    font-size: 8px;
+    font-size: 14px;
   }
   .methods-evidence {
     min-height: 370px;
@@ -397,7 +417,7 @@
     gap: 20px;
   }
   .methods-evidence-source > p {
-    font-size: 9px;
+    font-size: 14px;
     margin-bottom: 9px;
   }
   .methods-evidence-source h3 {
@@ -405,7 +425,7 @@
     max-width: none;
   }
   .methods-evidence-source > .methods-evidence-role {
-    font-size: 10px;
+    font-size: 14px;
   }
   .methods-evidence-source > a {
     margin-top: 11px;
@@ -414,15 +434,15 @@
     font-size: 22px;
   }
   .methods-evidence-copy > p {
-    font-size: 13px;
+    font-size: 14px;
   }
   .methods-evidence-copy > .methods-evidence-detail {
-    font-size: 11px;
+    font-size: 14px;
   }
   .methods-paper-foot {
     flex-direction: column;
     gap: 6px;
-    font-size: 8px;
+    font-size: 14px;
   }
 }
 
@@ -435,17 +455,24 @@
 .methods-notebook { padding-top: 20px; }
 .methods-scene-desktop { max-height: 190px; }
 .methods-steps { padding-bottom: 16px; }
-.methods-paper-top { font-size: 10px; }
-.methods-paper-top span:last-child { font-size: 12px; }
-.methods-paper-foot { font-size: 11px; }
-.methods-paper-foot > span:last-child { font-size: 9px; }
+.methods-paper-top { font-size: 14px; }
+.methods-paper-top span:last-child { font-size: 14px; }
+.methods-paper-foot { font-size: 14px; }
+.methods-paper-foot > span:last-child { font-size: 14px; }
 .methods-evidence { min-height: 0; padding-top: 22px; padding-bottom: 22px; }
-.methods-evidence-source > .methods-evidence-role, .methods-evidence-source > a { font-size: 12px; }
-.methods-evidence-copy > .methods-evidence-detail { font-size: 12px; }
+.methods-evidence-source > .methods-evidence-role, .methods-evidence-source > a { font-size: 14px; }
+.methods-evidence-copy > .methods-evidence-detail { font-size: 14px; }
 @media(max-width:760px) {
  .methods-inner { padding-top: 42px; padding-bottom: 42px; }
- .methods-heading > p { font-size: 13px; }
+ .methods-heading > p { font-size: 14px; }
  .methods-scene-mobile { height: 210px; }
- .methods-paper-top { font-size: 9px; }
- .methods-paper-top span:last-child { font-size: 10px; }
+ .methods-paper-top { font-size: 14px; }
+ .methods-paper-top span:last-child { font-size: 14px; }
 }
+@media (max-width: 420px) {
+  .methods-steps { grid-template-columns: minmax(0, 1fr); }
+  .methods-steps button { min-height: 72px; }
+}
+
+.methods-evidence-copy > p { font-size: 16px; line-height: 1.8; }
+.methods-evidence-copy > .methods-evidence-detail { font-size: 16px; }

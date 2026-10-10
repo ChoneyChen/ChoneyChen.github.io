@@ -20,7 +20,7 @@
 }
 .tools-heading-line > span {
   color: #173d40;
-  font-size: 8px;
+  font-size: 14px;
   letter-spacing: 0.075em;
   font-family: "IBM Plex Mono", monospace;
 }
@@ -44,7 +44,7 @@
 .tools-heading > p {
   color: #173d40;
   margin: 0 0 8px;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.8;
 }
 .tools-archive-layout {
@@ -62,7 +62,7 @@
   align-items: center;
   padding: 22px 0 0;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 8px;
+  font-size: 14px;
   letter-spacing: 0.05em;
   color: #173d40;
 }
@@ -113,7 +113,7 @@
 }
 .tools-flat-file > span {
   font-family: "IBM Plex Mono", monospace;
-  font-size: 8px;
+  font-size: 14px;
   letter-spacing: 0.08em;
   color: #173d40;
 }
@@ -124,12 +124,12 @@
   font-weight: 500;
 }
 .tools-flat-file > p {
-  font-size: 11px;
+  font-size: 14px;
   color: #173d40;
   margin: 12px 0 25px;
 }
 .tools-flat-file > small {
-  font-size: 9px;
+  font-size: 14px;
   color: #173d40;
 }
 .tools-scene-controls {
@@ -145,7 +145,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 10px;
+  font-size: 14px;
   color: #173d40;
   margin: 0;
 }
@@ -210,7 +210,7 @@
   background: #103338;
   color: #fff4d7;
   font: inherit;
-  font-size: 13px;
+  font-size: 14px;
   cursor: pointer;
 }
 .tools-closed-intro { padding-bottom: 20px; }
@@ -219,7 +219,7 @@
   display: block;
   color: #173d40;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 8px;
+  font-size: 14px;
   letter-spacing: 0.04em;
   margin-bottom: 19px;
 }
@@ -250,7 +250,7 @@
   margin: 23px 0 29px;
 }
 .tools-use-tags > span {
-  font-size: 9px;
+  font-size: 14px;
   color: #173d40;
   border: 1px solid #10333866;
   padding: 5px 8px;
@@ -267,17 +267,17 @@
   padding: 16px 0;
 }
 .tools-context-link > span {
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.6;
 }
 .tools-context-link > span > small {
   display: block;
-  font-size: 8px;
+  font-size: 14px;
   color: #173d40;
   margin-bottom: 5px;
 }
 .tools-content-note {
-  font-size: 10px;
+  font-size: 14px;
   line-height: 1.8;
   color: #173d40;
   margin: 15px 0 0;
@@ -307,11 +307,11 @@
 }
 .tools-file-index > button > span {
   font-family: "IBM Plex Mono", monospace;
-  font-size: 9px;
+  font-size: 14px;
   opacity: 1;
 }
 .tools-file-index > button > strong {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   flex: 1;
 }
@@ -333,21 +333,21 @@
   margin-top: 28px;
 }
 .tools-closing > p {
-  font-size: 11px;
+  font-size: 14px;
   color: #173d40;
   line-height: 1.8;
   margin: 0;
 }
 .tools-closing > p > span {
   color: #173d40;
-  font-size: 9px;
+  font-size: 14px;
 }
 .tools-closing .chapter-link {
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
   gap: 9px;
-  font-size: 11px;
+  font-size: 14px;
   color: #103338;
   text-decoration: none;
 }
@@ -391,7 +391,7 @@
     gap: 9px;
   }
   .tools-file-index > button > strong {
-    font-size: 11px;
+    font-size: 14px;
   }
 }
 @media (max-width: 720px) {
@@ -413,7 +413,7 @@
     font-size: clamp(31px, 8.6vw, 45px);
   }
   .tools-heading > p {
-    font-size: 11px;
+    font-size: 14px;
   }
   .tools-heading > p > br {
     display: none;
@@ -427,10 +427,10 @@
   }
   .tools-scene-topline {
     padding-top: 9px;
-    font-size: 7px;
+    font-size: 14px;
   }
   .tools-scene-controls > p {
-    font-size: 9px;
+    font-size: 14px;
   }
   .tools-reading-column {
     padding-top: 19px;
@@ -446,7 +446,7 @@
     font-size: 17px;
   }
   .tools-personal-use {
-    font-size: 13px;
+    font-size: 14px;
   }
   .tools-file-index {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -457,7 +457,7 @@
     gap: 7px;
   }
   .tools-file-index > button > strong {
-    font-size: 10px;
+    font-size: 14px;
   }
   .tools-file-index > button > svg {
     width: 11px;
@@ -487,3 +487,12 @@
     transition-duration: 0s !important;
   }
 }
+
+.tools-public-repository {display:flex;align-items:center;justify-content:space-between;gap:32px;margin-top:38px;padding:28px;border:1px solid #10333855;background:#fff4d770;border-radius:12px;}
+.tools-public-repository >div {max-width:740px;}
+.tools-public-repository span {font:14px var(--mono);}
+.tools-public-repository h3 {font-size:30px;margin:14px 0 10px;letter-spacing:-.03em;}
+.tools-public-repository p {font-size:16px;line-height:1.7;margin:0;}
+.tools-public-repository a {font-size:16px;display:flex;align-items:center;gap:12px;white-space:nowrap;}
+.tools-context-link {font-size:16px;line-height:1.6;}
+@media(max-width:650px) {.tools-public-repository {display:block;padding:22px;}.tools-public-repository a {margin-top:20px;}}

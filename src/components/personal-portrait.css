@@ -8,10 +8,12 @@
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+  flex-wrap: wrap;
 }
+.portrait-heading .chapter-kicker { font-size: 14px; }
 .portrait-heading > span {
   font:
-    9px "IBM Plex Mono",
+    14px/1.6 "IBM Plex Mono",
     monospace;
   color: #515069;
   letter-spacing: 0.04em;
@@ -24,6 +26,7 @@
   margin: 34px 0 30px;
 }
 .portrait-introduction h2 {
+  min-width: 0;
   margin: 0;
   font-size: clamp(35px, 5.1vw, 65px);
   line-height: 1.18;
@@ -31,7 +34,7 @@
   letter-spacing: -0.065em;
 }
 .portrait-introduction > p {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.95;
   margin: 0;
   max-width: 370px;
@@ -123,7 +126,7 @@
   bottom: 3%;
   right: 0;
   font:
-    8px "IBM Plex Mono",
+    14px/1.5 "IBM Plex Mono",
     monospace;
   letter-spacing: 0.03em;
   color: #515069;
@@ -132,7 +135,8 @@
 }
 .portrait-selector {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
   gap: 17px;
   margin-top: 17px;
 }
@@ -140,6 +144,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  min-width: 0;
   border: 0;
   border-top: 1px solid #2d2c4666;
   padding: 13px 0 0;
@@ -154,20 +159,27 @@
 }
 .portrait-selector button > span {
   font:
-    8px "IBM Plex Mono",
+    14px/1.5 "IBM Plex Mono",
     monospace;
   margin-bottom: 7px;
 }
 .portrait-selector button > strong {
   font-weight: 500;
-  font-size: 13px;
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 3em;
+  max-width: 100%;
+  overflow-wrap: anywhere;
   margin-bottom: 7px;
 }
 .portrait-selector button > small {
   font:
-    8px/1.5 "IBM Plex Mono",
+    14px/1.5 "IBM Plex Mono",
     monospace;
   min-height: 24px;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 .portrait-selector button[aria-pressed="true"] {
   color: #254cc7;
@@ -185,7 +197,7 @@
   position: relative;
   margin: 22px 0 0;
   padding-left: 20px;
-  font-size: 9px;
+  font-size: 14px;
   color: #515069;
   line-height: 1.9;
 }
@@ -196,7 +208,7 @@
 }
 .portrait-art-note > span {
   color: #515069;
-  font-size: 8px;
+  font-size: 14px;
 }
 .portrait-direction {
   padding-top: 25px;
@@ -226,7 +238,7 @@
 .portrait-direction-number {
   display: block;
   font:
-    10px "IBM Plex Mono",
+    14px/1.6 "IBM Plex Mono",
     monospace;
   letter-spacing: 0.04em;
   color: #c03c2b;
@@ -240,7 +252,7 @@
   letter-spacing: -0.045em;
 }
 .portrait-experience {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.75;
   color: #515069;
 }
@@ -250,7 +262,8 @@
   padding-top: 20px;
 }
 .portrait-question > span {
-  font-size: 9px;
+  font-size: 14px;
+  line-height: 1.6;
   color: #c03c2b;
 }
 .portrait-question > p {
@@ -261,14 +274,15 @@
   margin: 11px 0 0;
 }
 .portrait-next {
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.9;
   color: #515069;
   margin: 19px 0 0;
 }
 .portrait-direction .chapter-link {
   margin-top: 22px;
-  font-size: 10px;
+  font-size: 14px;
+  max-width: 100%;
   color: #254cc7;
 }
 .portrait-bottom {
@@ -281,16 +295,23 @@
   margin-top: 56px;
 }
 .portrait-bottom > span {
-  font-size: 10px;
+  font-size: 14px;
+  line-height: 1.7;
   color: #515069;
 }
 .portrait-bottom > a {
   display: inline-flex;
   align-items: center;
   gap: 11px;
-  font-size: 12px;
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 100%;
   color: #254cc7;
   text-decoration: none;
+}
+.portrait-direction .chapter-link > svg,
+.portrait-bottom > a > svg {
+  flex-shrink: 0;
 }
 .portrait-bottom > a:focus-visible {
   outline: 2px solid currentColor;
@@ -303,13 +324,13 @@
 @media (max-width: 850px) {
   .portrait-layout {
     gap: 29px;
-    grid-template-columns: 1.1fr 1fr;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
   }
   .portrait-introduction h2 {
     font-size: 45px;
   }
   .portrait-introduction > p {
-    font-size: 12px;
+    font-size: 14px;
   }
   .portrait-direction h3 {
     font-size: 25px;
@@ -321,10 +342,10 @@
     gap: 12px;
   }
   .portrait-selector button > strong {
-    font-size: 11px;
+    font-size: 14px;
   }
   .portrait-selector button > small {
-    font-size: 7px;
+    font-size: 14px;
   }
 }
 
@@ -334,7 +355,7 @@
     gap: 12px;
   }
   .portrait-heading > span {
-    font-size: 8px;
+    font-size: 14px;
     padding-top: 3px;
   }
   .portrait-introduction {
@@ -345,7 +366,7 @@
     font-size: clamp(35px, 10.5vw, 49px);
   }
   .portrait-introduction > p {
-    font-size: 12px;
+    font-size: 14px;
     margin-top: 23px;
     line-height: 1.85;
   }
@@ -358,27 +379,40 @@
   }
   .portrait-collage-caption {
     bottom: 0;
-    font-size: 7px;
+    font-size: 14px;
   }
   .portrait-selector {
+    grid-template-columns: minmax(0, 1fr);
     gap: 10px;
     margin-top: 20px;
   }
+  .portrait-selector button {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr);
+    column-gap: 10px;
+  }
+  .portrait-selector button > span {
+    grid-row: 1 / span 2;
+    margin-bottom: 0;
+  }
   .portrait-selector button > strong {
-    font-size: 11px;
+    font-size: 14px;
     line-height: 1.5;
+    min-height: 0;
+    margin-bottom: 4px;
   }
   .portrait-selector button > small {
-    font-size: 7px;
+    grid-column: 2;
+    font-size: 14px;
     line-height: 1.65;
-    min-height: 26px;
+    min-height: 0;
   }
   .portrait-art-note {
     margin-top: 17px;
-    font-size: 8px;
+    font-size: 14px;
   }
   .portrait-art-note > span {
-    font-size: 7px;
+    font-size: 14px;
   }
   .portrait-direction {
     padding-top: 33px;
@@ -386,7 +420,7 @@
   }
   .portrait-direction-number {
     margin-bottom: 19px;
-    font-size: 9px;
+    font-size: 14px;
   }
   .portrait-direction h3 {
     font-size: 27px;
@@ -394,7 +428,7 @@
     margin-bottom: 17px;
   }
   .portrait-experience {
-    font-size: 12px;
+    font-size: 14px;
   }
   .portrait-question {
     padding-top: 18px;
@@ -404,10 +438,10 @@
     font-size: 16px;
   }
   .portrait-next {
-    font-size: 10px;
+    font-size: 14px;
   }
   .portrait-direction .chapter-link {
-    font-size: 10px;
+    font-size: 14px;
   }
   .portrait-bottom {
     display: block;
@@ -417,10 +451,10 @@
   .portrait-bottom > span {
     display: block;
     margin-bottom: 19px;
-    font-size: 9px;
+    font-size: 14px;
   }
   .portrait-bottom > a {
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 
@@ -429,3 +463,5 @@
     transition: none;
   }
 }
+
+.portrait-experience { font-size: 16px; line-height: 1.8; }

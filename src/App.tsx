@@ -1,4 +1,4 @@
-import { ReadingReveal } from "./components/ReadingReveal";
+import { useScenePresence as useInView } from "./hooks/useScenePresence";
 import { slowMotion, slowDragRelease, slowSpring, motionTimingStyle } from "./lib/motionTiming";
 import { useCollapseOnLeave, useReadingExit } from "./hooks/useCollapseOnLeave";
 import {
@@ -16,7 +16,6 @@ import {
   useReducedMotion,
   useScroll,
   useSpring,
-  useInView,
 } from "motion/react";
 import {
   ArrowDown,
@@ -27,7 +26,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Layers,
-  Minus,
   Plus,
   X,
 } from "lucide-react";
@@ -38,14 +36,15 @@ import { ESGChapter } from "./components/ESGChapter";
 import { FutureChapter } from "./components/FutureChapter";
 import { useContent } from "./data/use-content";
 import { useI18n } from "./i18n";
-import { SteampunkWork, RomanEducation } from "./components/HistoryDetails";
+import { SteampunkWork } from "./components/HistoryDetails";
 import { MethodsChapter } from "./components/MethodsChapter";
 import { ToolsChapter } from "./components/ToolsChapter";
 import { PersonalPortrait } from "./components/PersonalPortrait";
 import { ContactChapter } from "./components/ContactChapter";
 import { ResearchDirections } from "./components/ResearchDirections";
 import { useChapterAnchors } from "./hooks/useChapterAnchors";
-import { useChapterSnap } from "./hooks/useChapterSnap";
+import { siteChapters, earlyExperienceIds } from "./data/architecture";
+import { PersonalArchive } from "./components/AcademicArchive";
 
 const presentationTransition = slowMotion({
   type: "spring",
@@ -55,106 +54,9 @@ const presentationTransition = slowMotion({
 const quietTransition = { type: "tween", duration: 0 } as const;
 
 function getChapters(t: (zh: string, en: string) => string) {
-  return [
-    {
-      id: "home",
-      label: t("认识我", "About"),
-      caption: t("陈天一 / Choney Chen", "Tianyi / Choney Chen"),
-      style: "PERSONAL PORTRAIT",
-      colour: "#304de8",
-    },
-    {
-      id: "origins",
-      label: t("起点", "Origins"),
-      caption: t("从日常问题开始", "Starting with everyday questions"),
-      style: "PAPER ARCHIVE",
-      colour: "#cc6d44",
-    },
-    {
-      id: "methods",
-      label: t("方法", "Methods"),
-      caption: t("我怎样做一件事", "How I approach a piece of work"),
-      style: "HAND-DRAWN NOTES",
-      colour: "#285baf",
-    },
-    {
-      id: "directions",
-      label: t("方向", "Directions"),
-      caption: t("我的三个研究方向", "My three research directions"),
-      style: "RIBBON / SECTION / FOLIO",
-      colour: "#274bee",
-    },
-    {
-      id: "cosmos",
-      label: t("定位", "Locate"),
-      caption: "Cosmos-Loc",
-      style: "PIXEL ARCADE",
-      colour: "#9e65d0",
-    },
-    {
-      id: "sups",
-      label: t("造景", "Build"),
-      caption: "SUPS / SVL",
-      style: "ISOMETRIC WORLD",
-      colour: "#3047b9",
-    },
-    {
-      id: "mask",
-      label: t("系统", "Systems"),
-      caption: t("智能光疗面罩", "Intelligent phototherapy mask"),
-      style: "PRODUCT STORY",
-      colour: "#2458f2",
-    },
-    {
-      id: "esg",
-      label: t("环境", "Environment"),
-      caption: "ESG AI",
-      style: "DOCUMENT DESK",
-      colour: "#0f4e3d",
-    },
-    {
-      id: "glimpse",
-      label: t("下一问", "Next question"),
-      caption: "U-IMPROVE / FYP",
-      style: "GLASS BLUEPRINT",
-      colour: "#214dcb",
-    },
-    {
-      id: "avpc",
-      label: t("协同", "Collaborate"),
-      caption: t("AVPC 研究", "AVPC research"),
-      style: "TWO PERSPECTIVES",
-      colour: "#6c183c",
-    },
-    {
-      id: "tools",
-      label: t("工具", "Tools"),
-      caption: t("我的研究工具档案", "My research-tool archive"),
-      style: "3D WORK FILES",
-      colour: "#cf633b",
-    },
-    {
-      id: "archive",
-      label: t("足迹", "Archive"),
-      caption: t("完整经历索引", "My experience index"),
-      style: "PERSONAL ALMANAC",
-      colour: "#c0ad8f",
-    },
-    {
-      id: "next",
-      label: t("继续", "Continuing"),
-      caption: t("关于接下来的我", "What I am exploring next"),
-      style: "STILL BECOMING",
-      colour: "#254cc7",
-    },
-    {
-      id: "contact",
-      label: t("联系", "Contact"),
-      caption: t("与我保持联系", "Get in touch"),
-      style: "PERSONAL CORRESPONDENCE",
-      colour: "#bda987",
-    },
-  ];
+  return siteChapters.map(chapter => ({ ...chapter,
+    label: t(chapter.label[0], chapter.label[1]), caption: t(chapter.caption[0], chapter.caption[1]), group: t(chapter.group[0], chapter.group[1]),
+  }));
 }
 
 function getIdentities(t: (zh: string, en: string) => string) {
@@ -180,8 +82,8 @@ function getIdentities(t: (zh: string, en: string) => string) {
           "From programming, statistics, and systems to visual and spatial perception.",
         ),
       ],
-      link: "#origins",
-      linkLabel: t("看看我的起点", "Explore my beginnings"),
+      link: "#archive",
+      linkLabel: t("阅读教育与课程记录", "Read my education and coursework"),
     },
     {
       label: t("研究者", "Researcher"),
@@ -192,20 +94,20 @@ function getIdentities(t: (zh: string, en: string) => string) {
         "Gordon Owusu Boateng 研究团队",
         "Gordon Owusu Boateng’s research team",
       ),
-      note: t("从 Cosmos-Loc 到 U-IMPROVE", "From Cosmos-Loc to U-IMPROVE"),
+      note: t("视觉定位 / 生成式感知", "Visual localisation / generative perception"),
       stamp: "IN PROGRESS",
       lines: [
         t(
-          "参与 Qwen 训练、实验对比与定位评估。",
-          "Contributing to Qwen training, experimental comparisons, and localisation evaluation.",
+          "我关心模型怎样理解现实场景。",
+          "I study how models understand real environments.",
         ),
         t(
-          "U-IMPROVE 毕业研究连接目标存在性、像素语义与度量几何。",
-          "My U-IMPROVE dissertation connects target presence, pixel semantics and metric geometry.",
+          "把问题变成能对照条件、检查输出的实验。",
+          "I turn questions into experiments with explicit conditions and checkable outputs.",
         ),
       ],
-      link: "#cosmos",
-      linkLabel: t("走进我的研究", "Step into my research"),
+      link: "#glimpse",
+      linkLabel: t("走进我的毕业研究", "Explore my dissertation"),
     },
     {
       label: t("实践者", "Practitioner"),
@@ -226,12 +128,12 @@ function getIdentities(t: (zh: string, en: string) => string) {
       stamp: "HANDS ON",
       lines: [
         t(
-          "曾担任智能光疗面罩团队组长，参与跨模块联调。",
-          "Led the phototherapy-mask team and contributed to cross-module integration.",
+          "把模型、软件和设备连成可工作的链路。",
+          "I connect models, software and devices into working systems.",
         ),
         t(
-          "现在于清华大学苏州环境创新研究院实习。",
-          "Currently interning at Tsinghua University’s environmental innovation institute in Suzhou.",
+          "通过原型、接口与数据流程，把想法变成实践。",
+          "Prototypes, interfaces and data workflows turn ideas into practice.",
         ),
       ],
       link: "#mask",
@@ -319,7 +221,7 @@ function IdentityFold({ quiet, entered }: { quiet: boolean; entered: boolean }) 
           <span>CHONEY CHEN</span>
           <span>PERSONAL FILE / {page?.number ?? "INDEX"}</span>
         </div>
-        <AnimatePresence mode="wait" initial={false}>
+        <div className="reading-switch"><AnimatePresence initial={false}>
           {page && identity !== null ? <motion.div
             key={identity}
             role="tabpanel"
@@ -352,7 +254,7 @@ function IdentityFold({ quiet, entered }: { quiet: boolean; entered: boolean }) 
             <p>{t("学生、研究者、实践者。", "Student. Researcher. Practitioner.")}</p>
             <span>{t("选一个身份，翻开我的档案。", "Choose a role to open my file.")}</span>
           </motion.div>}
-        </AnimatePresence>
+        </AnimatePresence></div>
         <span className="identity-stamp">{page?.stamp ?? "PERSONAL INDEX"}</span>
         <div className="identity-paper-bottom">
           <span>FROM SHIYAN</span>
@@ -414,9 +316,9 @@ function Hero({ quiet }: { quiet: boolean }) {
                   }
                   key={letter}
                   initial={
-                    quiet ? false : { y: 32, opacity: 0, filter: "blur(6px)" }
+                    quiet ? false : { y: 32, opacity: 0 }
                   }
-                  animate={quiet || entered ? { y: 0, opacity: 1, filter: "blur(0px)" } : { y: 22, opacity: 0, filter: "blur(4px)" }}
+                  animate={quiet || entered ? { y: 0, opacity: 1 } : { y: 22, opacity: 0 }}
                   transition={
                     slowMotion(quiet
                       ? { duration: 0 }
@@ -473,7 +375,7 @@ function Hero({ quiet }: { quiet: boolean }) {
             BEng · Stage 4{" "}
             <span>{t("2023 — 2027（预计）", "2023 — 2027 (expected)")}</span>
           </p>
-          <a className="hero-start" href="#origins">
+          <a className="hero-start" href="#directions">
             <span>
               {t("从我开始，慢慢往下看", "Start here. Follow the thread.")}
             </span>
@@ -497,7 +399,7 @@ function Hero({ quiet }: { quiet: boolean }) {
   );
 }
 
-const originIds = ["lif001", "kaiding", "surf-wearable"];
+const originIds = earlyExperienceIds;
 
 const originIcons = [
   <svg viewBox="0 0 240 100" key="chart" aria-hidden="true">
@@ -578,7 +480,7 @@ function Origins({ quiet }: { quiet: boolean }) {
     <section id="origins" className="chapter origins-chapter" aria-labelledby="origins-title">
       <div className="chapter-inner">
         <header className="origins-heading">
-          <div><p className="chapter-kicker">01 / THE BEGINNINGS</p><h2 id="origins-title">{t("从具体的", "It began with")}<br /><span>{t("问题开始。", "small questions.")}</span></h2></div>
+          <div><p className="chapter-kicker">09 / EARLY EXPERIENCE</p><h2 id="origins-title">{t("从具体的", "It began with")}<br /><span>{t("问题开始。", "small questions.")}</span></h2></div>
           <p>{t("回归分析、软件维护、可穿戴数据采集。", "Regression. Software maintenance. Wearable data.")}<br />{t("我的三段早期经历。", "Three early experiences that shaped my work.")}</p>
         </header>
         <div className="origin-desk">
@@ -603,160 +505,20 @@ function Origins({ quiet }: { quiet: boolean }) {
             <p className="origin-pull-hint">{t("向上抽出 · 或点击文件", "Pull a file up · or click to read")} <ArrowUpRight size={15} /></p>
           </div>
           <div className="origin-reading-slot">
-            <AnimatePresence mode="wait" initial={false}>
+            <div className="reading-switch"><AnimatePresence initial={false}>
               {selectedExperience && selected !== null ? <motion.article id="origin-record" className="origin-record" role="tabpanel" aria-labelledby={`origin-tab-${selected}`} key={selectedExperience.id} initial={{ opacity: 0, x: quiet ? 0 : -16, clipPath: "inset(0 100% 0 0)" }} animate={{ opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)" }} exit={{ opacity: 0, x: quiet ? 0 : 10 }} transition={slowMotion({ duration: quiet ? 0 : 0.38, ease: [0.22, 1, 0.36, 1] })}>
                 <div className="origin-record-top"><span className="record-number">RECORD / 0{selected + 1}</span><button className="reading-close" onClick={() => setSelected(null)} aria-label={t("合上经历文件", "Close experience file")}><X size={17} /></button></div>
                 {selected === 1 ? <SteampunkWork quiet={quiet} /> : <><h3>{selectedExperience.title}</h3><p className="record-role">{selectedExperience.role}</p><p>{selectedExperience.description}</p><div className="record-tags">{selectedExperience.tags.map(tag => <span key={tag}>{tag}</span>)}</div>{selectedExperience.boundary && <details className="support-notes"><summary>{t("记录说明", "Record context")}</summary><p>{selectedExperience.boundary}</p></details>}</>}
               </motion.article> : <motion.div key="closed" className="origin-closed" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><span>2023 — 2025</span><h3>{t("三个起点，", "Three beginnings,")}<br />{t("同一份好奇。", "one curiosity.")}</h3><p>{t("抽出一份文件，读我的实际工作。", "Open a file to read what I worked on.")}</p></motion.div>}
-            </AnimatePresence>
+            </AnimatePresence></div>
           </div>
         </div>
-        <a className="chapter-link origins-next" href="#methods">{t("接下来：我的做事方式", "Next: how I approach the work")}<ArrowRight size={18} /></a>
+        <a className="chapter-link origins-next" href="#archive">{t("接下来：教育与课程记录", "Next: education and coursework")}<ArrowRight size={18} /></a>
       </div>
     </section>
   );
 }
 
-function PersonalArchive({ quiet }: { quiet: boolean }) {
-  const { t } = useI18n();
-  const { experienceTimeline } = useContent();
-  const [year, setYear] = useState("all");
-  const [open, setOpen] = useState("");
-  useCollapseOnLeave("archive", () => setOpen(""));
-  const items = experienceTimeline.filter(
-    (item) => year === "all" || item.year.includes(year),
-  );
-  return (
-    <section id="archive" className="chapter archive-chapter">
-      <div className="chapter-inner">
-        <div className="archive-heading">
-          <div>
-            <p className="chapter-kicker">11 / MY PERSONAL ALMANAC</p>
-            <h2>
-              {t("这些事，", "Every experience,")}
-              <br />
-              {t("都让我成为我。", "a part of who I am.")}
-            </h2>
-          </div>
-          <div className="archive-note">
-            <span className="archive-count">
-              15<span>RECORDS</span>
-            </span>
-            <p>
-              {t(
-                "课程、实习、研究、原型与团队。",
-                "Courses, internships, research, prototypes, and teams.",
-              )}
-              <br />
-              {t(
-                "有些已完成，有些还在生长。",
-                "Some completed. Some still growing.",
-              )}
-            </p>
-          </div>
-        </div>
-        <div
-          className="archive-filter"
-          role="group"
-          aria-label={t("按年份浏览个人经历", "Browse my experiences by year")}
-        >
-          {["all", "2023", "2024", "2025", "2026"].map((item) => (
-            <button
-              key={item}
-              aria-pressed={year === item}
-              onClick={() => setYear(item)}
-            >
-              {item === "all" ? t("全部", "All") : item}
-              {year === item && <span>↗</span>}
-            </button>
-          ))}
-          <span>SELECT A YEAR / OPEN A RECORD</span>
-        </div>
-        <div className="archive-records">
-          {items.map((item, index) => (
-            <motion.article
-              layout={!quiet}
-              key={item.id}
-              className={`archive-ticket ${open === item.id ? "is-open" : ""}`}
-              initial={quiet ? false : { opacity: 0, x: index % 2 ? 28 : -28 }}
-              animate={quiet ? { opacity: 1, x: 0 } : undefined}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: false, amount: 0.2 }}
-              transition={
-                slowMotion(quiet
-                  ? { duration: 0 }
-                  : {
-                      duration: 0.55,
-                      delay: (index % 3) * 0.045,
-                      ease: [0.16, 1, 0.3, 1],
-                    })
-              }
-            >
-              <button
-                className="archive-ticket-button"
-                aria-expanded={open === item.id}
-                aria-controls={`record-${item.id}`}
-                onClick={() => setOpen(open === item.id ? "" : item.id)}
-              >
-                <span className="archive-year">{item.id === "can201" ? "2025" : item.year}</span>
-                <span className="archive-title">
-                  {item.title}
-                  <small>{item.role}</small>
-                </span>
-                <span className="archive-status">{item.status}</span>
-                {open === item.id ? <Minus size={19} /> : <Plus size={19} />}
-              </button>
-              <AnimatePresence initial={false}>
-                {open === item.id && (
-                  <ReadingReveal
-                    id={`record-${item.id}`}
-                    className="archive-ticket-body"
-                    initial={{ gridTemplateRows: "0fr", opacity: 0 }}
-                    animate={{ gridTemplateRows: "1fr", opacity: 1 }}
-                    exit={{ gridTemplateRows: "0fr", opacity: 0 }}
-                    transition={slowMotion({ duration: quiet ? 0 : 0.28 })}
-                  >
-                    <div
-                      className={
-                        item.id === "education"
-                          ? "archive-education-body"
-                          : undefined
-                      }
-                    >
-                      {item.id === "education" ? (
-                        <RomanEducation quiet={quiet} />
-                      ) : (
-                        <>
-                          <p>{item.description}</p>
-                          {item.boundary && <small>{item.boundary}</small>}
-                          {item.projectId && (
-                            <a href={`#${item.projectId}`}>
-                              {t(
-                                "进入这段经历的专属章节",
-                                "Explore this experience’s chapter",
-                              )}
-                              <ArrowUpRight size={15} />
-                            </a>
-                          )}
-                        </>
-                      )}
-                    </div>
-                  </ReadingReveal>
-                )}
-              </AnimatePresence>
-            </motion.article>
-          ))}
-        </div>
-        <details className="archive-footnote support-notes"><summary>{t("关于这份经历索引", "About this index")}</summary><p>
-          {t(
-            "地下停车场 SURF 与 Cosmos-Loc 存在工作重叠；面罩竞赛是同一原型的后续成果。这里保留经历脉络，不重复计算项目成果。",
-            "The car-park SURF overlaps with Cosmos-Loc; the maker competition is a later result of the same mask prototype. These records preserve the timeline without counting the same achievement twice.",
-          )}
-        </p></details>
-      </div>
-    </section>
-  );
-}
 
 function PersonalFooter() {
   const { t } = useI18n();
@@ -791,16 +553,17 @@ const MainChapters = memo(function MainChapters({ quiet }: { quiet: boolean }) {
   return (
     <main>
       <Hero quiet={quiet} />
-      <Origins quiet={quiet} />
-      <MethodsChapter quiet={quiet} />
       <ResearchDirections quiet={quiet} />
+      <FutureChapter quiet={quiet} part="perception" />
       <CosmosChapter quiet={quiet} />
       <SupsChapter quiet={quiet} />
+      <FutureChapter quiet={quiet} part="collaboration" />
       <MaskChapter quiet={quiet} />
       <ESGChapter quiet={quiet} />
-      <FutureChapter quiet={quiet} />
       <ToolsChapter quiet={quiet} />
+      <Origins quiet={quiet} />
       <PersonalArchive quiet={quiet} />
+      <MethodsChapter quiet={quiet} />
       <PersonalPortrait quiet={quiet} />
       <ContactChapter quiet={quiet} />
       <PersonalFooter />
@@ -817,7 +580,6 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   useChapterAnchors();
   useReadingExit(!menuOpen);
-  useChapterSnap({ enabled: !menuOpen, reduced: quiet });
   const [active, setActive] = useState("home");
   const menuButton = useRef<HTMLButtonElement>(null);
   const menuContainer = useRef<HTMLDivElement>(null);
@@ -1029,7 +791,7 @@ export default function App() {
                     />
                     <span>
                       {chapter.caption}
-                      <small>{chapter.style}</small>
+                      <small>{chapter.group} / {chapter.style}</small>
                     </span>
                     <ArrowUpRight size={20} />
                   </a>

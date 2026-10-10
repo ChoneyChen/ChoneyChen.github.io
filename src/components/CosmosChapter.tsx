@@ -1,5 +1,6 @@
 import { slowMotion, slowDragRelease } from "../lib/motionTiming";
 import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
+import { useScenePresence as useInView } from "../hooks/useScenePresence";
 import {
   useRef,
   useState,
@@ -9,7 +10,6 @@ import {
 import {
   AnimatePresence,
   motion,
-  useInView,
   useReducedMotion,
 } from "motion/react";
 import { ArrowDownRight, ArrowUpRight, X } from "lucide-react";
@@ -22,12 +22,12 @@ const getRecords = (t: (zh: string, en: string) => string) => [
     label: t("调研", "Data"),
     english: "DATA",
     title: t(
-      "先确认，数据能回答这个问题。",
-      "First, check what the data can answer.",
+      "筛选有位姿真值的数据。",
+      "Screen datasets for pose ground truth.",
     ),
     context: t(
-      "我的研究从数据开始。地下停车场里的视觉线索，只有与位姿真值、场景条件和训练设置一起检查，才有可能成为可靠的实验材料。",
-      "I started with the data: checking visual cues against pose ground truth, scene conditions and training requirements before treating them as experiment material.",
+      "调研自动驾驶与停车场数据集、开源模型和 CARLA 仿真资料，检查位姿真值、地下场景适配及训练可行性。",
+      "Reviewed driving and parking datasets, open-source models and CARLA simulation resources, checking pose ground truth, underground-scene suitability and training feasibility.",
     ),
     tags: [
       t("位姿真值", "Pose ground truth"),
@@ -40,12 +40,12 @@ const getRecords = (t: (zh: string, en: string) => string) => [
     label: t("训练", "Qwen"),
     english: "QWEN",
     title: t(
-      "让训练跑起来，也让过程看得见。",
-      "Run the training. Keep the process visible.",
+      "训练 Qwen，迭代微调方案。",
+      "Train Qwen and iterate on fine-tuning.",
     ),
     context: t(
-      "Qwen 系列是我的主要工作。我参与环境、参数、过程监控与多轮迭代，把模型训练作为需要持续观察和比较的研究过程。",
-      "My main contribution involved Qwen models: environment setup, parameters, monitoring and repeated experiments. Training was a process to observe and compare, rather than a single run.",
+      "重点负责 Qwen 系列的训练环境、参数设定、中间结果监控和实验迭代；参与模型选择与 LoRA 微调路线设计。",
+      "My main work covered Qwen training environments, parameter settings, intermediate-result monitoring and experimental iteration. I also contributed to model selection and LoRA fine-tuning plans.",
     ),
     tags: [
       t("Qwen 系列", "Qwen models"),
@@ -58,12 +58,12 @@ const getRecords = (t: (zh: string, en: string) => string) => [
     label: t("比较", "Tune"),
     english: "TUNING",
     title: t(
-      "一个变量，值得单独追问。",
-      "Give each variable its own question.",
+      "比较数据覆盖与模型规模。",
+      "Compare data coverage and model size.",
     ),
     context: t(
-      "不同的数据覆盖、学习率、图像分辨率和模型规模，会怎样影响定位？我参与多轮实验比较，把这些条件和模型表现一起分析。",
-      "How do data coverage, learning rate, image resolution and model size affect localisation? I participated in repeated experiments to compare these conditions alongside model performance.",
+      "参与控制变量实验，比较训练数据规模、学习率、图像分辨率和模型规模对定位表现的影响。",
+      "Contributed to controlled experiments comparing the effects of training-data size, learning rate, image resolution and model size on localisation.",
     ),
     tags: [
       t("数据规模", "Data scale"),
@@ -76,12 +76,12 @@ const getRecords = (t: (zh: string, en: string) => string) => [
     label: t("评估", "Review"),
     english: "COST",
     title: t(
-      "精度之外，还有计算的代价。",
-      "Accuracy comes with a computational cost.",
+      "同时评估精度与计算成本。",
+      "Evaluate accuracy alongside compute cost.",
     ),
     context: t(
-      "一个实验结果要同时回答：有多准确，需要多少显存，处理得有多快。我参与分析精度、吞吐量和延迟，让性能与资源代价一起被看见。",
-      "An experiment should show accuracy, memory requirements and processing speed together. I helped analyse accuracy, throughput and latency alongside the resources they required.",
+      "分析定位精度、显存占用、推理吞吐量与延迟，比较数据效率和模型扩大的资源代价。",
+      "Analysed localisation accuracy, GPU memory, inference throughput and latency, comparing data efficiency with the resource costs of larger models.",
     ),
     tags: [
       t("精度 / 显存", "Accuracy / memory"),
@@ -157,7 +157,7 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
       <div className="chapter-inner cosmos-inner">
         <div className="cosmos-masthead">
           <p className="chapter-kicker">
-            {t("04 / 我的空间研究", "04 / MY WORK IN SPATIAL RESEARCH")}
+            {t("03 / Cosmos-Loc · 视觉定位", "03 / COSMOS-LOC · VISUAL LOCALISATION")}
           </p>
           <p className="cosmos-date">2025.12 — 2026.09</p>
         </div>
@@ -190,12 +190,12 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
             </h3>
             <p>
               {t(
-                "用视觉语言模型，在 GPS 拒止的地下停车场中推断位置。",
-                "Visual language models for localisation in GPS-denied underground parking facilities.",
+                "从单张 RGB 图像推断车辆位置与朝向，研究视觉语言模型如何利用地下停车场中的语义地标。",
+                "Estimate a vehicle’s position and orientation from one RGB image, using semantic landmarks in GPS-denied underground car parks.",
               )}
             </p>
             <p className="cosmos-my-role">
-              {t("我在团队里：", "My contribution: ")}
+              {t("研究团队成员 · 本人重点工作", "RESEARCH TEAM MEMBER · MY MAIN WORK")}
               <strong>
                 {t(
                   "Qwen 训练与实验分析",
@@ -252,7 +252,7 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
                   ))}
                 </div>
               </div>
-              <AnimatePresence mode="wait" initial={false}>
+              <div className="reading-switch"><AnimatePresence initial={false}>
                 {record && selected !== null ? <motion.div
                   key={selected}
                   className="cosmos-reader-copy"
@@ -276,13 +276,7 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
                     {t("我具体做了什么", "WHAT I WORKED ON")} / {record.label}
                   </p>
                   <h3>{record.title}</h3>
-                  <p className="cosmos-reader-contribution">
-                    {project.contributions[selected]}
-                  </p>
-                  <details className="cosmos-record-context">
-                    <summary>{t("实验背景", "Experiment context")}</summary>
-                    <p className="cosmos-reader-context">{record.context}</p>
-                  </details>
+                  <p className="cosmos-reader-contribution">{record.context}</p>
                   <div className="cosmos-record-tags">
                     {record.tags.map((tag) => (
                       <span key={tag}>{tag}</span>
@@ -296,10 +290,10 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
                   exit={{ opacity: 0 }}
                   transition={slowMotion({ duration: still ? 0 : 0.25 })}
                 >
-                  <p className="cosmos-reader-label">{t("等待一份研究记录", "READY FOR A RESEARCH RECORD")}</p>
-                  <h3>{t("抽出一块，看看我做了什么。", "Pull a cartridge. Explore my contribution.")}</h3>
+                  <p className="cosmos-reader-label">{t("数据 / 训练 / 实验 / 评估", "DATA / TRAINING / EXPERIMENTS / EVALUATION")}</p>
+                  <h3>{t("抽出工作记录。", "Pull a work record.")}</h3>
                 </motion.div>}
-              </AnimatePresence>
+              </AnimatePresence></div>
             </div>
             <div
               className="cosmos-cartridge-rack"
@@ -483,24 +477,28 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
           ))}
         </div>
         <details className="cosmos-boundary">
-          <summary>{t("实验范围与团队归属", "Experiment scope & team attribution")}</summary>
+          <summary>{t("实验范围与关联记录", "Experiment scope & linked research")}</summary>
           <p>{t(
-            "以上为 Cosmos-Reason2 + LoRA 在特定设置下的团队指标；我的主要贡献是 Qwen 训练与多轮实验分析。结果不直接说明跨停车场泛化，开发评测与最终测试需区分。",
-            "These Cosmos-Reason2 + LoRA metrics are team results under a specific setup. My main contribution was Qwen training and repeated experiment analysis. They do not establish cross-facility generalisation; development evaluations and final tests must be distinguished.",
+            "Gordon Owusu Boateng 研究团队的 Cosmos-Reason2 + LoRA 结果，仅对应所报告的实验设置；不能直接推断跨停车场泛化，开发评测与最终测试需区分。",
+            "The Cosmos-Reason2 + LoRA results belong to Gordon Owusu Boateng’s research team and the reported experimental setting. They do not establish cross-facility generalisation; development evaluations and final tests must be distinguished.",
+          )}</p>
+          <p>{t(
+            "2026.03—08 的地下停车场定位 SURF 记录与本项目技术内容重叠，在此合并说明，不另列独立成果。",
+            "The 2026.03–08 SURF record on underground-car-park localisation overlaps with this research and is included here without claiming a separate set of results.",
           )}</p>
         </details>
         <footer className="cosmos-exits">
           <a className="chapter-link" href="#sups">
             {t(
-              "为研究建立可控制的空间",
-              "Build a controllable research environment",
+              "下一项目：SUPS / SVL",
+              "Next: SUPS / SVL",
             )}{" "}
             <ArrowDownRight size={16} />
           </a>
           <a className="chapter-link" href="#glimpse">
             {t(
-              "我的毕业研究，继续追问感知",
-              "Continue the question in my final-year research",
+              "相关毕业研究：U-IMPROVE",
+              "Related final-year research: U-IMPROVE",
             )}{" "}
             <ArrowUpRight size={16} />
           </a>

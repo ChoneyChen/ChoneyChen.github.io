@@ -1,11 +1,11 @@
 import { ReadingReveal } from "./ReadingReveal";
 import { slowMotion, slowDragRelease } from "../lib/motionTiming";
 import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
+import { useScenePresence as useInView } from "../hooks/useScenePresence";
 import { useRef, useState, type CSSProperties } from "react";
 import {
   AnimatePresence,
   motion,
-  useInView,
   useReducedMotion,
 } from "motion/react";
 import { ArrowDownRight, Layers3 } from "lucide-react";
@@ -30,18 +30,18 @@ const getLayerRecords = (
     title: t("车位编号", "Parking IDs"),
     short: "01 / LANDMARKS",
     phrase: t(
-      "编号，是空间里可读的线索。",
-      "Give the space a readable landmark.",
+      "为车位添加语义标识。",
+      "Add semantic identifiers to parking bays.",
     ),
     text: t(
-      "我补充停车位编号，让车位不只是相似的几何框线，也有可以被感知与定位研究检查的语义标记。",
-      "I added parking-space identifiers so that similar geometric bays also carry semantic markers that can be examined in perception and localisation research.",
+      "在现有停车场场景中增加可识别的车位编号，为语义地标提取与位置推断提供场景元素。",
+      "Added readable parking-space identifiers to the existing scene, providing landmarks for semantic extraction and position inference.",
     ),
     reason: t(
       "编号与实际位置应当对应，才能讨论它对定位的作用。",
       "An identifier should correspond to its actual location before we can study its role in localisation.",
     ),
-    status: t("已开展场景扩展", "Scene extension underway"),
+    status: t("车位编号已扩展", "Parking identifiers added"),
     color: "#3047b9",
   },
   {
@@ -49,18 +49,18 @@ const getLayerRecords = (
     title: t("屋顶结构", "Roof structure"),
     short: "02 / STRUCTURE",
     phrase: t(
-      "把停车场，变成封闭的空间。",
-      "Make the parking scene an enclosed space.",
+      "补充地下停车场的建筑结构。",
+      "Extend the enclosed parking structure.",
     ),
     text: t(
-      "我参与补充屋顶结构，让基础场景更接近地下停车场。结构扩展与车位编号一起，构成后续研究的环境基础。",
-      "I helped add a roof structure to bring the base scene closer to an underground parking environment. The structure and identifiers form part of the setting for further research.",
+      "为原有停车场增加屋顶等建筑结构，使场景更接近地下或封闭停车场的视觉环境。",
+      "Helped add a roof and architectural structure to bring the existing scene closer to the visual conditions of an underground or enclosed car park.",
     ),
     reason: t(
       "场景条件可以被控制，环境变化与失败案例才有机会被分别研究。",
       "Controllable scene conditions make it possible to examine environmental changes and failure cases separately.",
     ),
-    status: t("已开展结构扩展", "Structural extension underway"),
+    status: t("屋顶结构已扩展", "Roof structure added"),
     color: "#993d2c",
   },
   {
@@ -68,18 +68,18 @@ const getLayerRecords = (
     title: t("导向与分区", "Wayfinding"),
     short: "03 / CONSISTENCY",
     phrase: t(
-      "一个箭头，也要与空间说得通。",
-      "Even an arrow must agree with the space.",
+      "让导向标志对应真实分区。",
+      "Align wayfinding with the actual zones.",
     ),
     text: t(
-      "我研究道路导向、A/B 分区和箭头方向之间的空间一致性，让语义地标与几何关系保持对应。",
-      "I study spatial consistency between road guidance, A/B zones and arrow directions, keeping semantic landmarks aligned with geometric relationships.",
+      "推进左转、右转和区域导向的开发要求，检查 A/B 分区、道路位置与箭头方向的对应关系。",
+      "Developing requirements for turning and zone guidance, checking the correspondence between A/B zones, road positions and arrow directions.",
     ),
     reason: t(
-      "这些线索不是装饰。改变一个标志，应当知道它指向哪个分区与哪段道路。",
-      "Changing a sign should mean knowing which zone and stretch of road it refers to.",
+      "导向语义必须与空间布局一致，才能用于后续定位与场景理解。",
+      "Wayfinding semantics must agree with the layout before they can support localisation and scene understanding.",
     ),
-    status: t("研究与工程继续推进", "Research and development ongoing"),
+    status: t("导向一致性开发进行中", "Wayfinding consistency in progress"),
     color: "#283783",
   },
 ];
@@ -179,7 +179,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
       <div className="chapter-inner sups-inner">
         <div className="sups-masthead">
           <p className="chapter-kicker">
-            {t("05 / 建立研究环境", "05 / BUILDING A RESEARCH ENVIRONMENT")}
+            {t("04 / SUPS · 仿真场景扩展", "04 / SUPS · SIMULATION EXTENSIONS")}
           </p>
           <span>{t("2026.09 — 至今", "2026.09 — PRESENT")}</span>
         </div>
@@ -209,9 +209,10 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
             </motion.h2>
           </div>
           <div className="sups-heading-note">
-            <p>{t("扩展现有停车场仿真，让编号、结构与导向可以被控制和研究。", "Extend an existing parking simulator with controllable identifiers, structure and wayfinding.")}</p>
+            <p>{t("怎样构造语义标识与几何布局一致、可用于感知研究的停车场？", "How can a parking scene keep semantic landmarks aligned with its geometry for perception research?")}</p>
             <span>{t("我的角色", "MY ROLE")}</span>
-            <strong>{t("场景扩展与研究工程", "Scene extension & research engineering")}</strong>
+            <strong>{t("仿真开发与场景扩展", "Simulation development & scene extension")}</strong>
+            <small className="sups-project-status">{t("仿真与数据工程进行中", "Simulation and data work in progress")}</small>
           </div>
         </header>
 
@@ -644,12 +645,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
           <div className="sups-scene-side-note">
             <Layers3 size={16} strokeWidth={1} />
             <span>
-              {t("一个真实的研究问题，", "A research question,")}
-              <br />
-              {t(
-                "对应一层可控制的环境。",
-                "a controllable layer of the scene.",
-              )}
+              {t("编号 · 结构 · 导向", "Identifiers · structure · wayfinding")}
             </span>
           </div>
         </div>
@@ -710,7 +706,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
               ease: [0.22, 1, 0.36, 1],
             })}
           >
-            <AnimatePresence mode="wait" initial={false}>
+            <div className="reading-switch"><AnimatePresence initial={false}>
               <motion.div
                 key={selected}
                 className="sups-work-grid"
@@ -736,41 +732,41 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
                   </span>
                 </div>
               </motion.div>
-            </AnimatePresence>
+            </AnimatePresence></div>
           </ReadingReveal>}
           </AnimatePresence>
         </div>
         <div className="sups-foundation">
           <span>
-            {t("起点：", "Foundation: ")}
+            {t("已跑通：", "Running: ")}
             <strong>{t("基础仿真链路跑通", "Base simulation running")}</strong>
           </span>
           <span>
-            {t("目前：", "Status: ")}
+            {t("已扩展：", "Added: ")}
             <strong>
-              {t("仿真与数据工程进行中", "Simulation and data work ongoing")}
+              {t("车位编号与屋顶结构", "Parking identifiers and roof structure")}
             </strong>
           </span>
         </div>
         <details className="sups-boundary">
           <summary>{t("场景与数据范围", "Scene & data scope")}</summary>
           <p>{t(
-            "工作基于现有 SUPS / SVL 平台扩展。图中为原创工作示意；完整样本规模、统一标注与公开数据集发布尚未确认。",
-            "This work extends the existing SUPS / SVL platform. The scene is an original illustration; complete sample counts, unified annotation and a public dataset release have not been confirmed.",
+            "基于现有 SUPS / SVL 平台，使用 Codex 协作开发场景。图中为工作示意；完整样本规模、统一标注与公开数据集发布尚未确认。",
+            "The scene extends the existing SUPS / SVL platform with Codex-assisted development. This is a work illustration; complete sample counts, unified annotation and a public dataset release have not been confirmed.",
           )}</p>
         </details>
         <footer className="sups-exits">
-          <a className="chapter-link" href="#mask">
+          <a className="chapter-link" href="#avpc">
             {t(
-              "接下来，把系统做成能演示的原型",
-              "Next, build a prototype that can be demonstrated",
+              "下一项目：AVPC 协同感知",
+              "Next: AVPC collaborative perception",
             )}{" "}
             <ArrowDownRight size={16} />
           </a>
           <a className="chapter-link" href="#glimpse">
             {t(
-              "这些空间，也连接我的毕业研究",
-              "These spaces also connect to my final-year research",
+              "相关毕业研究：U-IMPROVE",
+              "Related final-year research: U-IMPROVE",
             )}{" "}
             <ArrowDownRight size={16} />
           </a>

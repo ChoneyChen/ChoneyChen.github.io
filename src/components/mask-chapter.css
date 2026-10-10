@@ -42,7 +42,7 @@
   align-items: center;
   gap: 8px;
   margin-top: 22px;
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 0.055em;
 }
 .mask-role-mark > span {
@@ -72,7 +72,7 @@
   gap: 16px;
   padding: 18px 0;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 9px;
+  font-size: 14px;
   color: #465574;
   letter-spacing: 0.045em;
 }
@@ -153,20 +153,20 @@
 .mask-connection-node > small {
   display: block;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 7px;
+  font-size: 14px;
   letter-spacing: 0.035em;
   color: #536383;
 }
 .mask-connection-node > strong {
   display: block;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   margin: 8px 0 5px;
   letter-spacing: -0.025em;
 }
 .mask-connection-node > span {
   display: block;
-  font-size: 9px;
+  font-size: 14px;
   color: #536383;
   line-height: 1.5;
 }
@@ -183,13 +183,13 @@
   left: 5%;
   top: 45%;
   color: #536383;
-  font-size: 8px;
+  font-size: 14px;
 }
 .mask-diagram-note {
   margin: 11px 0 0;
   text-align: center;
   color: #536383;
-  font-size: 10px;
+  font-size: 14px;
 }
 .mask-connection-node:focus-visible,
 .mask-system-header > button:focus-visible,
@@ -212,7 +212,7 @@
   gap: 8px;
 }
 .mask-system-header > div {
-  font-size: 12px;
+  font-size: 14px;
 }
 .mask-system-header > div svg {
   color: #465574;
@@ -222,7 +222,7 @@
   border: 0;
   padding: 0;
   color: #2458f2;
-  font-size: 11px;
+  font-size: 14px;
   cursor: pointer;
 }
 .mask-system-chain {
@@ -234,7 +234,7 @@
   gap: 6px;
   margin: 8px 0 18px;
   color: #465574;
-  font-size: 10px;
+  font-size: 14px;
 }
 .mask-chain-nodes {
   display: grid;
@@ -259,7 +259,7 @@
   flex-direction: column;
   align-items: center;
   padding: 10px 3px;
-  font-size: 9px;
+  font-size: 14px;
   cursor: pointer;
 }
 .mask-chain-nodes > button svg {
@@ -271,7 +271,7 @@
   margin-top: 6px;
   font-family: "IBM Plex Mono", monospace;
   opacity: 0.65;
-  font-size: 8px;
+  font-size: 14px;
 }
 .mask-chain-nodes > button[aria-pressed="true"] {
   color: #172038;
@@ -300,7 +300,7 @@
   align-items: center;
   gap: 7px;
   color: #536383;
-  font-size: 11px;
+  font-size: 14px;
   padding-bottom: 26px;
 }
 .mask-story-step {
@@ -339,7 +339,7 @@
 }
 .mask-step-number {
   font-family: "IBM Plex Mono", monospace;
-  font-size: 9px;
+  font-size: 14px;
   color: #465574;
   letter-spacing: 0.08em;
 }
@@ -364,7 +364,7 @@
   gap: 6px;
   margin-top: 12px;
   color: #2458f2;
-  font-size: 12px;
+  font-size: 14px;
 }
 .mask-story-step > p {
   color: #465574;
@@ -375,7 +375,7 @@
 .mask-step-label {
   color: #536383;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 9px;
+  font-size: 14px;
   margin-top: 10px;
   letter-spacing: 0.03em;
 }
@@ -388,7 +388,7 @@
   gap: 30px;
 }
 .mask-outcomes > div > span {
-  font-size: 10px;
+  font-size: 14px;
   color: #536383;
   letter-spacing: 0.045em;
 }
@@ -426,7 +426,7 @@
 }
 .mask-outcomes > div > p {
   margin: 12px 0 0;
-  font-size: 12px;
+  font-size: 14px;
   color: #465574;
   line-height: 1.6;
 }
@@ -441,7 +441,7 @@
   display: block;
   margin-top: 19px;
   max-width: 310px;
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.7;
   color: #465574;
 }
@@ -454,7 +454,7 @@
   font-weight: 500;
 }
 .mask-project-scope {
-  font-size: 12px;
+  font-size: 14px;
   color: #465574;
   line-height: 1.7;
   margin-top: 16px;
@@ -481,7 +481,7 @@
   padding-top: 26px;
 }
 .mask-footer .chapter-link {
-  font-size: 11px;
+  font-size: 14px;
   color: #465574;
   align-items: center;
   gap: 7px;
@@ -556,19 +556,19 @@
   }
   .mask-stage-topline {
     padding: 13px 0;
-    font-size: 10px;
+    font-size: 14px;
   }
   .mask-connection-node {
     padding: 10px 12px;
   }
   .mask-connection-node > span {
-    font-size: 12px;
+    font-size: 14px;
   }
   .mask-system-header {
     padding: 14px 0;
   }
   .mask-system-header > button {
-    font-size: 12px;
+    font-size: 14px;
   }
   .mask-narrative {
     padding-top: 15px;
@@ -576,7 +576,7 @@
   }
   .mask-narrative-intro {
     padding-bottom: 12px;
-    font-size: 12px;
+    font-size: 14px;
   }
   .mask-story-step {
     padding: 12px 0 18px 23px;
@@ -585,7 +585,7 @@
     top: 18px;
   }
   .mask-step-number {
-    font-size: 10px;
+    font-size: 14px;
   }
   .mask-step-title {
     margin-top: 8px;
@@ -615,7 +615,7 @@
     padding-top: 18px;
   }
   .mask-footer .chapter-link {
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 @media (min-width: 1450px) {
@@ -633,10 +633,10 @@
     padding-right: 8px;
   }
   .mask-connection-node > strong {
-    font-size: 12px;
+    font-size: 14px;
   }
   .mask-connection-node > small {
-    font-size: 6px;
+    font-size: 14px;
   }
   .mask-step-title {
     font-size: 19px;
@@ -655,7 +655,7 @@
   }
   .mask-eyebrow {
     margin-top: 29px;
-    font-size: 12px;
+    font-size: 14px;
   }
   .mask-heading h2 {
     font-size: clamp(36px, 9.5vw, 62px);
@@ -664,7 +664,7 @@
     margin: 23px 0 34px;
   }
   .mask-introduction > p {
-    font-size: 13px;
+    font-size: 14px;
   }
   .mask-desktop-break {
     display: none;
@@ -684,26 +684,26 @@
     min-height: 70px;
   }
   .mask-connection-node > strong {
-    font-size: 12px;
+    font-size: 14px;
   }
   .mask-connection-node > span {
-    font-size: 8px;
+    font-size: 14px;
   }
   .mask-connection-node-3 {
     min-height: 77px;
   }
   .mask-diagram-note {
-    font-size: 9px;
+    font-size: 14px;
     margin-top: 14px;
   }
   .mask-stage-topline {
-    font-size: 8px;
+    font-size: 14px;
   }
   .mask-system-header > div {
-    font-size: 11px;
+    font-size: 14px;
   }
   .mask-system-header > button {
-    font-size: 10px;
+    font-size: 14px;
   }
   .mask-narrative {
     display: grid;
@@ -732,7 +732,7 @@
     display: none;
   }
   .mask-step-action {
-    font-size: 11px;
+    font-size: 14px;
   }
   .mask-outcomes {
     grid-template-columns: 1fr 1fr;
@@ -778,7 +778,7 @@
     padding: 11px 8px;
   }
   .mask-chapter[lang="en"] .mask-connection-node > strong {
-    font-size: 11px;
+    font-size: 14px;
   }
   .mask-chapter[lang="en"] .mask-outcome-award strong {
     font-size: 19px;
@@ -803,5 +803,46 @@
   .mask-chapter *,
   .mask-chapter *::before {
     transition-duration: 0s !important;
+  }
+}
+.chapter.mask-chapter :is(
+  .mask-eyebrow,
+  .mask-introduction > p,
+  .mask-role-mark,
+  .mask-stage-topline,
+  .mask-connection-node > strong,
+  .mask-feedback-label,
+  .mask-diagram-note,
+  .mask-system-header > div,
+  .mask-system-header > button,
+  .mask-chain-caption,
+  .mask-chain-nodes > button,
+  .mask-narrative-intro,
+  .mask-step-label,
+  .mask-step-action,
+  .mask-outcomes > div > span,
+  .mask-outcomes > div > p,
+  .mask-project-scope,
+  .mask-footer .chapter-link
+) {
+  font-size: 14px;
+  line-height: 1.6;
+}
+.chapter.mask-chapter :is(.mask-connection-node > small, .mask-chain-nodes > button small) {
+  font-size: 14px;
+  line-height: 1.45;
+}
+.chapter.mask-chapter .mask-stage-topline {
+  flex-wrap: wrap;
+}
+.chapter.mask-chapter .mask-connection-node > strong {
+  margin-bottom: 0;
+}
+.chapter.mask-chapter .mask-outcome-reflection > p {
+  font-size: 21px;
+}
+@media (max-width: 950px) {
+  .chapter.mask-chapter .mask-connection-board {
+    height: 510px;
   }
 }

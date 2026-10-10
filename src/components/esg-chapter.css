@@ -21,7 +21,7 @@
 }
 .esg-filing-line > span {
   font-family: "IBM Plex Mono", monospace;
-  font-size: 9px;
+  font-size: 14px;
   letter-spacing: 0.05em;
   color: #C6D8C4;
 }
@@ -33,13 +33,13 @@
   padding: 54px 0 45px;
 }
 .esg-institution {
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.8;
   margin: 0 0 28px;
   color: #E1EAD3;
 }
 .esg-institution > span {
-  font-size: 10px;
+  font-size: 14px;
   color: #C6D8C4;
 }
 .esg-heading h2 {
@@ -75,7 +75,7 @@
 .esg-scale-note > p {
   margin: 0 0 20px;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 8px;
+  font-size: 14px;
   letter-spacing: 0.07em;
   color: #52644D;
 }
@@ -92,14 +92,14 @@
 }
 .esg-scale-note > div {
   margin-top: 8px;
-  font-size: 12px;
+  font-size: 14px;
 }
 .esg-scale-note > small {
   display: block;
   margin-top: 19px;
   border-top: 1px solid #BBAF81;
   padding-top: 12px;
-  font-size: 10px;
+  font-size: 14px;
   line-height: 1.65;
   color: #52644D;
 }
@@ -111,7 +111,7 @@
 }
 .esg-brief-mark {
   font-family: "IBM Plex Mono", monospace;
-  font-size: 10px;
+  font-size: 14px;
   letter-spacing: 0.11em;
   padding-top: 5px;
   color: #C6D8C4;
@@ -156,7 +156,7 @@
 }
 .esg-folder-tab > span {
   font-family: "IBM Plex Mono", monospace;
-  font-size: 9px;
+  font-size: 14px;
   letter-spacing: 0.08em;
   color: #23462F;
 }
@@ -166,7 +166,7 @@
   justify-content: space-between;
   gap: 15px;
   padding: 0 5px 23px;
-  font-size: 10px;
+  font-size: 14px;
   color: #23462F;
 }
 .esg-folder-topline > span:last-child {
@@ -238,7 +238,7 @@
   padding-bottom: 25px;
   color: #52644D;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 8px;
+  font-size: 14px;
   letter-spacing: 0.08em;
 }
 .esg-print-cross {
@@ -267,7 +267,7 @@
 }
 .esg-paper-heading > span > small {
   display: block;
-  font-size: 10px;
+  font-size: 14px;
   color: #52644D;
   padding-bottom: 11px;
 }
@@ -290,7 +290,7 @@
   outline-offset: 8px;
 }
 .esg-paper-teaser {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.7;
   color: #52644D;
   margin: 17px 0;
@@ -298,7 +298,7 @@
 }
 .esg-paper-topic {
   font-family: "IBM Plex Mono", monospace;
-  font-size: 8px;
+  font-size: 14px;
   line-height: 1.8;
   color: #52644D;
   letter-spacing: 0.02em;
@@ -311,7 +311,7 @@
   padding-top: 23px;
   margin: 23px 0 20px;
   color: #183F33;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.9;
 }
 .esg-paper-details > ul {
@@ -325,7 +325,7 @@
   gap: 7px;
   margin-top: 7px;
   color: #52644D;
-  font-size: 10px;
+  font-size: 14px;
   line-height: 1.7;
 }
 .esg-paper-details > ul > li > svg {
@@ -337,7 +337,7 @@
   margin-top: 22px;
 }
 .esg-model-index > p {
-  font-size: 9px;
+  font-size: 14px;
   color: #52644D;
   margin: 0 0 10px;
 }
@@ -357,7 +357,7 @@
   text-align: left;
   padding: 8px 9px;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 9px;
+  font-size: 14px;
   cursor: pointer;
   transition:
     color calc(0.2s * var(--motion-time-scale, 1)),
@@ -378,11 +378,11 @@
   padding-left: 11px;
 }
 .esg-model-detail > span {
-  font-size: 10px;
+  font-size: 14px;
   color: #963F26;
 }
 .esg-model-detail > p {
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.8;
   color: #52644D;
   margin: 8px 0 0;
@@ -395,7 +395,7 @@
   margin-top: 24px;
 }
 .esg-source-chain > span {
-  font-size: 10px;
+  font-size: 14px;
   color: #183F33;
   border-bottom: 1px solid #BBAF81;
   padding-bottom: 4px;
@@ -407,7 +407,7 @@
   display: block;
   width: 100%;
   margin-top: 9px;
-  font-size: 9px;
+  font-size: 14px;
   line-height: 1.6;
   color: #52644D;
 }
@@ -420,7 +420,7 @@
   border-top: 1px solid #BBAF81;
   color: #52644D;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 7px;
+  font-size: 14px;
   letter-spacing: 0.035em;
 }
 .esg-paper-signature > span:last-child {
@@ -432,7 +432,7 @@
   justify-content: space-between;
   gap: 12px;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 7px;
+  font-size: 14px;
   letter-spacing: 0.05em;
   color: #23462F;
   padding: 10px 5px 3px;
@@ -444,7 +444,7 @@
   padding: 52px 0 38px;
 }
 .esg-afterword > div:first-child > span {
-  font-size: 10px;
+  font-size: 14px;
   color: #C6D8C4;
 }
 .esg-afterword > div:first-child > p {
@@ -466,12 +466,12 @@
 }
 .esg-project-state > strong {
   font-weight: 500;
-  font-size: 11px;
+  font-size: 14px;
 }
 .esg-project-state > p {
   margin: 15px 0 0;
   color: #C6D8C4;
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.85;
   max-width: 350px;
 }
@@ -487,7 +487,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 11px;
+  font-size: 14px;
   color: #DAF17C;
   text-decoration: none;
 }
@@ -528,13 +528,13 @@
 }
 .esg-project-category {
   margin: 0 0 17px;
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 0.09em;
   color: #DAF17C;
 }
 .esg-institution {
   margin: 24px 0 0;
-  font-size: 13px;
+  font-size: 14px;
 }
 .esg-institution > span {
   display: block;
@@ -551,7 +551,7 @@
   line-height: 1.65;
 }
 .esg-brief-mark {
-  font-size: 11px;
+  font-size: 14px;
 }
 .esg-afterword {
   display: block;
@@ -562,7 +562,7 @@
 }
 .esg-project-scope {
   margin-top: 12px;
-  font-size: 12px;
+  font-size: 14px;
   color: #C6D8C4;
   line-height: 1.7;
   max-width: 740px;
@@ -572,7 +572,7 @@
   width: fit-content;
 }
 .esg-project-scope p {
-  font-size: 13px;
+  font-size: 14px;
   margin: 12px 0 0;
 }
 .esg-project-scope summary:focus-visible {
@@ -581,20 +581,20 @@
 }
 .esg-paper-details > ul > li,
 .esg-model-detail > p {
-  font-size: 12px;
+  font-size: 14px;
 }
 .esg-paper-body,
 .esg-project-scope p {
   font-size: 14px;
 }
 .esg-model-buttons > button {
-  font-size: 11px;
+  font-size: 14px;
 }
 .esg-model-detail {
   overflow: hidden;
 }
 .esg-paper-topic {
-  font-size: 10px;
+  font-size: 14px;
 }
 @media (min-width: 951px) {
   .chapter .esg-inner {
@@ -617,7 +617,7 @@
   }
   .esg-folder-topline {
     padding-bottom: 18px;
-    font-size: 12px;
+    font-size: 14px;
   }
   .esg-paper {
     min-height: 248px;
@@ -631,7 +631,7 @@
     margin-bottom: 12px;
   }
   .esg-paper-heading > span > small {
-    font-size: 12px;
+    font-size: 14px;
     padding-bottom: 8px;
   }
   .esg-paper-teaser {
@@ -648,7 +648,7 @@
     padding-top: 18px;
   }
   .esg-footer .chapter-link {
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 @media (max-width: 950px) {
@@ -678,7 +678,7 @@
     font-size: 19px;
   }
   .esg-paper-heading > span > small {
-    font-size: 9px;
+    font-size: 14px;
   }
   .esg-brief {
     grid-template-columns: 100px 1fr;
@@ -702,7 +702,7 @@
     padding: 33px 0 32px;
   }
   .esg-institution {
-    font-size: 12px;
+    font-size: 14px;
     margin: 21px 0 0;
   }
   .esg-heading h2 {
@@ -746,7 +746,7 @@
     flex-direction: column;
     gap: 6px;
     padding-bottom: 18px;
-    font-size: 9px;
+    font-size: 14px;
   }
   .esg-folded-pages {
     flex-direction: column;
@@ -776,7 +776,7 @@
   }
   .esg-paper-registration {
     padding-bottom: 13px;
-    font-size: 7px;
+    font-size: 14px;
   }
   .esg-paper-heading {
     flex-direction: row;
@@ -788,7 +788,7 @@
     margin-bottom: 0;
   }
   .esg-paper-heading > span > small {
-    font-size: 9px;
+    font-size: 14px;
     padding-bottom: 5px;
   }
   .esg-paper-heading > span > strong {
@@ -800,7 +800,7 @@
   .esg-paper-teaser {
     margin: 13px 0 8px;
     min-height: auto;
-    font-size: 10px;
+    font-size: 14px;
   }
   .esg-paper-topic {
     display: none;
@@ -808,16 +808,16 @@
   .esg-paper-body {
     margin: 19px 0 17px;
     padding-top: 18px;
-    font-size: 12px;
+    font-size: 14px;
   }
   .esg-paper-details > ul > li {
-    font-size: 10px;
+    font-size: 14px;
   }
   .esg-folder-bottom > span:last-child {
     display: none;
   }
   .esg-folder-bottom {
-    font-size: 6px;
+    font-size: 14px;
     line-height: 1.7;
   }
   .esg-afterword {
@@ -843,7 +843,7 @@
     font-size: 21px;
   }
   .esg-chapter[lang="en"] .esg-paper-teaser {
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1.7;
   }
   .esg-chapter[lang="en"] .esg-paper-registration {
@@ -863,3 +863,47 @@
     transition-duration: 0s !important;
   }
 }
+.chapter.esg-chapter :is(
+  .esg-filing-line > span,
+  .esg-project-category,
+  .esg-institution,
+  .esg-institution > span,
+  .esg-scale-note > p,
+  .esg-scale-note > div,
+  .esg-scale-note > small,
+  .esg-brief-mark,
+  .esg-folder-tab,
+  .esg-folder-topline,
+  .esg-paper-heading > span > small,
+  .esg-paper-teaser,
+  .esg-paper-topic,
+  .esg-paper-body,
+  .esg-paper-details > ul > li,
+  .esg-model-index > p,
+  .esg-model-buttons > button,
+  .esg-model-detail > span,
+  .esg-model-detail > p,
+  .esg-source-chain > span,
+  .esg-project-state > strong,
+  .esg-project-scope,
+  .esg-project-scope p,
+  .esg-footer .chapter-link
+) {
+  font-size: 14px;
+  line-height: 1.6;
+}
+.chapter.esg-chapter :is(.esg-paper-registration, .esg-paper-signature) {
+  font-size: 14px;
+  line-height: 1.5;
+}
+.chapter.esg-chapter .esg-folder-topline {
+  flex-wrap: wrap;
+}
+.chapter.esg-chapter .esg-model-buttons {
+  grid-template-columns: 1fr;
+}
+.chapter.esg-chapter .esg-model-buttons > button {
+  min-height: 40px;
+}
+
+.esg-paper-heading > span > strong { white-space: normal; overflow-wrap: anywhere; }

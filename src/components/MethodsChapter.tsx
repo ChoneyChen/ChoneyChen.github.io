@@ -1,3 +1,4 @@
+import { useScenePresence as useInView } from "../hooks/useScenePresence";
 import { ReadingReveal } from "./ReadingReveal";
 import { slowMotion, slowDragRelease } from "../lib/motionTiming";
 import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
@@ -5,105 +6,74 @@ import { useRef, useState } from "react";
 import {
   AnimatePresence,
   motion,
-  useInView,
   useReducedMotion,
 } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
-import { useContent } from "../data/use-content";
 import { useI18n } from "../i18n";
 import "./methods-chapter.css";
 
 const getMethods = (t: (zh: string, en: string) => string) => [
   {
-    id: "lif001",
-    label: t("把问题具体化", "Frame it"),
-    word: "QUESTION",
-    title: t(
-      "用数据，解释一个日常问题。",
-      "Use data to explain an everyday question.",
-    ),
-    evidence: t(
-      "校园食堂客流预测 / LIF001",
-      "Campus canteen footfall / LIF001",
-    ),
-    period: "2023.10 — 2024.05",
+    id: "question",
+    label: t("定义问题", "Define the question"),
+    title: t("先写清楚，要回答什么。", "Write down the question first."),
     text: t(
-      "我参与选题、数据处理与建模：用 Python 清洗数据，把天气和日期编码成特征，再建立多元线性回归。R²、F 检验和残差检查，是研究条件与模型结果的一部分。",
-      "I participated in topic selection, data preparation and modelling: cleaning data with Python, encoding weather and date features, and building a multiple linear regression. R², F-tests and residual checks were part of examining the model.",
+      "把问题写成一句可检验的话：要解释、预测或改变什么？先确定输入、输出和适用条件，再决定需要收集哪些数据。",
+      "Write a question that can be checked: what should be explained, predicted or changed? Define the inputs, outputs and conditions before deciding what data is needed.",
     ),
     detail: t(
-      "工作内容有记录；没有可靠原始结果的预测误差或 R²，不补写成数字。",
-      "The work is documented. Prediction errors and R² values are only reported when reliable original results are available.",
+      "推进时先核对变量与定义。如果问题发生变化，先更新问题说明，再调整模型或实现。",
+      "Check the variables and definitions as the work develops. If the question changes, revise its framing before changing the model or implementation.",
     ),
+    evidence: "LIF001",
     source: "#origins",
     color: "#285baf",
   },
   {
-    id: "mec202",
-    label: t("把链路搭起来", "Connect"),
-    word: "CONNECT",
-    title: t(
-      "不同模块，要能一起工作。",
-      "Make the different modules work together.",
-    ),
-    evidence: t(
-      "智能光疗面罩 / MEC202",
-      "Phototherapy mask prototype / MEC202",
-    ),
-    period: "2026.03 — 2026.07",
+    id: "interfaces",
+    label: t("接口与反馈", "Interfaces and feedback"),
+    title: t("接通一条完整链路，再扩展。", "Connect one complete path, then expand."),
     text: t(
-      "作为团队组长，我统筹任务、进度和系统整合，也参与软件、嵌入式、传感器与原型结构的联调。视觉分析后的参数，要能进入控制；反馈，也要能回到系统。",
-      "As team leader, I coordinated tasks, schedules and integration, and helped test software, embedded modules, sensors and prototype structure together. Parameters from visual analysis had to reach the controls, and feedback had to return to the system.",
+      "给每个模块写出输入、输出与异常状态。先沿一条最小链路检查参数能否传递、反馈能否返回，再逐步接入其余模块。",
+      "Describe each module’s inputs, outputs and failure states. Check that parameters travel and feedback returns along one minimal path, then connect the remaining modules.",
     ),
     detail: t(
-      "这是我参与推进的团队工程原型。课程成绩 79；团队获得苏州选拔赛优秀奖。",
-      "This is a team engineering prototype I helped develop. The course mark was 79; the team received an Excellence Award at the Suzhou selection event.",
+      "联调时把异常还原到具体接口，记录触发条件和改动，让每次修改都能再检查。",
+      "Trace integration failures to a specific interface. Record what triggered the issue and what changed, so the fix can be checked again.",
     ),
+    evidence: "MEC202",
     source: "#mask",
     color: "#ad5636",
   },
   {
-    id: "isa305",
-    label: t("看真实的输出", "Check output"),
-    word: "CHECK",
-    title: t(
-      "先保留输出，再解释结果。",
-      "Keep the output. Then explain the result.",
-    ),
-    evidence: t(
-      "人工智能与 MATLAB 实验 / ISA305",
-      "AI and MATLAB experiments / ISA305",
-    ),
-    period: t("2026.09 — 至今", "2026.09 — PRESENT"),
+    id: "experiments",
+    label: t("实验与边界", "Experiments and boundaries"),
+    title: t("保留条件和输出，再解释。", "Keep the conditions and output, then interpret."),
     text: t(
-      "在感知机、EEG 运动想象分类与 CSP 实验中，我保留真实运行输出。Week 4 使用 100 个训练试次和 44 个测试试次；学习率 0.01 时，测试准确率为 77.27%。",
-      "I retain the actual output from perceptron, EEG motor-imagery classification and CSP experiments. Week 4 used 100 training trials and 44 test trials. At a learning rate of 0.01, test accuracy was 77.27%.",
+      "先固定数据划分与预处理规则，再改变要比较的条件。保留运行输出和失败记录，把实际观察与尚待验证的解释写开。",
+      "Fix the data split and preprocessing rules before changing the condition being compared. Keep the actual output and failure records, and distinguish observations from explanations still to be tested.",
     ),
     detail: t(
-      "CSP 与标准化只在训练集拟合，训练和测试边界保持分开。这是特定课程实验，不能推广为临床诊断表现。",
-      "CSP and standardisation were fitted on the training set only, keeping training and test boundaries separate. These are results from a specific course experiment, with no clinical diagnostic claim.",
+      "单独检查训练与测试的边界。下一轮实验从记录里的差异出发，而不只追一个最好数字。",
+      "Check the training and test boundaries separately. Let differences in the record guide the next experiment, rather than chasing only the best number.",
     ),
+    evidence: "ISA305",
     source: "#archive",
     color: "#315946",
   },
   {
-    id: "can201",
-    label: t("和团队一起交付", "Together"),
-    word: "TOGETHER",
-    title: t(
-      "把一份任务，做成团队的交付。",
-      "Turn a shared task into a team delivery.",
-    ),
-    evidence: "Computer Networking Project / CAN201",
-    period: t("2025 · 具体学期待核对", "2025 · term to be confirmed"),
+    id: "delivery",
+    label: t("团队交付", "Team delivery"),
+    title: t("把任务分清，把交接留好。", "Make responsibilities and handovers clear."),
     text: t(
-      "我担任 CAN201 小组组长，参与完成团队交付，Coursework 成绩为 82.5。这门由 Gordon 授课的课程，也成为后续科研合作的起点。",
-      "I led the CAN201 group and participated in the team delivery, earning a coursework mark of 82.5. This course, taught by Gordon, also became the starting point for our later research collaboration.",
+      "先确认负责人、依赖关系和交付内容，再按阶段检查阻塞。整合时对齐版本、接口和待解决问题，让接手的人能继续推进。",
+      "Agree on ownership, dependencies and deliverables, then check what is blocking progress at each stage. Align versions, interfaces and open issues so the next person can continue the work.",
     ),
     detail: t(
-      "保留已确认的角色与课程结果；项目题目和具体技术内容，等待原报告补齐。",
-      "The role and course result are confirmed. The original report is still needed to establish the project title and technical details.",
+      "阶段交付留下当前状态、复现步骤和下一项任务；遇到变化，及时调整分工与计划。",
+      "Leave the current state, reproduction steps and next task with each handover. Update responsibilities and plans when circumstances change.",
     ),
+    evidence: "CAN201 / MEC202",
     source: "#archive",
     color: "#754e96",
   },
@@ -240,9 +210,6 @@ function MethodScene({
                 delay={0.17}
                 d="M 29 131 Q 48 129 69 131 M 29 139 L 67 137"
               />
-              <text x="30" y="155">
-                DATA
-              </text>
               <DrawPath
                 {...draw}
                 delay={0.26}
@@ -258,12 +225,6 @@ function MethodScene({
                 className="methods-drawn-paper"
                 d="M 16 175 L 48 173 L 49 215 L 14 217 Z M 77 175 L 110 174 L 110 217 L 75 217 Z"
               />
-              <text x="20" y="199">
-                AI
-              </text>
-              <text x="81" y="199">
-                IO
-              </text>
               <motion.path
                 key={`wire-${pulse}`}
                 d="M 48 190 Q 61 167 77 190 M 76 210 Q 60 233 48 210"
@@ -288,13 +249,7 @@ function MethodScene({
                 className="methods-drawn-paper"
                 d="M 17 118 L 84 120 L 82 215 L 18 212 Z"
               />
-              <text x="25" y="138">
-                TRAIN
-              </text>
               <DrawPath {...draw} delay={0.28} d="M 24 146 Q 44 147 76 145" />
-              <text x="25" y="166">
-                TEST
-              </text>
               <DrawPath
                 {...draw}
                 delay={0.33}
@@ -431,27 +386,13 @@ function MethodScene({
           </motion.g>
         </g>
       </motion.g>
-      {!compact && (
-        <g className="methods-scene-labels">
-          {methods.map((method, index) => (
-            <text
-              key={method.word}
-              x={stations[index]}
-              y="46"
-              textAnchor="middle"
-            >
-              0{index + 1} / {method.word}
-            </text>
-          ))}
-        </g>
-      )}
+
     </svg>
   );
 }
 
 export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
   const { language, t } = useI18n();
-  const { experienceTimeline } = useContent();
   const methods = getMethods(t);
   const [selected, setSelected] = useState(0);
   const [opened, setOpened] = useState(false);
@@ -459,13 +400,12 @@ export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
   const [pulse, setPulse] = useState(0);
   const reduce = useReducedMotion();
   const still = quiet || Boolean(reduce);
+  const headerRef = useRef<HTMLElement>(null);
   const sceneRef = useRef<HTMLDivElement>(null);
-  const evidenceRef = useRef<HTMLDivElement>(null);
+  const headerEntered = useInView(headerRef, { once: false });
   const sceneEntered = useInView(sceneRef, { once: false, amount: 0.24 });
-  const evidenceEntered = useInView(evidenceRef, { once: false, amount: 0.12 });
-  const evidenceReady = still || evidenceEntered;
+  const evidenceReady = still || opened;
   const current = methods[selected];
-  const experience = experienceTimeline.find((item) => item.id === current.id);
   function choose(index: number) {
     setOpened(index === selected ? !opened : true);
     setSelected(index);
@@ -479,14 +419,14 @@ export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
       aria-labelledby="methods-title"
     >
       <div className="chapter-inner methods-inner">
-        <header className="methods-heading">
+        <header className="methods-heading" ref={headerRef}>
           <div>
             <p className="chapter-kicker">
-              {t("02 / 我怎样推进一个想法", "02 / HOW I MOVE AN IDEA FORWARD")}
+              {t("11 / 我的工作方法", "11 / MY WORKING METHODS")}
             </p>
             <h2 id="methods-title">
-              {t("我怎样，", "How I")}
-              <span>{t("做一件事。", "move an idea.")}</span>
+              {t("我的，", "My working")}
+              <span>{t("工作方法。", "methods.")}</span>
             </h2>
             <svg
               className="methods-title-scribble"
@@ -496,20 +436,18 @@ export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
               <motion.path
                 d="M 4 11 Q 78 4 221 8 M 10 16 Q 136 10 227 12"
                 initial={still ? false : { pathLength: 0 }}
-                animate={still ? { pathLength: 1 } : undefined}
-                whileInView={{ pathLength: 1 }}
-                viewport={{ once: false, amount: 0.3 }}
+                animate={{ pathLength: still || headerEntered ? 1 : 0 }}
                 transition={slowMotion({ duration: still ? 0 : 0.52 })}
               />
             </svg>
           </div>
           <p>
             {t(
-              "从课程研究到团队原型。",
-              "From class research to team prototypes. ",
+              "先定义问题，再检查接口、实验与交付。",
+              "Define the question, then check interfaces, experiments and delivery.",
             )}
             <br />
-            {t("四个步骤，对应我的实际工作。", "Four steps, grounded in my work.")}
+            {t("四种方法，都落在实际工作里。", "Four methods I bring to the work.")}
           </p>
         </header>
         <div className="methods-notebook" data-still={still}>
@@ -550,9 +488,7 @@ export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
                 initial={
                   still ? false : { y: 9, rotate: index % 2 === 0 ? -0.9 : 0.9 }
                 }
-                animate={still ? { y: 0, rotate: 0 } : undefined}
-                whileInView={{ y: 0, rotate: 0 }}
-                viewport={{ once: false, amount: 0.3 }}
+                animate={{ y: still || sceneEntered ? 0 : 9, rotate: still || sceneEntered ? 0 : index % 2 === 0 ? -.9 : .9 }}
                 transition={slowMotion({
                   duration: still ? 0 : 0.42,
                   delay: still ? 0 : index * 0.055,
@@ -580,13 +516,11 @@ export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
                 >
                   <span>0{index + 1}</span>
                   <strong>{method.label}</strong>
-                  <svg viewBox="0 0 230 60" aria-hidden="true">
+                  <svg viewBox="0 0 230 60" preserveAspectRatio="none" aria-hidden="true">
                     <motion.path
                       d="M 4 8 Q 110 3 225 7 L 226 54 Q 113 57 5 52 Z M 7 5 Q 119 7 223 4 L 229 50"
                       initial={still ? false : { pathLength: 0 }}
-                      animate={still ? { pathLength: 1 } : undefined}
-                      whileInView={{ pathLength: 1 }}
-                      viewport={{ once: false, amount: 0.25 }}
+                      animate={{ pathLength: still || sceneEntered ? 1 : 0 }}
                       transition={slowMotion({
                         duration: still ? 0 : 0.52,
                         delay: still ? 0 : index * 0.055,
@@ -597,7 +531,7 @@ export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
               </motion.div>
             ))}
           </div>
-          <div ref={evidenceRef} style={{ display: "flow-root" }}>
+          <div style={{ display: "flow-root" }}>
             <AnimatePresence initial={false}>{opened && <ReadingReveal className="methods-reading" initial={{ gridTemplateRows: "0fr", opacity: 0 }} animate={{ gridTemplateRows: "1fr", opacity: 1 }} exit={{ gridTemplateRows: "0fr", opacity: 0 }} transition={slowMotion({ duration: still ? 0 : 0.3 })}>
             <motion.div
               className="methods-evidence"
@@ -614,7 +548,7 @@ export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
                 ease: [0.22, 1, 0.36, 1],
               })}
             >
-              <AnimatePresence mode="wait" initial={false}>
+              <div className="reading-switch"><AnimatePresence initial={false}>
                 <motion.div
                   key={selected}
                   className="methods-evidence-grid"
@@ -625,16 +559,10 @@ export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
                 >
                   <div className="methods-evidence-source">
                     <p style={{ color: current.color }}>
-                      {t("来自我的一段真实记录", "EVIDENCE FROM MY WORK")}
+                      {t("关联实践", "RELATED PRACTICE")}
                     </p>
-                    <h3>{current.evidence}</h3>
-                    <span>{current.period}</span>
-                    <span className="methods-evidence-role">
-                      {experience?.role}
-                    </span>
                     <a href={current.source}>
-                      {t("阅读相关经历", "Read the related experience")}{" "}
-                      <ArrowUpRight size={14} />
+                      {current.evidence}<ArrowUpRight size={14} />
                     </a>
                   </div>
                   <div className="methods-evidence-copy">
@@ -643,24 +571,14 @@ export function MethodsChapter({ quiet = false }: { quiet?: boolean }) {
                     <p className="methods-evidence-detail">{current.detail}</p>
                   </div>
                 </motion.div>
-              </AnimatePresence>
+              </AnimatePresence></div>
             </motion.div>
             </ReadingReveal>}</AnimatePresence>
           </div>
-          <footer className="methods-paper-foot">
-            <span>
-              {t(
-                "观察 · 连接 · 检验 · 协作",
-                "Observe · Connect · Check · Collaborate",
-              )}
-            </span>
-            <span>
-              {t("工作笔记 / 2026", "WORKING NOTES / 2026")}
-            </span>
-          </footer>
+
         </div>
-        <a className="chapter-link methods-next" href="#directions">
-          {t("接下来：我关注的三个研究方向", "Next: my three research directions")}
+        <a className="chapter-link methods-next" href="#next">
+          {t("接下来：生活、学习与愿景", "Next: life, learning and aspirations")}
           <ArrowUpRight size={17} />
         </a>
       </div>

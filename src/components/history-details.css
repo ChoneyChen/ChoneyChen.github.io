@@ -56,7 +56,7 @@
 .history-steampunk .steam-header > span {
   display: block;
   font:
-    8px "IBM Plex Mono",
+    14px "IBM Plex Mono",
     monospace;
   color: #a4825e;
   letter-spacing: 0.09em;
@@ -71,7 +71,7 @@
 }
 .history-steampunk .steam-company {
   margin: 0;
-  font-size: 10px;
+  font-size: 14px;
   line-height: 1.7;
   color: #bd9c79;
 }
@@ -81,7 +81,7 @@
   gap: 6px 15px;
   padding: 14px 0 17px;
   font:
-    8px/1.6 "IBM Plex Mono",
+    14px/1.6 "IBM Plex Mono",
     monospace;
   color: #ac8c6a;
   border-bottom: 1px solid #9e794747;
@@ -138,12 +138,12 @@
   text-align: center;
   color: #e6c594;
   font:
-    7px "IBM Plex Mono",
+    14px "IBM Plex Mono",
     monospace;
 }
 .history-steampunk .steam-gear-track button strong {
   font-weight: 400;
-  font-size: 10px;
+  font-size: 14px;
   margin-top: 10px;
   color: #bd9871;
 }
@@ -178,7 +178,7 @@
 .history-steampunk .steam-duty-index {
   display: block;
   font:
-    8px "IBM Plex Mono",
+    14px "IBM Plex Mono",
     monospace;
   letter-spacing: 0.1em;
   color: #a27e57;
@@ -191,7 +191,7 @@
   margin: 12px 0 0;
 }
 .history-steampunk .steam-duty-plate p {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.95;
   color: #ba9b7c;
   margin: 14px 0 0;
@@ -205,7 +205,7 @@
 .history-steampunk .steam-duty-tags span {
   color: #93765d;
   font:
-    8px/1.5 "IBM Plex Mono",
+    14px/1.5 "IBM Plex Mono",
     monospace;
   border-bottom: 1px solid #80603e67;
   padding-bottom: 3px;
@@ -227,12 +227,12 @@
 }
 .history-steampunk .steam-bottom > span:last-child {
   font:
-    7px "IBM Plex Mono",
+    14px "IBM Plex Mono",
     monospace;
   color: #8b6c50;
 }
 .history-steampunk .steam-boundary {
-  font-size: 8px;
+  font-size: 14px;
   line-height: 1.85;
   color: #9c7d60;
   margin: 11px 0 0;
@@ -275,7 +275,7 @@
   justify-content: space-between;
   gap: 18px;
   font:
-    8px "IBM Plex Mono",
+    14px "IBM Plex Mono",
     monospace;
   letter-spacing: 0.07em;
   color: #ab8a64;
@@ -303,7 +303,7 @@
   margin-top: 8px;
   text-align: center;
   font:
-    7px "IBM Plex Mono",
+    14px "IBM Plex Mono",
     monospace;
   color: #b4a082;
 }
@@ -329,19 +329,19 @@
 .history-roman .roman-school-name {
   margin: 0;
   font:
-    9px/1.65 "IBM Plex Mono",
+    14px/1.65 "IBM Plex Mono",
     monospace;
   color: #a08b6a;
 }
 .history-roman .roman-programme {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.8;
   color: #766247;
   margin: 16px 0 0;
 }
 .history-roman .roman-programme > span {
   font:
-    9px/1.6 "IBM Plex Mono",
+    14px/1.6 "IBM Plex Mono",
     monospace;
   color: #9a8466;
 }
@@ -358,23 +358,23 @@
   min-width: 0;
 }
 .history-roman .roman-study-status span {
-  font-size: 8px;
+  font-size: 14px;
   color: #a79372;
 }
 .history-roman .roman-study-status strong {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   color: #826247;
   margin-top: 6px;
 }
 .history-roman .roman-study-status small {
-  font-size: 8px;
+  font-size: 14px;
   color: #b2997b;
   margin-top: 4px;
   line-height: 1.6;
 }
 .history-roman .roman-foundation {
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.9;
   margin: 18px 0 0;
   color: #9a8267;
@@ -388,19 +388,19 @@
 }
 .history-roman .roman-course-strip > span {
   flex-shrink: 0;
-  font-size: 8px;
+  font-size: 14px;
   line-height: 1.8;
   color: #a48b68;
 }
 .history-roman .roman-course-strip > p {
-  font-size: 10px;
+  font-size: 14px;
   line-height: 1.8;
   color: #8f785b;
   margin: 0;
 }
 .history-roman .roman-note {
   margin: 14px 0 0;
-  font-size: 8px;
+  font-size: 14px;
   line-height: 1.75;
   color: #b8a185;
 }
@@ -436,7 +436,7 @@
     margin-top: 13px;
   }
   .history-roman .roman-foundation {
-    font-size: 10px;
+    font-size: 14px;
   }
   .history-roman .roman-course-strip {
     display: block;
@@ -459,7 +459,7 @@
     opacity: 0.65;
   }
   .history-roman .roman-column > span {
-    font-size: 6px;
+    font-size: 14px;
   }
   .history-roman .roman-degree {
     max-width: calc(100% - 68px);
@@ -471,13 +471,13 @@
   }
   .history-roman .roman-school-name {
     max-width: calc(100% - 26px);
-    font-size: 8px;
+    font-size: 14px;
   }
   .history-roman .roman-programme {
     margin-top: 25px;
   }
   .history-roman .roman-topline {
-    font-size: 7px;
+    font-size: 14px;
     gap: 8px;
     flex-wrap: wrap;
   }
@@ -493,7 +493,7 @@
   }
   .history-steampunk .steam-gear-number {
     top: 21px;
-    font-size: 6px;
+    font-size: 14px;
   }
   .history-steampunk .steam-track-line {
     top: 26px;
@@ -505,7 +505,7 @@
     font-size: 15px;
   }
   .history-steampunk .steam-duty-plate p {
-    font-size: 11px;
+    font-size: 14px;
   }
   .history-steampunk .steam-duty-window {
     min-height: 250px;
@@ -543,6 +543,6 @@
     font-size: 19px;
   }
   .history-roman .roman-note {
-    font-size: 7px;
+    font-size: 14px;
   }
 }

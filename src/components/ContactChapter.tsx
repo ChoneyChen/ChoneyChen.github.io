@@ -1,6 +1,7 @@
+import { useScenePresence as useInView } from "../hooks/useScenePresence";
 import { slowMotion } from "../lib/motionTiming";
 import { useRef, useState } from "react";
-import { motion, useInView, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { ArrowUpRight, Check, Copy, Github, Mail, Phone } from "lucide-react";
 import { useI18n } from "../i18n";
 import "./contact-chapter.css";

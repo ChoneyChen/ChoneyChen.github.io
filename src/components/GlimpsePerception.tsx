@@ -1,6 +1,7 @@
+import { useScenePresence as useInView } from "../hooks/useScenePresence";
 import { slowMotion, presentationBlend } from "../lib/motionTiming";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { motion, useInView } from "motion/react";
+import { memo, useEffect, useRef, useState, type CSSProperties } from "react";
+import { motion } from "motion/react";
 import { MoveHorizontal, RotateCcw, RotateCw } from "lucide-react";
 import { useI18n } from "../i18n";
 import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
@@ -16,7 +17,7 @@ type Presence = "present" | "absent" | "uncertain";
 const palette = ["#b7c6e9", "#587aca", "#dca385", "#d3d6df"];
 const semantics = ["#bbbef4", "#476bed", "#ed9b77", "#b3d598"];
 
-function PerceptionImage({ mode, presence = "present" }: { mode: "rgb" | "semantic" | "depth" | "normal" | "fusion"; presence?: Presence }) {
+const PerceptionImage = memo(function PerceptionImage({ mode, presence = "present" }: { mode: "rgb" | "semantic" | "depth" | "normal" | "fusion"; presence?: Presence }) {
   const depth = mode === "depth";
   const colors = depth ? ["#242651", "#6755ae", "#df956e", "#eadbb0"] : mode === "normal" ? ["#86d4ba", "#a98fd8", "#e6b1bc", "#8dd7df"] : mode === "semantic" ? semantics : palette;
   return <svg viewBox="0 0 320 200" aria-hidden="true" className={`gp-image gp-image-${mode}`}>
@@ -32,12 +33,12 @@ function PerceptionImage({ mode, presence = "present" }: { mode: "rgb" | "semant
     {mode === "semantic" && <g><rect width="305" height="200" fill="#26304e"/>{presence === "present" && <path d="M39 50H64V161L39 169ZM243 50H266V164L243 157Z" fill="#ddf5ef"/>}{presence === "uncertain" && <path d="M39 50H64V161L39 169Z" fill="#8290a6"/>}<rect x="305" width="15" height="200" fill={presence === "present" ? "#37ad75" : presence === "absent" ? "#c95054" : "#778097"}/></g>}
     {mode === "fusion" && <g fill="none" strokeWidth="1.4"><path d="M39 50H64V161L39 169ZM243 50H266V164L243 157Z" stroke="#476bed"/><path d="M112 111L128 101H192L210 116V157H107Z" stroke="#e98956"/><path d="M0 86H320M0 115H320M0 160H320" stroke="#c5edb5" opacity=".65"/></g>}
   </svg>;
-}
+});
 
 function SpatialPreview({ lift, dragging, visible, quiet, presence }: { lift: number; dragging: boolean; visible: boolean; quiet: boolean; presence: Presence }) {
   const { t } = useI18n();
   const canvas = useRef<HTMLCanvasElement>(null);
-  const engine = useRef<{ draw: () => void; rotate: (x: number, y?: number) => void; reset: () => void } | null>(null);
+  const engine = useRef<{ draw: () => void; rotate: (x: number, y?: number) => void; reset: () => void; rearm: () => void } | null>(null);
   const current = useRef({ lift, dragging, visible, quiet, presence });
   current.current = { lift, dragging, visible, quiet, presence };
   const [ready, setReady] = useState(false);
@@ -78,7 +79,7 @@ function SpatialPreview({ lift, dragging, visible, quiet, presence }: { lift: nu
       group.add(new THREE.Points(geometry, material));
       const grid = new THREE.GridHelper(5.3, 12, 0x859ecb, 0xb6c6df); grid.rotation.x = Math.PI / 2; grid.position.z = -1.05; group.add(grid);
       group.rotation.set(-.12, -.25, 0);
-      let raf = 0, lastTime = 0, yaw = -.25, pitch = -.12, dragging: { id: number; x: number; y: number } | null = null;
+      let raf = 0, lastTime = 0, yaw = -.25, pitch = -.12, rendered = false, dragging: { id: number; x: number; y: number } | null = null;
       const render = (time: number) => {
         raf = 0;
         if (disposed || !current.current.visible) { lastTime = 0; return; }
@@ -90,13 +91,14 @@ function SpatialPreview({ lift, dragging, visible, quiet, presence }: { lift: nu
         group.rotation.y = current.current.quiet || dragging ? yaw : THREE.MathUtils.lerp(group.rotation.y, yaw, presentationBlend(.15, delta));
         group.rotation.x = current.current.quiet || dragging ? pitch : THREE.MathUtils.lerp(group.rotation.x, pitch, presentationBlend(.15, delta));
         renderer.render(scene, camera);
+        if (!rendered) { rendered = true; setReady(true); }
         node.dataset.rotation = `${group.rotation.x.toFixed(3)},${group.rotation.y.toFixed(3)}`;
         node.dataset.depthLift = String(material.uniforms.lift.value.toFixed(3));
         if (Math.abs(material.uniforms.lift.value - goal) > .002 || Math.abs(group.rotation.y - yaw) > .001 || Math.abs(group.rotation.x - pitch) > .001) raf = requestAnimationFrame(render);
         else lastTime = 0;
       };
       const schedule = () => { if (!raf) { lastTime = 0; raf = requestAnimationFrame(render); } };
-      engine.current = { draw: schedule, rotate: (x, y = 0) => { yaw = THREE.MathUtils.clamp(yaw + x, -1.25, 1.25); pitch = THREE.MathUtils.clamp(pitch + y, -.7, .7); if (dragging) group.rotation.set(pitch, yaw, 0); schedule(); }, reset: () => { yaw = -.25; pitch = -.12; schedule(); } };
+      engine.current = { draw: schedule, rotate: (x, y = 0) => { yaw = THREE.MathUtils.clamp(yaw + x, -1.25, 1.25); pitch = THREE.MathUtils.clamp(pitch + y, -.7, .7); if (dragging) group.rotation.set(pitch, yaw, 0); schedule(); }, reset: () => { yaw = -.25; pitch = -.12; schedule(); }, rearm: () => { yaw = -.25; pitch = -.12; dragging = null; group.rotation.set(pitch, yaw, 0); material.uniforms.lift.value = 0; } };
       const resize = () => { const b = node.getBoundingClientRect(); renderer.setSize(Math.max(1,b.width),Math.max(1,b.height),false); camera.aspect = b.width / Math.max(1,b.height); camera.updateProjectionMatrix(); schedule(); };
       const observer = new ResizeObserver(resize); observer.observe(node); resize();
       const down = (event: PointerEvent) => { if (event.button !== 0) return; node.focus({preventScroll:true}); node.setPointerCapture(event.pointerId); dragging = {id:event.pointerId,x:event.clientX,y:event.clientY}; };
@@ -104,14 +106,16 @@ function SpatialPreview({ lift, dragging, visible, quiet, presence }: { lift: nu
       const up = (event: PointerEvent) => { dragging=null; if(node.hasPointerCapture(event.pointerId))node.releasePointerCapture(event.pointerId); };
       node.addEventListener("pointerdown",down);node.addEventListener("pointermove",move);node.addEventListener("pointerup",up);node.addEventListener("pointercancel",up);
       const lost = (event: Event) => { event.preventDefault(); setFallback(true); };
-      node.addEventListener("webglcontextlost",lost); setReady(true);
+      node.addEventListener("webglcontextlost",lost);
       cleanup = () => { observer.disconnect(); cancelAnimationFrame(raf);node.removeEventListener("pointerdown",down);node.removeEventListener("pointermove",move);node.removeEventListener("pointerup",up);node.removeEventListener("pointercancel",up);node.removeEventListener("webglcontextlost",lost);geometry.dispose();material.dispose();grid.geometry.dispose();(grid.material as InstanceType<typeof THREE.Material>).dispose();renderer.dispose();engine.current=null; };
     }).catch(() => { if (!disposed) setFallback(true); });
     return () => { disposed=true;cleanup(); };
   }, []);
   useEffect(() => { engine.current?.draw(); }, [lift,dragging,visible,quiet,presence]);
+  useEffect(() => { if (!visible || lift === 0) engine.current?.rearm(); }, [visible,lift]);
   return <div className="gp-space" data-ready={ready} data-lifted={lift>0}>
-    {fallback ? <div className="gp-space-fallback"><PerceptionImage mode="fusion"/><p>{t("空间示意 · 你的浏览器显示二维预览", "Spatial concept · showing a 2D preview in this browser")}</p></div> : <canvas ref={canvas} tabIndex={0} aria-label={t("语义深度空间预览：拖动旋转，方向键转动", "Semantic depth preview: drag to rotate, arrow keys to turn")} onKeyDown={event=>{ const direction=event.key==="ArrowRight"? .15:event.key==="ArrowLeft"?-.15:0;const vertical=event.key==="ArrowDown"?.1:event.key==="ArrowUp"?-.1:0;if(direction||vertical){event.preventDefault();engine.current?.rotate(direction,vertical);} }}/>} 
+    {!fallback && <canvas ref={canvas} tabIndex={0} aria-label={t("语义深度空间预览：拖动旋转，方向键转动", "Semantic depth preview: drag to rotate, arrow keys to turn")} onKeyDown={event=>{ const direction=event.key==="ArrowRight"? .15:event.key==="ArrowLeft"?-.15:0;const vertical=event.key==="ArrowDown"?.1:event.key==="ArrowUp"?-.1:0;if(direction||vertical){event.preventDefault();engine.current?.rotate(direction,vertical);} }}/>}
+    {(!ready || fallback) && <div className="gp-space-fallback"><PerceptionImage mode="fusion"/>{fallback && <p>{t("空间示意 · 你的浏览器显示二维预览", "Spatial concept · showing a 2D preview in this browser")}</p>}</div>}
     <div className="gp-orbit-controls"><span>{t("拖动旋转 · 方向键", "Drag to rotate · arrow keys")}</span><button onClick={()=>engine.current?.rotate(-.22)} aria-label={t("向左旋转空间", "Rotate space left")}><RotateCcw size={16}/></button><button onClick={()=>engine.current?.rotate(.22)} aria-label={t("向右旋转空间", "Rotate space right")}><RotateCw size={16}/></button><button onClick={()=>engine.current?.reset()}>{t("复位", "Reset view")}</button></div>
   </div>;
 }

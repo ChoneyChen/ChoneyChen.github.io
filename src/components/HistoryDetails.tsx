@@ -1,9 +1,9 @@
+import { useScenePresence as useInView } from "../hooks/useScenePresence";
 import { slowMotion } from "../lib/motionTiming";
 import { useRef, useState } from "react";
 import {
   AnimatePresence,
   motion,
-  useInView,
   useReducedMotion,
 } from "motion/react";
 import { experienceTimeline, profile } from "../data/content";
@@ -188,7 +188,7 @@ export function SteampunkWork({ quiet = false }: HistoryDetailProps) {
           ))}
         </div>
         <div id="kaiding-duty" className="steam-duty-window" aria-live="polite">
-          <AnimatePresence mode="wait" initial={false}>
+          <div className="reading-switch"><AnimatePresence initial={false}>
             <motion.div
               key={selected}
               className="steam-duty-plate"
@@ -210,7 +210,7 @@ export function SteampunkWork({ quiet = false }: HistoryDetailProps) {
                 ))}
               </div>
             </motion.div>
-          </AnimatePresence>
+          </AnimatePresence></div>
         </div>
       </div>
       <div className="steam-bottom">
@@ -312,7 +312,7 @@ export function RomanEducation({ quiet = false }: HistoryDetailProps) {
               <path d="M49 80H131V87H49Z" fill="#d6c4a3" stroke="#a68b68" />
             </motion.g>
           </svg>
-          <span>{t("原创柱式示意", "Original column diagram")}</span>
+
         </div>
         <div className="roman-education-copy">
           <p className="roman-degree">{profile.education.degree}</p>
@@ -360,17 +360,12 @@ export function RomanEducation({ quiet = false }: HistoryDetailProps) {
         <span>{t("课程基础", "Course foundations")}</span>
         <p>
           {t(
-            "编程与算法 · 软件与数据库 · 网络与系统 · 工程数学 · 嵌入式",
-            "Programming and algorithms · software and databases · networks and systems · engineering mathematics · embedded systems",
+            "编程、数据结构与算法 · 软件工程与数据库 · 计算机系统与网络 · 工程数学与信号 · 数字逻辑、微处理器与嵌入式 · 电路与控制",
+            "Programming, data structures and algorithms · software engineering and databases · systems and networks · engineering mathematics and signals · digital logic, microprocessors and embedded systems · circuits and control",
           )}
         </p>
       </div>
-      <p className="roman-note">
-        {t(
-          "教育信息按本人档案整理。柱式是设计表达，不代表西交利物浦校园建筑。",
-          "Education details follow my personal records. The column is a design motif, not an XJTLU campus building.",
-        )}
-      </p>
+
     </article>
   );
 }

@@ -1,7 +1,7 @@
 import { useLayoutEffect } from "react";
 import { chapterInset } from "./chapterGeometry";
 
-/** Keep native links and gesture snapping aligned to each chapter's opening strip. */
+/** Calibrate explicit chapter links below the header without controlling free scrolling. */
 export function useChapterAnchors() {
   useLayoutEffect(() => {
     const sections = [...document.querySelectorAll<HTMLElement>("main > section.chapter")];
@@ -12,7 +12,7 @@ export function useChapterAnchors() {
     const measure = () => {
       pending = 0;
       if (disposed) return;
-      // Finish all geometry reads before any write: disclosure animations resize every frame.
+      // Batch geometry reads; expanding a disclosure does not change its chapter's opening inset.
       const frame = `${Math.max(1, window.innerHeight - 78)}px`;
       const measurements = openings.flatMap(({ section, strip }) => strip
         ? [{ section, inset: chapterInset(section.getBoundingClientRect().top,
@@ -29,11 +29,9 @@ export function useChapterAnchors() {
     };
     const schedule = () => { if (!pending) pending = requestAnimationFrame(measure); };
     const observer = new ResizeObserver(schedule);
-    for (const section of sections) {
-      observer.observe(section);
-      const content = section.querySelector(":scope > .chapter-inner, :scope > .hero-grid");
-      if (content) observer.observe(content);
-    }
+    // Observe the opening label, not a chapter whose height animates every frame.
+    // Window resize and label/font changes cover the offsets used by explicit links.
+    for (const { strip } of openings) if (strip) observer.observe(strip);
     window.addEventListener("resize", schedule);
     document.fonts.ready.then(schedule);
     measure();

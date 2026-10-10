@@ -1,8 +1,9 @@
+import { useScenePresence as useInView } from "../hooks/useScenePresence";
 import { slowMotion, PRESENTATION_SPEED } from "../lib/motionTiming";
 import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
 import { useEffect, useRef, useState } from "react";
 import type * as Three from "three";
-import { AnimatePresence, motion, useInView, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -17,126 +18,55 @@ import "./tools-chapter.css";
 type Translate = (zh: string, en: string) => string;
 const makeToolFiles = (t: Translate) => [
   {
-    name: "Python / Qwen",
-    cover: ["Python", "Qwen"],
-    label: "MODEL EXPERIMENTS",
-    action: t("训练 · 参数 · 验证", "TRAIN · TUNE · VERIFY"),
-    title: t("把模型，训练到能验证。", "Train models, then test what they do."),
-    body: t(
-      "在 Cosmos-Loc 中，我参与 Qwen 系列的环境配置、训练参数设定、中间结果监控与多轮实验。比较数据规模、分辨率和模型规模时，我也一起看显存、吞吐量与延迟。",
-      "In Cosmos-Loc, I contributed to Qwen environment setup, training parameters, intermediate result monitoring and repeated experiments. When comparing data size, resolution and model size, I also considered GPU memory, throughput and latency.",
-    ),
-    context: t("Cosmos-Loc · 团队研究", "Cosmos-Loc · team research"),
-    link: "#cosmos",
-    tags: [
-      t("Qwen 系列训练", "Qwen training"),
-      "LoRA",
-      t("实验迭代", "Experiment iteration"),
-    ],
-    color: "#2347AA",
+    name: t("来源归档", "Sources"), cover: ["Source", "Archive"], label: "SOURCE ARCHIVE",
+    action: t("固定原文与发布时间", "PRESERVE SOURCE + DATE"),
+    title: t("先留下当时读到的原文。", "Keep the source as it was read."),
+    body: t("我的本地文章研究工作流保存原文、图片与发布日期，按内容哈希归档。分析从固定来源开始，而不是反复依赖可能改变的网页。", "My local article-research workflow archives source text, images and publication dates by content hash. Analysis starts from a fixed source rather than a web page that may change."),
+    context: t("本地工作流 · 已建立归档脚本", "Local workflow · archive script established"),
+    tags: ["ingest_wechat_article.py", t("原文 / 图片", "Text / images")], color: "#2347AA",
   },
   {
-    name: "MATLAB / EEG",
-    cover: ["MATLAB", "EEG"],
-    label: "SIGNALS & METHODS",
-    action: t("脑电 · CSP · 复现", "EEG · CSP · REPRODUCE"),
-    title: t(
-      "先留下真实输出，再解释结果。",
-      "Record the output before explaining the result.",
-    ),
-    body: t(
-      "ISA305 实验中，我使用 MATLAB、EEGLAB 与 BioSig 研究感知机和脑电运动想象分类。训练与测试先分开，CSP 和标准化参数只用训练数据拟合，再记录输出、分析并修复问题。",
-      "In ISA305, I used MATLAB, EEGLAB and BioSig for perceptron experiments and EEG motor imagery classification. I separated training and test data, fitted CSP and standardisation on training data only, then recorded outputs, analysed results and fixed issues.",
-    ),
-    context: t("ISA305 · 人工智能课程实验", "ISA305 · AI course experiments"),
-    link: "#archive",
-    tags: ["MATLAB", "EEGLAB / BioSig", "CSP"],
-    color: "#15514D",
+    name: t("方法账本", "Method ledger"), cover: ["Method", "Ledger"], label: "VERSIONED METHODS",
+    action: t("保留每次规则修改", "APPEND RULE VERSIONS"),
+    title: t("方法变了，也留下它的版本。", "When a method changes, keep its version."),
+    body: t("方法账本以仅追加方式保存规则版本。后续理解可以修订方法，但不覆盖以前使用的条件，让研究过程可以回读。", "An append-only method ledger retains rule versions. Later understanding can revise the method without replacing the conditions used earlier, so the research process can be revisited."),
+    context: t("本地工作流 · 版本账本已建立", "Local workflow · version ledger established"),
+    tags: ["method_ledger.jsonl", t("仅追加", "Append only")], color: "#15514D",
   },
   {
-    name: t("FastAPI / 嵌入式", "FastAPI / embedded"),
-    cover: ["FastAPI", "Embedded"],
-    label: "CONNECTED SYSTEMS",
-    action: t("接口 · 嵌入式 · 联调", "API · EMBED · INTEGRATE"),
-    title: t(
-      "让接口，真正接到设备上。",
-      "Connect an interface to a real device.",
-    ),
-    body: t(
-      "在 MEC202 团队原型中，我参与本地软件、参数转换与通信控制。FastAPI 提供本地接口，Raspberry Pi 与 ESP32-S3 连接设备控制；我的工作还包括跨模块联调、测试与整合。",
-      "For the MEC202 team prototype, I contributed to local software, parameter conversion and communication control. FastAPI provided local interfaces; Raspberry Pi and ESP32-S3 connected device control. I also helped debug, test and integrate modules.",
-    ),
-    context: t(
-      "MEC202 · 团队组长与系统整合",
-      "MEC202 · team leadership & integration",
-    ),
-    link: "#mask",
-    tags: ["FastAPI", "Raspberry Pi", "ESP32-S3"],
-    color: "#B63D32",
+    name: t("时间边界", "As-of context"), cover: ["As-of", "Context"], label: "TEMPORAL CONTEXT",
+    action: t("只看当时可获得的信息", "USE INFORMATION AVAILABLE THEN"),
+    title: t("未来的信息，不能改写过去。", "Later information cannot rewrite the past."),
+    body: t("上下文脚本核对时间戳，拒绝晚于文章发布时间的市场快照。没有可靠行情时，只解析文章，不把缺失的数据包装成当日判断。", "The context script checks timestamps and rejects market snapshots later than the article’s publication. Without reliable market data, it parses the article without claiming a same-day confirmation."),
+    context: t("本地工作流 · 时间检查脚本已建立", "Local workflow · timestamp checks established"),
+    tags: ["prepare_analysis_context.py", "as_of"], color: "#B63D32",
   },
   {
-    name: "Document AI",
-    cover: ["Document", "AI"],
-    label: "DOCUMENTS & EVIDENCE",
-    action: t("解析 · 抽取 · 证据", "PARSE · EXTRACT · TRACE"),
-    title: t(
-      "模型之间，还需要一条数据流程。",
-      "Models need a data workflow between them.",
-    ),
-    body: t(
-      "研究院实习中，我参与整合 NuExtract3、PaddleOCR-VL 与 Qwen3-Embedding，分别用于结构化抽取、文档理解和语义匹配。原始文字、表格、结构化记录与证据关联一起进入工程流程。",
-      "During my research institute internship, I helped integrate NuExtract3, PaddleOCR-VL and Qwen3-Embedding for structured extraction, document understanding and semantic matching. Source text, tables, structured records and evidence links all belong in the engineering workflow.",
-    ),
-    context: t("ESG AI · 研究院实习", "ESG AI · research institute internship"),
-    link: "#esg",
-    tags: ["NuExtract3", "PaddleOCR-VL", "Qwen3-Embedding"],
-    color: "#6C183C",
+    name: t("模型辅助", "Model assistance"), cover: ["Model", "Notes"], label: "ASSISTED READING",
+    action: t("观点、证据与推断分开", "SEPARATE CLAIMS + EVIDENCE"),
+    title: t("让模型帮助阅读，保留检查入口。", "Use models to read, with a path back to evidence."),
+    body: t("我在 Codex 中运行文章读取与报告流程。模型辅助整理观点与依据，引用和条件仍需回到归档材料检查。这是有人参与的研究方式。", "I run article-reading and report workflows in Codex. Models help organise claims and evidence, while references and conditions are checked against the archive. This is a human-involved research practice."),
+    context: t("人工辅助实践 · 持续迭代", "Assisted practice · ongoing iteration"),
+    tags: ["Codex", t("来源回查", "Source checks")], color: "#6C183C",
   },
   {
-    name: "SUPS / SVL",
-    cover: ["SUPS", "SVL"],
-    label: "CONTROLLED SPACES",
-    action: t("场景 · 编号 · 几何", "SCENES · LABELS · GEOMETRY"),
-    title: t(
-      "把研究问题，放进可控制的空间。",
-      "Give research a controlled space.",
-    ),
-    body: t(
-      "我跑通基于 SUPS 的仿真链路，并参与扩展现有停车场场景。补充车位编号与屋顶结构，继续推进导向标志和 A/B 分区的空间一致性，为感知与定位研究准备可控制的条件。",
-      "I ran the SUPS simulation pipeline and helped extend an existing parking scene with space numbers and roof structures. I continue to work on the spatial consistency of direction signs and A/B zones, preparing controlled conditions for perception and localisation research.",
-    ),
-    context: t("SUPS / SVL · 场景扩展", "SUPS / SVL · scene extension"),
-    link: "#sups",
-    tags: [
-      t("现有场景扩展", "Existing scene extension"),
-      t("语义地标", "Semantic landmarks"),
-      t("几何一致性", "Geometric consistency"),
-    ],
-    color: "#254CC7",
+    name: t("检查修订", "Review"), cover: ["Review", "Revise"], label: "REVIEW & REVISION",
+    action: t("核对条件，修订方法", "CHECK CONDITIONS + REVISE"),
+    title: t("记录判断成立的条件。", "Record the conditions behind a judgement."),
+    body: t("研究报告保留观察、触发、等待与放弃条件。检查来源与时间是否充分后再解释输出；方法调整进入新版本，而不是重写旧结论。", "Reports retain observation, trigger, waiting and abandonment conditions. I check source and timing sufficiency before interpreting output; method changes become new versions rather than rewritten conclusions."),
+    context: t("人工检查环节 · 非无人值守服务", "Human review · not an unattended service"),
+    tags: [t("条件记录", "Condition records"), t("人工复核", "Human review")], color: "#254CC7",
   },
   {
-    name: t("Python / 统计", "Python / statistics"),
-    cover: ["Python", "Statistics"],
-    label: "EVERYDAY DATA",
-    action: t("回归 · 检验 · 残差", "REGRESS · TEST · RESIDUALS"),
-    title: t(
-      "让日常问题，也能被数据检验。",
-      "Test everyday questions with data.",
-    ),
-    body: t(
-      "LIF001 食堂客流项目中，我参与 Python 数据清洗、特征工程与多元线性回归。把天气、日期等信息编码成数值，再通过 R²、F 检验与残差检查，研究它们和客流之间的关系。",
-      "For the LIF001 canteen footfall project, I contributed to Python data cleaning, feature engineering and multiple linear regression. I encoded weather and dates as numerical features, then used R², F-tests and residual checks to study their relationship with footfall.",
-    ),
-    context: t("LIF001 · 校园食堂客流预测", "LIF001 · campus canteen footfall"),
-    link: "#origins",
-    tags: [
-      "Python",
-      t("多元线性回归", "Multiple linear regression"),
-      t("统计检验", "Statistical tests"),
-    ],
-    color: "#F2D169",
+    name: t("证据回读", "Revisit"), cover: ["Evidence", "Revisit"], label: "REPRODUCIBLE HISTORY",
+    action: t("连接文章、方法与报告", "CONNECT SOURCE + METHOD + REPORT"),
+    title: t("知道一次判断怎样得到。", "Recover how a judgement was reached."),
+    body: t("文章、方法账本与日报按时间留下记录，历史报告不覆盖。回读时区分当时的依据和后来的信息；这里展示研究方法，不展示收益或荐股结论。", "Articles, method ledgers and dated reports preserve a history without overwriting earlier reports. Revisiting separates the original evidence from later information. This presents the research method, without returns or stock recommendations."),
+    context: t("归档与人工回读 · 持续完善", "Archive and human review · ongoing development"),
+    tags: ["daily_reports", t("历史不覆盖", "Preserved history")], color: "#F2D169",
   },
 ];
+
 type ToolFile = ReturnType<typeof makeToolFiles>[number];
 
 type ArchiveControl = {
@@ -284,6 +214,8 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
     let stopDraw = () => {};
     let resizeScene = () => {};
     let disposeScene = () => {};
+    let rearmScene = () => {};
+    let exitTimer = 0;
 
     async function initialize() {
       if (loading || disposed || controlsRef.current) return;
@@ -544,7 +476,8 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
           books.forEach((book, index) => {
             const height = currentFile === index ? 0.12 : 0;
             const angle = index * turn;
-            if (!quietRef.current && introductionElapsed < index * 0.065) {
+            const arrivalOrder = (index - currentFile + books.length) % books.length;
+            if (!quietRef.current && introductionElapsed < arrivalOrder * 0.065) {
               seated = false;
               return;
             }
@@ -595,6 +528,7 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
           });
         }
         renderer.render(scene, camera);
+        if (draws === 0 && !disposed) setMode("webgl");
         canvas!.dataset.renderState = moving ? "moving" : "idle";
         canvas!.dataset.entrance = introduction ? "seating" : "ready";
         canvas!.dataset.draws = String(++draws);
@@ -727,19 +661,40 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
         renderer.dispose();
         // StrictMode may reuse this connected canvas; never force context loss here.
       };
-      setMode("webgl");
+      rearmScene = () => {
+        if (dragging) return;
+        introduction = !quietRef.current;
+        introductionElapsed = 0;
+        velocity = 0;
+        books.forEach((book, index) => {
+          introductionVelocity[index] = 0;
+          introductionRadius[index] = quietRef.current ? radius : radius * .72;
+          book.visible = quietRef.current || index === currentFile;
+          book.position.set(Math.sin(index * turn) * introductionRadius[index], quietRef.current ? (currentFile === index ? .12 : 0) : .36 + index * .08, Math.cos(index * turn) * introductionRadius[index]);
+        });
+        canvas!.dataset.entrance = "reset";
+      };
       resize();
     }
 
     const observer = new IntersectionObserver((entries) => {
       visible = entries.some((entry) => entry.isIntersecting);
+      window.clearTimeout(exitTimer);
       if (visible) {
         void initialize().catch(() => {
           if (!disposed) setMode("fallback");
         });
         requestDraw();
-      } else stopDraw();
-    });
+      } else {
+        stopDraw();
+        exitTimer = window.setTimeout(() => {
+          const bounds = host.getBoundingClientRect();
+          const returned = bounds.bottom > -160 && bounds.top < window.innerHeight + 160;
+          if (returned) { visible = true; requestDraw(); }
+          else if (!visible) rearmScene();
+        }, 120);
+      }
+    }, { rootMargin: "160px 0px 160px 0px", threshold: 0 });
     observer.observe(host);
     const resizeObserver = new ResizeObserver(() => resizeScene());
     resizeObserver.observe(host);
@@ -751,6 +706,7 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
     return () => {
       disposed = true;
       observer.disconnect();
+      window.clearTimeout(exitTimer);
       resizeObserver.disconnect();
       document.removeEventListener("visibilitychange", visibilityChanged);
       controlsRef.current = null;
@@ -768,22 +724,22 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
     >
       <div className="chapter-inner tools-inner">
         <div className="tools-heading-line">
-          <p className="chapter-kicker">10 / TOOLS IN MY WORK</p>
-          <span>CHONEY CHEN’S WORKING LIBRARY</span>
+          <p className="chapter-kicker">08 / MY RESEARCH WORKFLOW</p>
+          <span>CHONEY’S RESEARCH DESK</span>
         </div>
         <header className="tools-heading">
           <h2 id="tools-title">
-            {t("工具的名字之外，", "Behind the tools,")}
+            {t("我的研究，", "My research,")}
             <br />
-            {t("是我", "there is ")}
-            <span>{t("怎样用它。", "the work.")}</span>
+            {t("怎样留下", "with ")}
+            <span>{t("证据。", "a history.")}</span>
           </h2>
           <p>
-            {t("六册工作档案。", "Six files from my work. ")}
+            {t("一套个人工作流，六个环节。", "One personal workflow. Six components. ")}
             <br />
             {t(
-              "每一本都连着一段真实经历。",
-              "Each opens onto a real experience.",
+              "从原文归档，到可以回读的研究记录。",
+              "From archived articles to research records I can revisit.",
             )}
           </p>
         </header>
@@ -870,9 +826,8 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
             </div>
           </div>
           <div id="tools-work-reading" className={`tools-reading-column${opened ? " is-open" : ""}`} aria-live="polite">
-            <AnimatePresence mode="wait" initial={false}>
+            <div className="reading-switch"><AnimatePresence initial={false}>
               <motion.div
-                layout={!lowMotion}
                 key={opened ? active : "closed"}
                 initial={{ opacity: 0, y: lowMotion ? 0 : 8 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -889,21 +844,20 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
                     <span key={tag}>{tag}</span>
                   ))}
                 </div>
-                <a className="tools-context-link" href={file.link}>
+                <div className="tools-context-link">
                   <span>
-                    <small>{t("关联经历", "RELATED EXPERIENCE")}</small>
+                    <small>{t("实现与使用状态", "IMPLEMENTATION & USE")}</small>
                     {file.context}
                   </span>
-                  <ArrowUpRight size={19} />
-                </a>
-                </> : <div className="tools-closed-intro"><span className="tools-file-label">{t("六册档案 · 六段实践", "SIX FILES · SIX EXPERIENCES")}</span><h3>{t("工具，也有来处。", "Every tool has a context.")}</h3><p className="tools-personal-use">{t("从模型训练到系统联调。打开一册，看看我怎样把工具用进项目。", "From model training to system integration. Open a file to see how I used the tools in a project.")}</p><button type="button" className="tools-open-file" onClick={() => selectFile(active)}>{t("打开这册档案", "Open this file")}<BookOpen size={17}/></button></div>}
+                </div>
+                </> : <div className="tools-closed-intro"><span className="tools-file-label">{t("文章 · 方法 · 时间 · 复核", "SOURCE · METHOD · TIME · REVIEW")}</span><h3>{t("一次研究，怎样被保留下来？", "How does a research process leave a record?")}</h3><p className="tools-personal-use">{t("打开一册，阅读这套工作流中的一个环节，以及它目前的实现状态。", "Open a file to read one workflow component and its current implementation status.")}</p><button type="button" className="tools-open-file" onClick={() => selectFile(active)}>{t("打开这册档案", "Open this file")}<BookOpen size={17}/></button></div>}
               </motion.div>
-            </AnimatePresence>
+            </AnimatePresence></div>
           </div>
         </div>
         <div
           className="tools-file-index"
-          aria-label={t("按工具选择我的工作档案", "Choose a work file by tool")}
+          aria-label={t("选择研究工作流环节", "Choose a research-workflow component")}
         >
           {toolFiles.map((item, index) => (
             <button
@@ -920,10 +874,11 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
             </button>
           ))}
         </div>
+        <div className="tools-public-repository"><div><span>{t("我的公开代码仓库", "MY PUBLIC REPOSITORY")}</span><h3>QuantPilot</h3><p>{t("Windows 原生的 A 股量化研究智能体与仪表盘。仓库文档涵盖确定性因子、Qwen 人工复核与会话研究记忆。", "A Windows-native A-share research agent and dashboard. Repository documentation covers deterministic factors, manual Qwen review and session research memory.")}</p></div><a href="https://github.com/ChoneyChen/quantpilot-a-share-agent" target="_blank" rel="noreferrer">{t("查看仓库", "View repository")}<ArrowUpRight size={18}/></a></div>
         <div className="tools-closing">
-          <p>{t("模型 · 信号 · 接口 · 文档 · 空间 · 数据", "Models · signals · interfaces · documents · spaces · data")}</p>
-          <a className="chapter-link" href="#archive">
-            {t("回到我的完整经历", "Explore my complete experience")}{" "}
+          <p>{t("来源固定 · 方法留痕 · 条件可查", "Fixed sources · versioned methods · traceable conditions")}</p>
+          <a className="chapter-link" href="#origins">
+            {t("回到起点：三段早期经历", "The beginnings: three early experiences")}{" "}
             <ArrowRight size={16} />
           </a>
         </div>

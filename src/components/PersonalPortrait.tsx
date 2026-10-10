@@ -1,10 +1,10 @@
+import { useScenePresence as useInView } from "../hooks/useScenePresence";
 import { slowMotion, slowDragRelease } from "../lib/motionTiming";
 import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
 import { useRef, useState } from "react";
 import {
   AnimatePresence,
   motion,
-  useInView,
   useReducedMotion,
 } from "motion/react";
 import { ArrowUpRight, Github, MoveUpRight, X } from "lucide-react";
@@ -15,85 +15,58 @@ interface PersonalPortraitProps {
   quiet?: boolean;
 }
 
-const getDirections = (t: (zh: string, en: string) => string) =>
+const getPersonalFacets = (t: (zh: string, en: string) => string) =>
   [
     {
       id: "space",
       index: "01",
-      label: t("视觉与空间", "Vision and space"),
-      tools: "Cosmos-Loc / U-IMPROVE",
-      title: t(
-        "我想继续，理解机器怎样看见空间。",
-        "I want to understand how machines perceive space.",
-      ),
-      experience: t(
-        "在 Cosmos-Loc 里，我重点参与 Qwen 训练与多轮实验。现在的毕业研究 U-IMPROVE，提出目标存在性三态 Strip，并研究共享图像生成模型怎样输出可解码的分割、度量深度与法线，再融合为三维场景。",
-        "In Cosmos-Loc, my focus was Qwen training and repeated experiments. My current final-year project, U-IMPROVE, proposes a three-state presence Strip and a shared image generator for decodable segmentation, metric depth and normals, fused into a 3D scene.",
-      ),
+      label: t("十堰 → 苏州", "Shiyan → Suzhou"),
+      subtitle: t("家乡与现在", "Home and now"),
+      title: t("家乡在十堰，日常在苏州。", "From Shiyan, based in Suzhou."),
+      facts: [
+        t("我的家乡是湖北十堰。", "My hometown is Shiyan, Hubei."),
+        t("现在我常居江苏苏州。", "I am now based in Suzhou, Jiangsu."),
+      ],
       question: t(
-        "面对没见过的环境和类别，模型能定位目标，也能可靠地回答不存在吗？",
-        "In unseen environments and categories, can the model locate a target and reliably recognise its absence?",
+        "下一段学习与生活里，我想保留怎样的日常？",
+        "What everyday routines do I want to make room for in the next stage of life and learning?",
       ),
-      next: t(
-        "我已推进课题、文献、输出协议与实验设计；负查询 FPR、分割 IoU 和深度 AbsRel 仍待训练与验证。",
-        "I have developed the research framing, literature review, output protocol and experiment design. Negative-query FPR, segmentation IoU and depth AbsRel remain to be measured after training.",
-      ),
-      href: "#glimpse",
-      link: t("进入我的毕业研究", "Explore my final-year research"),
+      href: "#origins",
+      link: t("回到我的来路", "Follow my journey"),
     },
     {
       id: "systems",
       index: "02",
-      label: t("系统与工程", "Systems and engineering"),
-      tools: "MEC202 / FastAPI / ESP32-S3",
-      title: t(
-        "我也喜欢，让不同的环节接得上。",
-        "I also enjoy making the parts work together.",
-      ),
-      experience: t(
-        "在智能光疗面罩项目中，我担任团队组长，参与软件、嵌入式、结构和系统联调。原型把视觉分析、结构化参数、设备控制与传感器反馈连接起来。",
-        "I led the smart phototherapy mask team and contributed to software, embedded systems, the enclosure and integration. The prototype connects visual analysis, structured parameters, device control and sensor feedback.",
-      ),
+      label: t("我的学习选择", "How I choose to learn"),
+      subtitle: t("计算机与跨学科", "Computing and other fields"),
+      title: t("从计算机工程，继续向外学。", "Start with computing, keep learning across fields."),
+      facts: [
+        t("我的学习结合了编程、数学和计算机系统。", "My studies bring together programming, mathematics and computer systems."),
+        t("我的兴趣也延伸到人工智能、空间感知与环境数据科学。", "My interests also extend to AI, spatial perception and environmental data science."),
+      ],
       question: t(
-        "模型的建议，怎样经过控制与反馈，变成可以检查的动作？",
-        "How can a model’s suggestion become a checkable action through control and feedback?",
+        "下一阶段的学习，怎样把工程能力与科学问题接起来？",
+        "How can my next stage of learning connect engineering skills with scientific questions?",
       ),
-      next: t(
-        "我想继续把模型放进真实系统，关心接口、反馈、异常与团队交付。",
-        "I want to keep bringing models into real systems, with attention to interfaces, feedback, failures and team delivery.",
-      ),
-      href: "#mask",
-      link: t(
-        "看看我的组长与联调工作",
-        "Explore my team leadership and integration work",
-      ),
+      href: "#methods",
+      link: t("看看我的工作方法", "Explore my working methods"),
     },
     {
       id: "environment",
       index: "03",
-      label: t("环境与数据", "Environment and data"),
-      tools: "ESG AI / Evidence linking",
-      title: t(
-        "我想把 AI，带进环境与科学数据。",
-        "I want to bring AI into environmental and scientific data.",
-      ),
-      experience: t(
-        "在清华大学苏州环境创新研究院实习，我参与文档模型整合、环境指标标准化、证据关联和数据平台建设。这是我进一步探索环境 AI 与科学数据的实践起点。",
-        "At the Research Institute for Environmental Innovation, Suzhou, Tsinghua University, I help integrate document models, standardise environmental indicators, link evidence and build a data platform. This is my practical starting point for environmental AI and scientific data.",
-      ),
+      label: t("长期愿景", "Long-term aspirations"),
+      subtitle: t("计算与环境问题", "Computing for the environment"),
+      title: t("把计算，带到更长期的环境问题。", "Bring computing to long-term environmental questions."),
+      facts: [
+        t("我希望进一步学习机器学习、科学计算和环境数据科学。", "I hope to deepen my knowledge of machine learning, scientific computing and environmental data science."),
+        t("长期来看，我希望把 AI 与数据科学用于环境管理、污染治理，以及可追溯的监测、报告与核查。", "In the long term, I hope to apply AI and data science to environmental management, pollution control, and traceable monitoring, reporting and verification."),
+      ],
       question: t(
-        "让环境数据可追溯、可比较，究竟需要哪些条件？",
-        "What does environmental data need to become traceable and comparable?",
+        "怎样把一个环境问题，转成可计算、可验证，也能用于管理的研究？",
+        "How can an environmental question become research that is computable, testable and useful for management?",
       ),
-      next: t(
-        "继续推进数据流程与验证，也继续思考人工智能和环境科学之间的连接。",
-        "Continue developing data workflows and validation, while exploring connections between AI and environmental science.",
-      ),
-      href: "#esg",
-      link: t(
-        "沿着数据回到环境 AI 实习",
-        "Follow the data to my environmental AI internship",
-      ),
+      href: "#contact",
+      link: t("聊聊接下来的问题", "Talk about the questions ahead"),
     },
   ] as const;
 
@@ -124,9 +97,6 @@ function SpaceFragment() {
       />
       <circle cx="213" cy="174" r="8" fill="#2D2C46" />
       <path d="M24 308L149 252L239 290L204 398Z" fill="#FFF4D7" />
-      <text x="84" y="293" fill="#2D2C46" fontSize="10" letterSpacing="2">
-        01 / LOOK CLOSER
-      </text>
       <path d="M51 81L92 68M304 86L335 118" stroke="#FFF4D7" strokeWidth="4" />
     </svg>
   );
@@ -161,16 +131,6 @@ function SystemsFragment() {
       <circle cx="320" cy="115" r="8" fill="#F2D169" />
       <circle cx="336" cy="332" r="8" fill="#F2D169" />
       <path d="M125 348L242 317L203 384L147 465Z" fill="#F2D169" />
-      <text
-        x="150"
-        y="357"
-        fill="#2D2C46"
-        fontSize="9"
-        letterSpacing="2"
-        transform="rotate(-12 150 357)"
-      >
-        02 / MAKE IT WORK
-      </text>
       <path
         d="M80 35L174 87M270 368L318 348"
         stroke="#C03C2B"
@@ -204,9 +164,6 @@ function EnvironmentFragment() {
       <circle cx="284" cy="210" r="4" fill="#FFF4D7" />
       <circle cx="323" cy="185" r="4" fill="#FFF4D7" />
       <path d="M54 253L138 240L155 280L68 295Z" fill="#F2D169" />
-      <text x="76" y="273" fill="#2D2C46" fontSize="10" letterSpacing="1.5">
-        ESG / AI
-      </text>
       <path
         d="M11 338L253 282L376 334"
         fill="none"
@@ -230,7 +187,7 @@ const fragmentDrawings = [
 
 export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
   const { t } = useI18n();
-  const directions = getDirections(t);
+  const directions = getPersonalFacets(t);
   const systemQuiet = useReducedMotion();
   const reduced = quiet || Boolean(systemQuiet);
   const [selected, setSelected] = useState(0);
@@ -254,17 +211,15 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
       className={`chapter portrait-chapter${reduced ? " is-quiet" : ""}`}
       aria-labelledby="portrait-title"
     >
-      <div className="chapter-inner">
+      <div className="chapter-inner" ref={collageRef}>
         <div className="portrait-heading">
-          <p className="chapter-kicker">12 / THE MANY SIDES OF ME</p>
+          <p className="chapter-kicker">{t("12 / 我的个人拼贴", "12 / A PERSONAL COLLAGE")}</p>
           <span>TIANYI CHEN / 2026</span>
         </div>
         <motion.div
           className="portrait-introduction"
           initial={reduced ? false : { x: -18, opacity: 0 }}
-          animate={reduced ? { x: 0, opacity: 1 } : undefined}
-          whileInView={{ x: 0, opacity: 1 }}
-          viewport={{ once: false, amount: 0.25 }}
+          animate={{ x: collageReady ? 0 : -18, opacity: collageReady ? 1 : 0 }}
           transition={
             slowMotion(reduced
               ? { duration: 0 }
@@ -274,24 +229,23 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
           <h2 id="portrait-title">
             {t("陈天一，", "Choney Chen,")}
             <br />
-            {t("还在继续。", "still moving forward.")}
+            {t("生活、学习与愿景。", "life, learning and aspirations.")}
           </h2>
           <p>
             {t(
-              "视觉与空间、系统工程、环境 AI。经历连着兴趣，兴趣引向下一问。",
-              "Vision and space. Systems. Environmental AI. Experience shapes my interests and the questions ahead.",
+              "我从哪里来，怎样继续学习，以及更长远想走向哪里。",
+              "Where I come from, how I keep learning and what I hope to work towards.",
             )}
           </p>
         </motion.div>
         <div className="portrait-layout">
           <div className="portrait-artwork">
             <div
-              ref={collageRef}
               className="portrait-collage"
               role="group"
               aria-label={t(
-                "点击或轻拖三块拼贴，认识陈天一的兴趣与方向",
-                "Click or gently drag the three collage pieces to explore Choney Chen’s interests and directions",
+                "点击或轻拖三块拼贴，认识陈天一的生活、学习与愿景",
+                "Click or gently drag the three collage pieces to explore Choney Chen’s life, learning and aspirations",
               )}
             >
               <motion.svg
@@ -324,26 +278,7 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
                 <path d="M574 67L643 127L598 132Z" fill="#C03C2B" />
                 <path d="M26 398L3 435L50 451Z" fill="#254CC7" />
                 <path d="M625 405L653 435L608 471Z" fill="#F2D169" />
-                <text
-                  x="511"
-                  y="505"
-                  fill="#2D2C46"
-                  fontSize="16"
-                  letterSpacing="4"
-                  transform="rotate(-8 511 505)"
-                >
-                  C / C
-                </text>
                 <path d="M17 567L548 546" stroke="#2D2C46" strokeWidth="2" />
-                <text
-                  x="23"
-                  y="31"
-                  fill="#515069"
-                  fontSize="8"
-                  letterSpacing="3"
-                >
-                  CHONEY / AN ONGOING COMPOSITION
-                </text>
               </motion.svg>
               {directions.map((item, index) => (
                 <motion.div
@@ -385,8 +320,8 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
                     aria-expanded={opened && selected === index}
                     aria-controls="portrait-direction"
                     aria-label={t(
-                      `阅读我的${item.label}方向：${item.tools}`,
-                      `Read my ${item.label} direction: ${item.tools}`,
+                      `阅读${item.label}：${item.subtitle}`,
+                      `Read ${item.label}: ${item.subtitle}`,
                     )}
                     onClick={() => selectDirection(index)}
                     drag={!reduced}
@@ -411,7 +346,7 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
             <div
               className="portrait-selector"
               role="group"
-              aria-label={t("直接选择个人方向", "Choose a personal direction")}
+              aria-label={t("选择个人笔记", "Choose a personal note")}
             >
               {directions.map((item, index) => (
                 <motion.button
@@ -443,15 +378,15 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
                 >
                   <span>{item.index}</span>
                   <strong>{item.label}</strong>
-                  <small>{item.tools}</small>
+                  <small>{item.subtitle}</small>
                 </motion.button>
               ))}
             </div>
             <p className="portrait-art-note">
               <MoveUpRight size={13} aria-hidden="true" />
               {t(
-                " 点选或轻拖一块，展开我对应的经历与下一问。",
-                " Click or gently drag a piece to explore my experience and next question.",
+                " 点选或轻拖一块，打开一段个人笔记。",
+                " Click or gently drag a piece to open a personal note.",
               )}
             </p>
           </div>
@@ -461,16 +396,14 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
             className="portrait-direction"
             aria-live="polite"
             initial={reduced ? false : { x: 18, opacity: 0 }}
-            animate={reduced ? { x: 0, opacity: 1 } : undefined}
-            whileInView={{ x: 0, opacity: 1 }}
-            viewport={{ once: false, amount: 0.2 }}
+            animate={{ x: collageReady ? 0 : 18, opacity: collageReady ? 1 : 0 }}
             transition={
               slowMotion(reduced
                 ? { duration: 0 }
                 : { duration: 0.58, ease: [0.22, 1, 0.36, 1] })
             }
           >
-            <AnimatePresence mode="wait" initial={false}>
+            <div className="reading-switch"><AnimatePresence initial={false}>
               <motion.div
                 key={opened ? direction.id : "closed"}
                 initial={reduced ? false : { opacity: 0, y: 12 }}
@@ -479,26 +412,25 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
                 transition={slowMotion(transition)}
               >
                 {opened ? <>
-                <button type="button" className="portrait-close" aria-label={t("合上个人方向", "Close personal direction")} onClick={() => setOpened(false)}><X size={18}/></button>
+                <button type="button" className="portrait-close" aria-label={t("合上个人笔记", "Close personal note")} onClick={() => setOpened(false)}><X size={18}/></button>
                 <span className="portrait-direction-number">
                   {direction.index} / {direction.label}
                 </span>
                 <h3>{direction.title}</h3>
-                <p className="portrait-experience">{direction.experience}</p>
+                {direction.facts.map((fact, index) => <p className="portrait-experience" key={index}>{fact}</p>)}
                 <div className="portrait-question">
                   <span>
                     {t("接下来，我想问", "The question I want to ask next")}
                   </span>
                   <p>{direction.question}</p>
                 </div>
-                <p className="portrait-next">{direction.next}</p>
                 <a className="chapter-link" href={direction.href}>
                   {direction.link}
                   <ArrowUpRight size={17} />
                 </a>
-                </> : <div className="portrait-closed-intro"><span className="portrait-direction-number">{t("三种兴趣，一段继续的旅程", "THREE INTERESTS. ONE ONGOING JOURNEY.")}</span><h3>{t("我还想问什么？", "What do I want to ask next?")}</h3><p className="portrait-experience">{t("点选一块拼贴，打开我的经历和下一问。", "Choose a collage piece to open the experience behind it and the question ahead.")}</p></div>}
+                </> : <div className="portrait-closed-intro"><span className="portrait-direction-number">{t("三段个人笔记", "THREE PERSONAL NOTES")}</span><h3>{t("生活、学习，与下一步。", "Life, learning and the next step.")}</h3><p className="portrait-experience">{t("点选一块拼贴，看看我的来路、学习选择与长期愿景。", "Choose a collage piece to read about my journey, learning choices and long-term aspirations.")}</p></div>}
               </motion.div>
-            </AnimatePresence>
+            </AnimatePresence></div>
           </motion.div>
         </div>
         <div className="portrait-bottom">
