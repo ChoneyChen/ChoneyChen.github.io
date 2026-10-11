@@ -1,0 +1,16 @@
+.qp-workflow {min-width:0;}
+.qp-workbench {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;position:relative;}
+.qp-workbench:before {content:"";position:absolute;top:34%;left:15%;right:15%;border-top:2px dashed #9cb3a166;}
+.qp-workbench button {position:relative;background:transparent;color:inherit;padding:10px 0;text-align:center;user-select:none;-webkit-user-select:none;touch-action:pan-y;}
+.qp-workbench svg {width:100%;height:auto;display:block;overflow:visible;}
+.qp-workbench span {font:14px/1.6 var(--mono);display:block;opacity:.75;margin-top:10px;}
+.qp-workbench strong {display:block;font-size:16px;font-weight:400;line-height:1.45;min-height:46px;}
+.qp-workbench button[aria-expanded="true"] strong {color:#f4d395;}
+.qp-workbench button:focus-visible {outline:2px solid #e0b35c;outline-offset:5px;border-radius:8px;}
+.qp-hint {font-size:14px!important;line-height:1.6;margin:22px 0 0;opacity:.8;text-align:center;}
+.qp-stage-details {margin-top:24px;border-top:1px solid #b9ceb44d;}
+.qp-stage-details>div {position:relative;padding-top:22px;}
+.qp-stage-details strong {font-size:18px;font-weight:500;padding-right:35px;display:block;}
+.qp-stage-details button {background:transparent;color:inherit;position:absolute;right:0;top:19px;padding:4px;}
+.qp-stage-details p {font-size:16px;line-height:1.7;margin:14px 0 0;}
+@media(max-width:480px){.qp-workbench{gap:10px;}.qp-workbench strong{font-size:16px;min-height:72px;}.qp-workbench span{margin-top:4px;}.qp-hint{margin-top:12px;}}

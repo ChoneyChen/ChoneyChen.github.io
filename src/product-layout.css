@@ -1,0 +1,94 @@
+/* Consistent reading hierarchy, with an individual visual language per chapter. */
+:root {--content-width:1280px;--section-space:clamp(64px,7vw,96px);--body-size:17px;}
+.personal-site .chapter-inner {max-width:var(--content-width);padding:var(--section-space) clamp(24px,6vw,80px);}
+.personal-site .chapter-kicker {font-size:14px;line-height:1.65;margin-bottom:22px;letter-spacing:.055em;}
+.personal-site .project-title {font-size:clamp(28px,3vw,40px);font-weight:500;line-height:1.17;letter-spacing:-.035em;text-wrap:balance;margin:0;}
+.personal-site .project-summary {font-size:18px;line-height:1.6;text-wrap:pretty;}
+.personal-site .project-role {font-size:14px;line-height:1.7;}
+.personal-site .site-header {background:#f6f4efd9;backdrop-filter:blur(14px);}
+.personal-site .site-directory {grid-template-columns:minmax(240px,.7fr) minmax(0,1.3fr);gap:60px;padding:48px 6vw;}
+.personal-site .directory-intro h2 {line-height:1.18;font-size:clamp(36px,4vw,56px);}
+.personal-site .site-directory nav a {font-size:17px;line-height:1.4;padding:18px 0;}
+.personal-site .site-directory nav small {font-family:inherit;font-size:14px;line-height:1.5;letter-spacing:0;}
+/* Profile: interactive paper, pixel ticket and glass system note, restored from the approved visual direction. */
+.personal-site .hero-grid {max-width:1280px;gap:clamp(36px,5vw,72px);padding:52px clamp(24px,6vw,80px) 65px;}
+.personal-site .hero-copy {align-self:center;}
+.personal-site .hero-bio,html[data-language="en"] .personal-site .hero-bio {font-size:17px;line-height:1.75;max-width:430px;margin-top:24px;}
+.personal-site .hero-statement {font-size:clamp(22px,2.4vw,30px);line-height:1.35;max-width:450px;}
+.personal-site .hero-start {font-size:16px;line-height:1.5;margin-top:28px;}
+.personal-site .hero-basic-facts {font-size:14px;line-height:1.7;}
+.personal-site .identity-fold {max-width:450px;}
+.personal-site .identity-paper {min-height:405px;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab;}
+.personal-site .identity-paper:active {cursor:grabbing;}
+.personal-site .identity-page {min-height:315px;padding-top:24px;}
+.personal-site .identity-page h2 {font-size:18px;line-height:1.5;letter-spacing:0;}
+.personal-site .identity-detail,.personal-site .identity-page li {font-size:16px;line-height:1.65;}
+.personal-site .identity-page li+li {margin-top:10px;}
+.personal-site .identity-page ul {margin-bottom:20px;}
+.personal-site .identity-cover p {font-size:16px;}
+.personal-site .identity-paper-top,.personal-site .identity-paper-bottom {flex-wrap:wrap;gap:8px 14px;line-height:1.5;}
+.personal-site .identity-stamp {display:none;}
+.personal-site .hero-pixel-ticket,.personal-site .hero-prototype-ticket {text-align:left;user-select:none;-webkit-user-select:none;}
+.personal-site .hero-pixel-ticket {right:-22px;top:128px;}
+.personal-site .hero-prototype-ticket {backdrop-filter:blur(14px);background:#fff9;}
+.personal-site .hero-prototype-ticket>span:not(.hero-system-icon) {line-height:1.65;}
+.personal-site .hero-foot {font-size:14px;line-height:1.6;gap:20px;}
+/* Keep formal titles complete; short names anchor the visual stage. */
+.personal-site .fg-introduction,.personal-site .fa-introduction {grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);align-items:end;gap:48px;margin:26px 0 38px;}
+.personal-site .fg-project-name,.personal-site .fa-project-name {font-size:clamp(48px,5.2vw,68px);line-height:1.04;font-weight:500;letter-spacing:-.05em;margin-bottom:18px;font-family:inherit;}
+.personal-site .fg-introduction .project-title,.personal-site .fa-introduction .project-title {font-size:clamp(24px,2.35vw,31px);line-height:1.2;letter-spacing:-.03em;}
+.personal-site .fg-role,.personal-site .fa-role {margin:18px 0 12px;line-height:1.65;font-size:14px;}
+.fg-protocol-bar {display:flex;align-items:center;justify-content:space-between;gap:28px;border-bottom:1px solid #bdd4fb55;padding:26px 0;margin-top:12px;font-size:16px;line-height:1.6;}
+.fg-protocol-bar .future-reading-toggle {margin:0;flex-shrink:0;}
+.fg-protocol-expanded {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:44px;padding-top:26px;}
+.fg-protocol-expanded h4 {font-size:19px;line-height:1.5;margin:0 0 16px;}
+.personal-site .fg-research-protocol p,.personal-site .fg-research-reading p,.personal-site .future-details p {font-size:17px;line-height:1.7;}
+.personal-site .fg-source-framework {margin-bottom:0;}
+.fg-framework-figure {margin:32px 0 40px;}
+.fg-framework-figure img {width:100%;border-radius:10px;}
+.fg-framework-figure figcaption {font-size:14px;line-height:1.6;margin-top:14px;}
+.personal-site .fg-evaluation strong {white-space:nowrap;}
+.personal-site .fa-range {height:42px;margin:10px 0 0;}
+.personal-site .avpc-evidence-scene {max-width:1050px;margin:auto;}
+.personal-site .avpc-map {max-height:430px;}
+.personal-site .fa-current-boundary {margin-top:28px;}
+/* A physical archive and an interactive research workbench. */
+.personal-site .tools-heading {display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);align-items:end;gap:48px;}
+.personal-site .tools-heading .project-summary,.personal-site .tools-chapter[lang="en"] .tools-heading>p {font-size:18px;max-width:none;line-height:1.6;}
+.tools-project-label {font:14px/1.6 var(--mono);display:block;margin-bottom:18px;}
+.personal-site .tools-heading-line>span {display:none;}
+.personal-site .tools-reading-column h3 {font-size:27px;line-height:1.3;}
+.personal-site .tools-reading-column .tools-personal-use {font-size:17px;line-height:1.7;}
+.personal-site .tools-file-index {grid-template-columns:repeat(3,minmax(0,1fr));margin-top:24px;}
+.personal-site .tools-file-index button {padding:17px 20px;}
+.personal-site .tools-file-index strong {font-size:16px;}
+.personal-site .tools-public-repository {display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:40px;align-items:center;padding:36px;margin-top:64px;background:#163c3d;color:#f5ecd9;border:0;}
+.personal-site .tools-public-repository h3 {font-size:clamp(26px,2.7vw,34px);line-height:1.22;text-wrap:balance;margin:20px 0;}
+.personal-site .tools-public-repository p {font-size:17px;line-height:1.7;}
+.personal-site .tools-public-repository a {margin-top:24px;white-space:normal;}
+.portfolio-footer {background:#f5f2e9;display:flex;align-items:center;justify-content:space-between;gap:25px;padding:26px 6vw;color:#5d5a56;font-size:14px;line-height:1.6;}
+@media(max-width:1050px){.personal-site .site-directory{grid-template-columns:1fr;gap:36px;}.personal-site .directory-intro{padding-top:0;}.personal-site .directory-intro h2 br{display:none;}.personal-site .directory-intro p,.personal-site .directory-intro>span{margin-block:0 14px;}.personal-site .directory-intro>span{margin-top:16px;}.personal-site .site-directory nav{gap:0 30px;}.personal-site .hero-pixel-ticket{right:-12px;padding:10px;}.personal-site .identity-paper{padding:24px;}.personal-site .identity-tabs button{padding:12px 10px 18px;}.personal-site .identity-tabs button>span{margin-right:6px;}}
+@media(max-width:800px){.personal-site .chapter-inner{padding-block:60px;}.personal-site .fg-introduction,.personal-site .fa-introduction,.personal-site .tools-heading{grid-template-columns:1fr;gap:20px;}.personal-site .fg-project-name,.personal-site .fa-project-name{font-size:58px;}.personal-site .fg-introduction .project-title,.personal-site .fa-introduction .project-title{font-size:26px;max-width:640px;}.personal-site .fg-personal{max-width:none;}.fg-protocol-expanded{grid-template-columns:1fr;gap:16px;}.personal-site .tools-heading .project-summary{max-width:650px;}.personal-site .tools-public-repository{grid-template-columns:1fr;gap:32px;padding:30px;}.personal-site .tools-file-index{gap:0;}.personal-site .tools-file-index button{padding:16px 10px;}.personal-site .tools-file-index strong{font-size:16px;}.personal-site .tools-file-index button>svg{display:none;}}
+@media(max-width:600px){.personal-site .hero-grid{grid-template-columns:1fr;padding:36px 24px 58px;gap:24px;}.personal-site .hero-copy h1{max-width:100%;}.personal-site .hero-name-en,html[data-language="en"] .personal-site .hero-name-en{font-size:88px;line-height:.88;}.personal-site .hero-name-cn{font-size:62px;}.personal-site .identity-fold{max-width:410px;margin:22px auto 0;padding-bottom:76px;}.personal-site .identity-paper,html[data-language="en"] .personal-site .identity-paper{min-height:395px;padding:24px;}.personal-site .identity-title{font-size:33px;}.personal-site .identity-cover{padding:24px 0 46px;}.personal-site .hero-pixel-ticket{right:-8px;top:150px;}.personal-site .hero-prototype-ticket{left:0;right:0;padding:12px 14px;}.personal-site .hero-foot{padding:20px 24px;flex-wrap:wrap;}.personal-site .hero-foot>span:last-child{display:none;}.fg-protocol-bar{display:block;}.fg-protocol-bar .future-reading-toggle{margin-top:18px;}.personal-site .fg-project-name,.personal-site .fa-project-name{font-size:48px;}.personal-site .fg-introduction .project-title,.personal-site .fa-introduction .project-title{font-size:25px;}}
+@media(max-width:480px){.personal-site .chapter-inner{padding-inline:24px;padding-block:52px;}.personal-site .site-header{padding-inline:18px;gap:12px;}.personal-site .header-actions{gap:16px;}.personal-site .project-title{font-size:29px;}.personal-site .project-summary{font-size:17px;}.personal-site .site-directory{padding:30px 24px;}.personal-site .site-directory nav{grid-template-columns:1fr;}.personal-site .site-directory nav a{padding:16px 0;font-size:16px;}.personal-site .tools-file-index{grid-template-columns:1fr;}.personal-site .tools-file-index button{padding:15px;}.personal-site .tools-public-repository{padding:24px;}.personal-site .fg-evaluation strong{font-size:28px;}.portfolio-footer{padding:24px;gap:16px;flex-wrap:wrap;}}
+@media(max-width:350px){.personal-site .hero-name-cn{font-size:54px;}.personal-site .hero-name-en,html[data-language="en"] .personal-site .hero-name-en{font-size:78px;}.personal-site .identity-tabs button{font-size:14px;padding:11px 9px 18px;}.personal-site .identity-tabs button>span{display:none;}.personal-site .identity-paper{padding:22px 20px;}.personal-site .identity-paper-top span:last-child{display:none;}.personal-site .hero-pixel-ticket{right:-5px;font-size:14px;}.personal-site .hero-pixel-ticket .ticket-pixel{font-size:22px;}}
+@media(max-width:600px){
+ .personal-site .hero-copy h1{display:block;}
+ .personal-site .hero-name-en,html[data-language="en"] .personal-site .hero-name-en{font-size:clamp(52px,16vw,66px);line-height:1.05;white-space:nowrap;margin-top:8px;}
+ .personal-site .hero-name-en br{display:none;}
+ .personal-site .hero-name-cn,html[data-language="en"] .personal-site .hero-name-cn{font-size:clamp(52px,15vw,62px);}
+ .personal-site .identity-tabs button{flex:1;min-width:0;padding-inline:7px;font-size:14px;}
+ .personal-site .identity-tabs button>span{display:none;}
+ .personal-site .identity-fold{padding-bottom:160px;}
+ .personal-site .identity-underleaf{inset:45px -4px 154px;}
+ .personal-site .hero-pixel-ticket{position:absolute;width:auto;max-width:calc(100% - 12px);top:auto;bottom:83px;left:auto;right:0;margin:0;}
+ .personal-site .hero-prototype-ticket{position:absolute;bottom:0;left:0;right:0;width:auto;margin:0;}
+ .fg-protocol-bar>span{display:block;}
+}
+/* Dock the two role notes below the paper so they never cover its title or close control. */
+.personal-site .identity-fold {padding-bottom:160px;}
+.personal-site .identity-underleaf {inset:45px -8px 154px;}
+.personal-site .hero-pixel-ticket {position:absolute;top:auto;bottom:83px;right:0;margin:0;}
+.personal-site .hero-prototype-ticket {position:absolute;bottom:0;margin:0;}
+.personal-site .hero-system-icon:after {content:none;}
+@media(max-width:600px){.personal-site .identity-underleaf{inset:45px -4px 154px;}}

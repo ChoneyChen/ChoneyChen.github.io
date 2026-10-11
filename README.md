@@ -1,12 +1,12 @@
 # Choney Chen · Tianyi Chen
 
-A personal homepage built around fourteen chapters in six groups: introduction, spatial research, applied engineering, personal tools, foundations and practice, and contact. Each substantive experience has one complete home. Research directions introduce questions, the learning archive holds education and coursework, and short links connect related work without duplicating its story. Navigation and record destinations are defined together in `src/data/architecture.ts`.
+A personal homepage built around twelve chapters: profile, research interests, six research and engineering projects, personal tools, professional experience, education and technical foundation, and contact. Each substantive experience has one complete home. The header directory provides global navigation; project records are not repeated as coursework logs or secondary indexes. Navigation and record ownership are defined together in `src/data/architecture.ts`.
 
 Visit: [Vercel](https://choney-between-states.vercel.app) · [GitHub Pages](https://choneychen.github.io/)
 
 Three research directions have separate visual scenes and gestures: a horizontal task ribbon for LLM agent applications, an upward RGB observation layer that reveals geometry and map correspondences, and a diagonal glass evidence folio for AI in environmental and energy systems. AVPC uses vehicle views, shared landmarks and spatial conflicts to explain collaboration. Each gesture has click or keyboard alternatives. Chapter palettes alternate warm/cool and light/dark surfaces.
 
-Project names, research questions and my role form the first reading layer. All expandable records start closed. Scene entrances reverse when they leave the viewport and replay on return. Open reading layers automatically close near the viewport exit; language preferences remain.
+Full project names, a short purpose line and my role form the first reading layer. Animated illustrations carry the explanation; details appear through interaction. The profile uses draggable role papers, Cosmos-Loc uses pixel cartridges and trails, SUPS assembles an isometric scene, and ESG unfolds source documents. Personal tools retain rotating 3D books and add QuantPilot’s factor, review and session workflow. Professional experience uses mechanical selectors and hand-drawn sensor records; technical foundations assemble as four classical pillars. All expandable records start closed. Scene entrances reverse when they leave the viewport and replay on return. Open reading layers automatically close near the viewport exit; language preferences remain.
 
 The U-IMPROVE perception interface uses one continuous range control: drag from the three task outputs through semantic-geometric fusion into a rotatable depth scene, or reverse the motion to separate them again. Arrow keys and Home/End offer the same process. Leaving the visual resets it to its closed starting state.
 

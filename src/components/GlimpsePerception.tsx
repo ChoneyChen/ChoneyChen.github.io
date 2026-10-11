@@ -122,6 +122,14 @@ function SpatialPreview({ lift, dragging, visible, quiet, presence }: { lift: nu
 
 export function GlimpsePerception({ quiet = false }: { quiet?: boolean }) {
   const { t } = useI18n();
+  const [narrow, setNarrow] = useState(() => window.matchMedia("(max-width: 600px)").matches);
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 600px)");
+    const update = () => setNarrow(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
   const [progress,setProgress] = useState(0);
   const [dragging,setDragging] = useState(false);
   const stage=progress<35?0:progress<65?1:2;
@@ -155,7 +163,7 @@ export function GlimpsePerception({ quiet = false }: { quiet?: boolean }) {
       </div>
     </div>
     <div className="gp-stage" id="glimpse-visual-stage">
-      {(["semantic","depth","normal"] as const).map((mode,index)=><motion.div key={mode} className={`gp-view gp-view-${index}`} aria-hidden={stage !== 0} style={{left:`${index*33.333}%`}} animate={{x:`${(1-index)*100*fusion}%`,y:quiet||visible?([8,-8,8][index]*(1-fusion)):34,rotate:[-3,1,4][index]*(1-fusion),scale:1-lift*.18,opacity:quiet||visible?((1-fusion*.68)*(1-spaceOpacity)):0}} transition={slowMotion({duration:quiet||dragging?0:progress===0?.5:.15,delay:quiet||dragging||progress>0?0:index*.07,ease:[.22,1,.36,1]})}>
+      {(["semantic","depth","normal"] as const).map((mode,index)=><motion.div key={mode} className={`gp-view gp-view-${index}`} aria-hidden={stage !== 0} style={{left:narrow ? "0%" : `${index*33.333}%`}} animate={{x:narrow ? "0%" : `${(1-index)*100*fusion}%`,y:quiet||visible?([8,-8,8][index]*(1-fusion) + (narrow ? (1-index)*116*fusion : 0)):34,rotate:[-3,1,4][index]*(1-fusion),scale:1-lift*.18,opacity:quiet||visible?((1-fusion*(narrow ? 1 : .68))*(1-spaceOpacity)):0}} transition={slowMotion({duration:quiet||dragging?0:progress===0?.5:.15,delay:quiet||dragging||progress>0?0:index*.07,ease:[.22,1,.36,1]})}>
         <div className="gp-view-label"><span>0{index+1}</span><strong>{[t("分割输出", "Segmentation"),t("度量深度", "Metric depth"),t("表面法线", "Surface normals")][index]}</strong></div><PerceptionImage mode={mode} presence={presence}/><span className="gp-view-caption">{[t("RGB 遮罩编码 + 状态条", "RGB mask code + status strip"),t("颜色编码 → 距离", "Colour encoding to distance"),t("RGB 通道 → 法线方向", "RGB channels to normal direction")][index]}</span>
       </motion.div>)}
       <motion.div className="gp-fusion" animate={{opacity:quiet||visible?fusionOpacity:0,scale:.94+fusion*.06,y:-15*lift}} transition={slowMotion({duration:quiet||dragging?0:.15})} aria-hidden={stage!==1}><PerceptionImage mode="fusion"/><span>{t("确定性任务解码 · 语义与度量几何融合", "Deterministic decoding · semantic-geometric fusion")}</span></motion.div>
@@ -168,7 +176,8 @@ export function GlimpsePerception({ quiet = false }: { quiet?: boolean }) {
       </div>
       <div className="gp-journey-milestones" aria-hidden="true">{labels.map((label,index)=><span key={index} className={stage===index?"is-current":""}><small>0{index+1}</small>{label}</span>)}</div>
     </div>
-    <p className="gp-context">{stage===2?t("抬升原理：p = d K⁻¹ [u, v, 1]ᵀ；附加语义后形成可查询的 3D 点。此预览使用示意深度与相机模型，遮挡区域留空。", "Lifting principle: p = d K⁻¹ [u, v, 1]ᵀ. Semantics attach to each 3D point. This preview uses illustrative depth and a camera model; occluded regions remain unobserved."):t("RGB 与语言指令经共享生成骨干输出任务图像，再确定性解码为分割、深度与法线。", "RGB and language instructions condition a shared generator. Its task images decode deterministically into segmentation, depth and normals.")}</p>
-    <p className="gp-demo-note">{t("原创方法示意，非模型实验输出；训练、泛化与定量评估仍待验证。", "Original method illustration, not model experiment outputs. Training, generalisation and quantitative evaluation remain to be validated.")}</p>
+    <p className="gp-context">{stage===2?t("抬升原理：p = d K⁻¹ [u, v, 1]ᵀ。使用示意深度与相机模型，未观测区域留空。", "Lifting: p = d K⁻¹ [u, v, 1]ᵀ. Illustrative depth and camera calibration; unobserved regions remain empty."):stage===1?t("像素对应的语义、度量深度与法线形成联合空间线索。", "Pixel-aligned semantics, metric depth and normals form joint spatial cues."):t("RGB 编码的任务图像经确定性解码，恢复对应感知结果。", "RGB task encodings decode deterministically into their perception outputs.")}</p>
+    <p className="gp-demo-note">{t("方法示意 · 训练与定量评估待验证", "Method illustration · training and quantitative evaluation pending")}</p>
+
   </div>;
 }

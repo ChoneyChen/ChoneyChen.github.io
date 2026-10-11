@@ -25,9 +25,9 @@
     monospace;
 }
 .sups-heading {
-  display: flex;
-  justify-content: space-between;
-  gap: 30px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 42px;
   align-items: end;
 }
 .sups-eyebrow {
@@ -38,11 +38,13 @@
   margin: 0 0 16px;
 }
 .sups-heading h2 {
-  font-size: clamp(33px, 4.4vw, 57px);
-  line-height: 1.25;
+  font-size: clamp(32px, 3.8vw, 48px);
+  line-height: 1.16;
   font-weight: 500;
   letter-spacing: -0.045em;
   margin: 0;
+  text-wrap: balance;
+  max-width: 22ch;
 }
 .sups-heading-note {
   margin: 0 0 4px;
@@ -327,24 +329,24 @@
 .sups-heading h2 > span {
   display: block;
   color: #993d2c;
-  font-size: 0.72em;
-  line-height: 1.4;
-  margin-top: 10px;
+  font-size: inherit;
+  line-height: inherit;
+  margin-top: 6px;
 }
 .sups-heading-note {
-  max-width: 365px;
-  font-size: 15px;
+  max-width: 430px;
+  font-size: 18px;
   line-height: 1.65;
 }
 .sups-heading-note > p {
   margin: 0 0 18px;
 }
-.sups-heading-note > span {
+.sups-heading-note .project-role > span {
   display: block;
   font-size: 14px;
   letter-spacing: 0.08em;
 }
-.sups-heading-note > strong {
+.sups-heading-note .project-role > strong {
   display: block;
   margin-top: 5px;
   font-size: 16px;
@@ -412,13 +414,13 @@
     padding-top: 2px;
   }
   .sups-heading {
-    flex-direction: column;
-    align-items: flex-start;
+    grid-template-columns: 1fr;
+    align-items: start;
     gap: 19px;
   }
   .sups-heading h2 {
-    font-size: clamp(29px, 8.3vw, 46px);
-    line-height: 1.35;
+    font-size: clamp(30px, 7.5vw, 42px);
+    line-height: 1.2;
   }
   .sups-eyebrow {
     font-size: 14px;
@@ -527,7 +529,6 @@
   .sups-masthead > span,
   .sups-eyebrow,
   .sups-heading-note,
-  .sups-heading-note > span,
   .sups-project-status,
   .sups-stage-note,
   .sups-scene-side-note,
@@ -559,6 +560,15 @@
 }
 .chapter.sups-chapter .sups-drawing-index {
   font-size: 14px;
+}
+.chapter.sups-chapter .sups-heading-note > .project-summary {
+  font-size: 18px;
+  line-height: 1.65;
+}
+.chapter.sups-chapter .sups-work-description > p {
+  font-size: 16px;
+  line-height: 1.7;
+  max-width: 62ch;
 }
 
 .sups-layer-selector { grid-template-columns: repeat(3, minmax(0, 1fr)); }

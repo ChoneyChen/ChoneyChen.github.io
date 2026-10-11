@@ -9,6 +9,8 @@
 }
 .mask-heading {
   text-align: center;
+  max-width: 940px;
+  margin: 0 auto;
 }
 .mask-heading .chapter-kicker {
   color: #465574;
@@ -20,22 +22,25 @@
 }
 .mask-heading h2 {
   margin: 0;
-  font-size: clamp(42px, 5.7vw, 80px);
-  font-weight: 600;
-  line-height: 1.14;
-  letter-spacing: -0.06em;
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 500;
+  line-height: 1.18;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
 }
 .mask-heading h2 span {
+  display: block;
   color: #2458f2;
 }
 .mask-introduction {
   margin: 30px auto 64px;
+  max-width: 760px;
 }
 .mask-introduction > p {
   margin: 0;
   color: #465574;
-  font-size: 16px;
-  line-height: 1.85;
+  font-size: 18px;
+  line-height: 1.65;
 }
 .mask-role-mark {
   display: inline-flex;
@@ -382,7 +387,7 @@
 .mask-outcomes {
   margin-top: 70px;
   display: grid;
-  grid-template-columns: 0.85fr 1fr 1.2fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   border-top: 1px solid #ccd8ee;
   padding-top: 35px;
   gap: 30px;
@@ -658,7 +663,7 @@
     font-size: 14px;
   }
   .mask-heading h2 {
-    font-size: clamp(36px, 9.5vw, 62px);
+    font-size: clamp(30px, 7.5vw, 42px);
   }
   .mask-introduction {
     margin: 23px 0 34px;
@@ -735,14 +740,12 @@
     font-size: 14px;
   }
   .mask-outcomes {
-    grid-template-columns: 1fr 1fr;
-    gap: 30px 20px;
+    grid-template-columns: 1fr;
+    gap: 24px;
     margin-top: 24px;
   }
   .mask-outcome-reflection {
-    grid-column: 1 / -1;
-    border-top: 1px solid #ccd8ee;
-    padding-top: 25px;
+    grid-column: auto;
   }
   .mask-outcomes .mask-outcome-award strong {
     font-size: 29px;
@@ -807,7 +810,6 @@
 }
 .chapter.mask-chapter :is(
   .mask-eyebrow,
-  .mask-introduction > p,
   .mask-role-mark,
   .mask-stage-topline,
   .mask-connection-node > strong,
@@ -839,7 +841,17 @@
   margin-bottom: 0;
 }
 .chapter.mask-chapter .mask-outcome-reflection > p {
-  font-size: 21px;
+  font-size: 19px;
+  line-height: 1.6;
+}
+.chapter.mask-chapter .mask-introduction > .project-summary {
+  font-size: 18px;
+  line-height: 1.65;
+}
+.chapter.mask-chapter .mask-chain-work > p {
+  font-size: 16px;
+  line-height: 1.7;
+  max-width: 62ch;
 }
 @media (max-width: 950px) {
   .chapter.mask-chapter .mask-connection-board {

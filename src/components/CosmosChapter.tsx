@@ -12,22 +12,22 @@ import {
   motion,
   useReducedMotion,
 } from "motion/react";
-import { ArrowDownRight, ArrowUpRight, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useContent } from "../data/use-content";
 import { useI18n } from "../i18n";
 import "./cosmos-chapter.css";
 
 const getRecords = (t: (zh: string, en: string) => string) => [
   {
-    label: t("调研", "Data"),
+    label: t("数据调研", "Dataset review"),
     english: "DATA",
     title: t(
       "筛选有位姿真值的数据。",
       "Screen datasets for pose ground truth.",
     ),
     context: t(
-      "调研自动驾驶与停车场数据集、开源模型和 CARLA 仿真资料，检查位姿真值、地下场景适配及训练可行性。",
-      "Reviewed driving and parking datasets, open-source models and CARLA simulation resources, checking pose ground truth, underground-scene suitability and training feasibility.",
+      "调研自动驾驶与停车场数据集、开源模型及 CARLA 仿真资料，核查位姿真值、场景适配和训练条件。",
+      "Reviewed driving and parking datasets, open-source models and CARLA resources. Checked pose ground truth, scene suitability and the conditions needed for training.",
     ),
     tags: [
       t("位姿真值", "Pose ground truth"),
@@ -37,15 +37,15 @@ const getRecords = (t: (zh: string, en: string) => string) => [
     color: "#cbb1ff",
   },
   {
-    label: t("训练", "Qwen"),
+    label: t("Qwen 训练", "Qwen training"),
     english: "QWEN",
     title: t(
       "训练 Qwen，迭代微调方案。",
       "Train Qwen and iterate on fine-tuning.",
     ),
     context: t(
-      "重点负责 Qwen 系列的训练环境、参数设定、中间结果监控和实验迭代；参与模型选择与 LoRA 微调路线设计。",
-      "My main work covered Qwen training environments, parameter settings, intermediate-result monitoring and experimental iteration. I also contributed to model selection and LoRA fine-tuning plans.",
+      "重点负责 Qwen 训练环境、参数设定、过程监控与实验迭代，并参与模型选择和 LoRA 微调方案。",
+      "My main work covered Qwen training setup, parameter settings, run monitoring and repeated experiments. I also contributed to model selection and LoRA fine-tuning plans.",
     ),
     tags: [
       t("Qwen 系列", "Qwen models"),
@@ -55,7 +55,7 @@ const getRecords = (t: (zh: string, en: string) => string) => [
     color: "#dfff57",
   },
   {
-    label: t("比较", "Tune"),
+    label: t("参数比较", "Tuning comparisons"),
     english: "TUNING",
     title: t(
       "比较数据覆盖与模型规模。",
@@ -63,7 +63,7 @@ const getRecords = (t: (zh: string, en: string) => string) => [
     ),
     context: t(
       "参与控制变量实验，比较训练数据规模、学习率、图像分辨率和模型规模对定位表现的影响。",
-      "Contributed to controlled experiments comparing the effects of training-data size, learning rate, image resolution and model size on localisation.",
+      "Contributed to controlled experiments on training-data size, learning rate, image resolution and model size, examining how each factor affected the model’s localisation performance.",
     ),
     tags: [
       t("数据规模", "Data scale"),
@@ -73,15 +73,15 @@ const getRecords = (t: (zh: string, en: string) => string) => [
     color: "#83d9ed",
   },
   {
-    label: t("评估", "Review"),
+    label: t("计算评估", "Compute tradeoffs"),
     english: "COST",
     title: t(
       "同时评估精度与计算成本。",
       "Evaluate accuracy alongside compute cost.",
     ),
     context: t(
-      "分析定位精度、显存占用、推理吞吐量与延迟，比较数据效率和模型扩大的资源代价。",
-      "Analysed localisation accuracy, GPU memory, inference throughput and latency, comparing data efficiency with the resource costs of larger models.",
+      "分析定位精度、显存占用、吞吐量与延迟，比较数据效率和模型扩大的计算代价。",
+      "Analysed localisation accuracy, GPU memory, throughput and latency. Compared data efficiency with the compute costs of larger models rather than assessing accuracy in isolation.",
     ),
     tags: [
       t("精度 / 显存", "Accuracy / memory"),
@@ -100,22 +100,51 @@ interface PixelTrail {
 }
 const pixelStep = (progress: number) => Math.ceil(progress * 8) / 8;
 
+function PixelLocalisation({ ready, still, t }: { ready: boolean; still: boolean; t: (zh: string, en: string) => string }) {
+  const visible = ready || still;
+  return <figure className="cosmos-pose-preview">
+    <svg viewBox="0 0 520 170" role="img" aria-label={t("定位原理示意：图像中的车位编号和柱子对应地图地标，约束车辆位置与朝向；非模型实时输出。", "Localisation illustration: parking identifiers and pillars correspond to map landmarks that constrain vehicle position and orientation. Not a live model output.")}>
+      <g shapeRendering="crispEdges">
+        <rect x="7" y="15" width="190" height="128" fill="#22183a" stroke="#a587cd"/>
+        <path d="M8 54H196V142H8Z" fill="#34204f"/>
+        <path d="M8 54L103 42L196 54M8 143L103 72L196 143M48 143L103 72L154 143" fill="none" stroke="#6e558d"/>
+        <path d="M39 45H58V121H39ZM145 45H164V121H145Z" fill="#a587cd"/>
+        <path d="M82 88H122V114H82ZM89 77H114V89H89Z" fill="#6c6091"/>
+        <text x="71" y="34" fill="#dfff57" fontSize="13" fontFamily="monospace">P-01</text>
+        <rect x="326" y="15" width="185" height="128" fill="#22183a" stroke="#a587cd"/>
+        <path d="M356 16V142M387 16V142M419 16V142M450 16V142M481 16V142M327 46H510M327 78H510M327 110H510" fill="none" stroke="#6e558d"/>
+        <path d="M345 31H365V63H345ZM473 31H493V63H473Z" fill="#5b4677" stroke="#a587cd"/>
+      </g>
+      <motion.path d="M213 79H302M287 70L302 79L287 88" fill="none" stroke="#dfff57" strokeWidth="2.5" initial={still ? false : { pathLength: 0, opacity: 0 }} animate={{ pathLength: visible ? 1 : 0, opacity: visible ? 1 : 0 }} transition={slowMotion({ duration: still ? 0 : .5, delay: still ? 0 : visible ? .1 : 0, ease: pixelStep })}/>
+      <motion.g initial={still ? false : { opacity: 0, y: 9 }} animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 9 }} transition={slowMotion({ duration: still ? 0 : .4, delay: still ? 0 : visible ? .2 : 0, ease: pixelStep })}>
+        <path d="M355 48L418 104L483 48" fill="#dfff5709" stroke="#dfff57" strokeWidth="1.5" strokeDasharray="4 5"/>
+        <path d="M348 42H361V55H348ZM476 42H489V55H476Z" fill="#dfff57"/>
+        <path d="M407 99H426V112H407ZM412 90H421V99H412Z" fill="#83d9ed"/>
+        <path d="M418 90V75M413 81L418 75L423 81" fill="none" stroke="#83d9ed" strokeWidth="2"/>
+        <rect x="396" y="80" width="44" height="42" fill="none" stroke="#83d9ed" strokeDasharray="3 4"/>
+      </motion.g>
+      <text x="7" y="164" fill="#c8b8ea" fontSize="13" fontFamily="monospace">RGB / LANDMARKS</text><text x="326" y="164" fill="#c8b8ea" fontSize="13" fontFamily="monospace">MAP / VEHICLE POSE</text>
+    </svg>
+    <figcaption>{t("图像线索 → 地图位置", "Image clues → map position")}</figcaption>
+  </figure>;
+}
+
 export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
   const { language, t } = useI18n();
   const { projects } = useContent();
   const records = getRecords(t);
   const project = projects.find((item) => item.id === "cosmos")!;
   const [selected, setSelected] = useState<number | null>(null);
-  useCollapseOnLeave("cosmos", () => setSelected(null));
   const [trails, setTrails] = useState<PixelTrail[]>([]);
   const [dragging, setDragging] = useState<number | null>(null);
+  useCollapseOnLeave("cosmos", () => { setSelected(null); setDragging(null); setTrails([]); });
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const trailClock = useRef(0);
   const trailId = useRef(0);
-  const headingRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLDivElement>(null);
   const deskRef = useRef<HTMLDivElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
-  const headingEntered = useInView(headingRef, { once: false, amount: "some" });
+  const headingEntered = useInView(headingRef);
   const deskEntered = useInView(deskRef, { once: false, amount: "some" });
   const resultsEntered = useInView(resultsRef, { once: false, amount: "some" });
   const reduce = useReducedMotion();
@@ -161,41 +190,28 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
           </p>
           <p className="cosmos-date">2025.12 — 2026.09</p>
         </div>
-        <header className="cosmos-heading" ref={headingRef}>
+        <div ref={headingRef} className="cosmos-heading-presence"><motion.header className="cosmos-heading" initial={still ? false : { opacity: 0, y: 20 }} animate={{ opacity: headingReady ? 1 : 0, y: headingReady ? 0 : 20 }} transition={slowMotion({ duration: still ? 0 : headingReady ? .6 : .35, ease: [.22, 1, .36, 1] })}>
           <div>
             <p className="cosmos-project-number">
-              {t("视觉定位研究", "VISUAL LOCALISATION RESEARCH")}
+              {t("Cosmos-Loc · 视觉定位研究", "COSMOS-LOC · VISUAL LOCALISATION")}
             </p>
-            <motion.h2
-              id="cosmos-title"
-              initial={still ? false : { clipPath: "inset(0 100% 0 0)" }}
-              animate={{
-                clipPath: headingReady
-                  ? "inset(0 0% 0 0)"
-                  : "inset(0 100% 0 0)",
-              }}
-              transition={slowMotion({ duration: still ? 0 : 0.56, ease: pixelStep })}
-            >
-              COSMOS<span>— LOC</span>
-            </motion.h2>
+            <h2 id="cosmos-title" className="project-title">
+              {t("基于视觉大模型的", "Vision-Language Vehicle Localisation")}
+              {" "}<span>{t("地下停车场车辆定位", "in Underground Car Parks")}</span>
+            </h2>
           </div>
           <div className="cosmos-introduction">
             <span className="cosmos-status">
               <i /> {t("已有团队实验结果", "Team experiments reported")}
             </span>
-            <h3>
-              {t("在看起来一样的地方，", "When places look alike,")}
-              <br />
-              {t("我在哪里？", "where am I?")}
-            </h3>
-            <p>
+            <p className="project-summary">
               {t(
-                "从单张 RGB 图像推断车辆位置与朝向，研究视觉语言模型如何利用地下停车场中的语义地标。",
-                "Estimate a vehicle’s position and orientation from one RGB image, using semantic landmarks in GPS-denied underground car parks.",
+                "通过图像中的编号、标志与空间线索，研究地下停车场的车辆位置与朝向。",
+                "Using numbers, signs and spatial clues in RGB images to investigate vehicle position and orientation underground.",
               )}
             </p>
-            <p className="cosmos-my-role">
-              {t("研究团队成员 · 本人重点工作", "RESEARCH TEAM MEMBER · MY MAIN WORK")}
+            <p className="cosmos-my-role project-role">
+              {" "}<span>{t("研究团队成员", "RESEARCH TEAM MEMBER")}</span>
               <strong>
                 {t(
                   "Qwen 训练与实验分析",
@@ -204,7 +220,7 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
               </strong>
             </p>
           </div>
-        </header>
+        </motion.header></div>
 
         <div
           className="cosmos-record-stage"
@@ -226,9 +242,9 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
             })}
           >
             <div className="cosmos-record-topline">
-              <span>{t("CHONEY 的贡献记录", "CHONEY’S CONTRIBUTIONS")}</span>
+              {" "}<span>{t("CHONEY 的贡献记录", "CHONEY’S CONTRIBUTIONS")}</span>
               <span>
-                {t("4 条记录", "4 RECORDS")}
+                {records.length} {t("条记录", "RECORDS")}
               </span>
             </div>
             <div
@@ -273,7 +289,7 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
                     className="cosmos-reader-label"
                     style={{ color: record.color }}
                   >
-                    {t("我具体做了什么", "WHAT I WORKED ON")} / {record.label}
+                    {record.english} / {t("本人工作", "MY WORK")}
                   </p>
                   <h3>{record.title}</h3>
                   <p className="cosmos-reader-contribution">{record.context}</p>
@@ -290,8 +306,7 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
                   exit={{ opacity: 0 }}
                   transition={slowMotion({ duration: still ? 0 : 0.25 })}
                 >
-                  <p className="cosmos-reader-label">{t("数据 / 训练 / 实验 / 评估", "DATA / TRAINING / EXPERIMENTS / EVALUATION")}</p>
-                  <h3>{t("抽出工作记录。", "Pull a work record.")}</h3>
+                  <PixelLocalisation ready={deskReady} still={still} t={t}/>
                 </motion.div>}
               </AnimatePresence></div>
             </div>
@@ -429,16 +444,7 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
             </div>
             <p className="cosmos-operation">
               <span aria-hidden="true">↖</span>{" "}
-              {t(
-                "向上抽取 / 点击",
-                "Pull up / click",
-              )}
-              <span className="cosmos-keyboard-hint">
-                {t(
-                  "← → 切换 · 再点放回",
-                  "← → to switch · Click again to close",
-                )}
-              </span>
+              {t("向上抽取 · 点击 · ← → 选择", "Pull up · click · ← → to select")}
             </p>
           </motion.div>
         </div>
@@ -447,11 +453,11 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
           <div className="cosmos-results-label">
             <span className="cosmos-small-pixel" aria-hidden="true" />
             <p>
-              {t("团队的实验结果", "Team experiment results")}
+              {t("团队实验结果", "TEAM EXPERIMENT RESULTS")}
               <span>
                 Cosmos-Reason2 + LoRA
                 <br />
-                {t("特定实验设置", "Under a specific experiment setup")}
+                {t("所报告的实验设置", "Reported experimental setting")}
               </span>
             </p>
           </div>
@@ -487,22 +493,6 @@ export function CosmosChapter({ quiet = false }: { quiet?: boolean }) {
             "The 2026.03–08 SURF record on underground-car-park localisation overlaps with this research and is included here without claiming a separate set of results.",
           )}</p>
         </details>
-        <footer className="cosmos-exits">
-          <a className="chapter-link" href="#sups">
-            {t(
-              "下一项目：SUPS / SVL",
-              "Next: SUPS / SVL",
-            )}{" "}
-            <ArrowDownRight size={16} />
-          </a>
-          <a className="chapter-link" href="#glimpse">
-            {t(
-              "相关毕业研究：U-IMPROVE",
-              "Related final-year research: U-IMPROVE",
-            )}{" "}
-            <ArrowUpRight size={16} />
-          </a>
-        </footer>
       </div>
     </section>
   );

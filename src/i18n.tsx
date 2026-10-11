@@ -26,8 +26,8 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     document.documentElement.dataset.language = language;
     document.title =
       language === "en"
-        ? "Choney Chen — Curiosity has a next step."
-        : "陈天一 Choney Chen — 好奇心，有下一步。";
+        ? "Tianyi Chen / Choney — Research & Engineering"
+        : "陈天一 Choney — 研究与工程";
     document
       .querySelector('meta[name="description"]')
       ?.setAttribute(

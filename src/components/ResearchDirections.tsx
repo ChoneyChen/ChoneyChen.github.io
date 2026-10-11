@@ -4,7 +4,7 @@ import { slowMotion, slowDragRelease } from "../lib/motionTiming";
 import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion, useTransform } from 'motion/react'
-import { ArrowDownRight, ArrowRight, ArrowUp, ArrowUpRight, Minus, Plus } from 'lucide-react'
+import { ArrowDownRight, ArrowRight, ArrowUp, ArrowUpRight } from 'lucide-react'
 import { useI18n } from '../i18n'
 import './research-directions.css'
 
@@ -74,85 +74,53 @@ function SpatialObservation({ open, reduced, onOpen, onClose }: { open: boolean;
       </svg>
     </div>
     <div className="rd-spatial-legend"><span>{t('相机 / RGB 观察', 'Camera / RGB observation')}</span><ArrowDownRight size={18}/><span>{t('深度与几何', 'Depth and geometry')}</span><ArrowDownRight size={18}/><span>{t('空间地图 / 目标', 'Spatial map / target')}</span></div>
-    <p className="rd-spatial-instruction">{t('上拉观察层，查看投影线与地图目标怎样对应。', 'Pull the observation layer to reveal the projection lines and their map target.')}</p>
   </div>
 }
 
 export function ResearchDirections({ quiet = false }: ResearchDirectionsProps) {
-  const { t } = useI18n()
-  const systemQuiet = useReducedMotion()
-  const reduced = quiet || Boolean(systemQuiet)
-  const [agentsOpen, setAgentsOpen] = useState(false)
-  const [spatialOpen, setSpatialOpen] = useState(false)
-  const [environmentOpen, setEnvironmentOpen] = useState(false)
+  const { t } = useI18n();
+  const systemQuiet = useReducedMotion();
+  const reduced = quiet || Boolean(systemQuiet);
+  const [agentsOpen, setAgentsOpen] = useState(false);
+  const [spatialOpen, setSpatialOpen] = useState(false);
+  const [environmentOpen, setEnvironmentOpen] = useState(false);
   useCollapseOnLeave("directions", () => { setAgentsOpen(false); setSpatialOpen(false); setEnvironmentOpen(false); });
-  const agentRef = useRef<HTMLDivElement>(null)
-  const spatialRef = useRef<HTMLDivElement>(null)
-  const environmentRef = useRef<HTMLDivElement>(null)
-  const agentInView = useInView(agentRef, { once: false, amount: .2 })
-  const spatialInView = useInView(spatialRef, { once: false, amount: .2 })
-  const environmentInView = useInView(environmentRef, { once: false, amount: .2 })
-  const agentReady = reduced || agentInView
-  const spatialReady = reduced || spatialInView
-  const environmentReady = reduced || environmentInView
-  const arrival = reduced ? { duration: 0 } : { duration: .58, ease: [.22, 1, .36, 1] as const }
-  const reading = reduced ? { duration: 0 } : { duration: .22, ease: [.22, 1, .36, 1] as const }
-  const expansion = reduced ? { duration: 0 } : { duration: .4, ease: [.22, 1, .36, 1] as const }
-
-  return <section id="directions" className={`chapter research-directions${reduced ? ' is-quiet' : ''}`} aria-labelledby="directions-title">
-    <div className="chapter-inner">
-      <div className="rd-heading"><div><p className="chapter-kicker">{t('01 / 我的研究方向', '01 / MY RESEARCH DIRECTIONS')}</p><h2 id="directions-title">{t('研究方向', 'Research directions.')}</h2></div><p>{t('从模型到空间，再到环境数据。三条方向，各有一个下一问。', 'From models to spaces, then environmental data. Three directions, each with a question ahead.') }</p></div>
-
-      <div ref={agentRef} className="rd-entry rd-agent-entry">
-        <article className="rd-agent-scene" aria-labelledby="rd-agent-title">
-          <div className="rd-agent-intro"><span className="rd-scene-number">01 / AGENTS</span><h3 id="rd-agent-title">{t('大模型智能体', 'LLM agents')}<br/>{t('应用开发', '& application development')}</h3><p>{t('当前关注 · 工具调用与任务验证', 'CURRENT INTEREST · TOOLS + TASK VERIFICATION')}</p></div>
-          <div className="rd-agent-workspace">
-            <motion.div className="rd-agent-tape-arrival" initial={reduced ? false : { x: -26, opacity: 0 }} animate={{ x: agentReady ? 0 : -26, opacity: agentReady ? 1 : 0 }} transition={slowMotion(arrival)}>
-              <motion.button type="button" className="rd-agent-tape" aria-expanded={agentsOpen} aria-controls="directions-agent-details" aria-label={t('向右拉出任务纸带，或点击，阅读智能体应用研究关注', 'Pull the task ribbon to the right, or click, to read about my interest in agent applications')} drag={reduced ? false : 'x'} dragConstraints={{ left: 0, right: 64 }} dragElastic={.12} dragSnapToOrigin dragTransition={slowDragRelease} transition={slowMotion({ type: "spring", stiffness: 300, damping: 32 })} onDragEnd={(_, info) => { if (info.offset.x > 25) setAgentsOpen(true) }} onClick={() => setAgentsOpen(!agentsOpen)} whileTap={reduced ? undefined : { scale: .99 }}>
-                <span className="rd-tape-holes" aria-hidden="true">{Array.from({ length: 12 }, (_, index) => <i key={index}/>)}</span>
-                <span className="rd-tape-index">01</span><strong>{t('把模型接到任务里。', 'Put models into task workflows.')}</strong><svg className="rd-task-sketch" viewBox="0 0 260 72" aria-hidden="true"><path d="M4 12H60V61H4Z M10 24H44M10 33H47M10 42H34" fill="none" stroke="currentColor" strokeWidth="2"/><path d="M75 36H104M96 29L104 36L96 43 M167 36H194M186 29L194 36L186 43" fill="none" stroke="currentColor" strokeWidth="2"/><circle cx="134" cy="36" r="22" fill="none" stroke="currentColor" strokeWidth="2"/><path d="M126 28L142 44M142 28L126 44" stroke="currentColor" strokeWidth="2"/><path d="M211 10H249V60H211Z" fill="none" stroke="currentColor" strokeWidth="2"/><circle cx="225" cy="30" r="8" fill="none" stroke="currentColor" strokeWidth="2"/><path d="M231 36L240 45M217 52H239" stroke="currentColor" strokeWidth="2"/></svg><span className="rd-task-meaning">{t('上下文 → 工具 → 核验', 'Context → tools → checks')}</span><span className="rd-tape-instruction">{t('向右拉出', 'Pull right')}<ArrowRight size={16}/></span>
-              </motion.button>
-            </motion.div>
-            <AnimatePresence initial={false}>{agentsOpen && <ReadingReveal className="rd-notes-reveal" initial={reduced ? false : { gridTemplateRows: "0fr" }} animate={{ gridTemplateRows: "1fr" }} exit={{ gridTemplateRows: "0fr" }} transition={slowMotion(expansion)}><motion.div id="directions-agent-details" className="rd-agent-notes" initial={reduced ? false : { x: 14, opacity: .7 }} animate={{ x: 0, opacity: 1 }} exit={{ x: reduced ? 0 : -10, opacity: reduced ? 1 : 0 }} transition={slowMotion(reading)}><p className="rd-question">{t('一个智能体，怎样把需求变成可推进、可检查的任务？', 'How can an agent turn a request into a task that can progress and be checked?')}</p><p>{t('我想从清晰的应用任务入手，把上下文、工具调用与结果检查拆成可验证的步骤，再比较不同流程的稳定性。', 'I want to start with a clearly defined application task, make context, tool use and result checks into testable steps, then compare how reliably different workflows progress.')}</p><a href="#esg">{t('实践入口 / ESG AI', 'Related practice / ESG AI')}<ArrowUpRight size={16}/></a></motion.div></ReadingReveal>}</AnimatePresence>
-          </div>
-          <button type="button" className="rd-agent-toggle" aria-expanded={agentsOpen} aria-controls="directions-agent-details" onClick={() => setAgentsOpen(!agentsOpen)}>{agentsOpen ? t('收起研究关注', 'Close the notes') : t('展开研究关注', 'Read the notes')}{agentsOpen ? <Minus size={15}/> : <Plus size={15}/>}</button>
-        </article>
-      </div>
-
-      <div className="rd-lower-scenes">
-        <div ref={spatialRef} className="rd-entry rd-spatial-entry">
-          <article className="rd-spatial-scene" aria-labelledby="rd-spatial-title">
-            <div className="rd-spatial-header"><span className="rd-scene-number">02 / SPATIAL</span><span>{t('持续研究', 'ONGOING RESEARCH')}</span></div>
-            <h3 id="rd-spatial-title">{t('自动驾驶场景', 'Spatial perception')}<br/>{t('空间感知', 'for autonomous driving')}</h3>
-            <div className="rd-section-stage">
-              <motion.div className="rd-section-arrival" initial={reduced ? false : { y: 28, rotate: 3, opacity: 0 }} animate={{ y: spatialReady ? 0 : 28, rotate: spatialReady ? 0 : 3, opacity: spatialReady ? 1 : 0 }} transition={slowMotion(arrival)}>
-                <SpatialObservation open={spatialOpen} reduced={reduced} onOpen={() => setSpatialOpen(true)} onClose={() => setSpatialOpen(false)}/>
-              </motion.div>
-            </div>
-            <AnimatePresence initial={false}>{spatialOpen && <ReadingReveal className="rd-notes-reveal" initial={reduced ? false : { gridTemplateRows: "0fr" }} animate={{ gridTemplateRows: "1fr" }} exit={{ gridTemplateRows: "0fr" }} transition={slowMotion(expansion)}><motion.div id="directions-spatial-details" className="rd-spatial-notes" initial={reduced ? false : { y: 10, opacity: .7 }} animate={{ y: 0, opacity: 1 }} exit={{ y: reduced ? 0 : -8, opacity: reduced ? 1 : 0 }} transition={slowMotion(reading)}><p className="rd-question">{t('环境和目标变化时，感知结果怎样仍能支持可靠的空间判断？', 'When environments and targets change, how can perception still support reliable spatial decisions?')}</p><p>{t('我想把同一问题放进真实图像与可控场景里比较，追踪失败条件，并研究不同视角的信息怎样互相补充。', 'I want to compare the same question in real images and controllable scenes, track the conditions that lead to failure, and study how information from different viewpoints can complement each other.')}</p><div className="rd-spatial-links"><a href="#cosmos">Cosmos-Loc<ArrowUpRight size={14}/></a><a href="#sups">SUPS / SVL<ArrowUpRight size={14}/></a><a href="#glimpse">U-IMPROVE<ArrowUpRight size={14}/></a><a href="#avpc">AVPC<ArrowUpRight size={14}/></a></div></motion.div></ReadingReveal>}</AnimatePresence>
-            <button type="button" className="rd-spatial-toggle" aria-expanded={spatialOpen} aria-controls="directions-spatial-details" onClick={() => setSpatialOpen(!spatialOpen)}>{spatialOpen ? t('合上研究剖面', 'Close the section') : t('展开研究关联', 'Explore the connections')}{spatialOpen ? <Minus size={15}/> : <ArrowUp size={15}/>}</button>
-          </article>
-        </div>
-
-        <div ref={environmentRef} className="rd-entry rd-environment-entry">
-          <article className="rd-environment-scene" aria-labelledby="rd-environment-title">
-            <span className="rd-scene-number">03 / ENVIRONMENT + ENERGY</span>
-            <h3 id="rd-environment-title">{t('环境与能源', 'Environment & energy')}<br/>{t('数据 AI', 'data AI')}</h3>
-            <p className="rd-environment-status">{t('ESG 实习实践 · 能源研究兴趣', 'ESG PRACTICE · ENERGY RESEARCH INTEREST')}</p>
-            <div className="rd-evidence-stage">
-              <span className="rd-evidence-underleaf" aria-hidden="true"/>
-              <motion.div className="rd-evidence-arrival" initial={reduced ? false : { x: -18, y: 19, rotate: -4, opacity: 0 }} animate={{ x: environmentReady ? 0 : -18, y: environmentReady ? 0 : 19, rotate: environmentReady ? 0 : -4, opacity: environmentReady ? 1 : 0 }} transition={slowMotion(arrival)}>
-                <motion.button type="button" className="rd-evidence-leaf" aria-expanded={environmentOpen} aria-controls="directions-environment-details" aria-label={t('向右上方斜拉证据折页，或点击，阅读环境与能源数据研究方向', 'Pull the evidence leaf diagonally upwards and right, or click, to read about environmental and energy data')} drag={!reduced} dragConstraints={{ left: 0, right: 38, top: -38, bottom: 0 }} dragElastic={.1} dragSnapToOrigin dragTransition={slowDragRelease} transition={slowMotion({ type: "spring", stiffness: 300, damping: 32 })} onDragEnd={(_, info) => { if (info.offset.x > 14 && info.offset.y < -14) setEnvironmentOpen(true) }} onClick={() => setEnvironmentOpen(!environmentOpen)}>
-                  <span className="rd-evidence-corner" aria-hidden="true"/><span className="rd-evidence-file">03</span><strong>{t('一个数字，', 'A number,')}<br/>{t('和它的出处。', 'and its source.')}</strong><svg className="rd-source-sketch" viewBox="0 0 220 85" aria-hidden="true"><path d="M8 8H63L83 28V76H8Z M63 8V28H83M20 40H63M20 51H57M20 62H49" fill="none" stroke="currentColor" strokeWidth="2"/><path d="M97 43H131M123 36L131 43L123 50" fill="none" stroke="currentColor" strokeWidth="2"/><path d="M146 22H208V66H146Z M158 36H195M158 48H183" fill="none" stroke="currentColor" strokeWidth="2"/><path d="M34 62L106 79L171 57" fill="none" stroke="currentColor" strokeWidth="1.5" strokeDasharray="4 4"/></svg><span className="rd-evidence-meaning">{t('来源页 ↔ 指标条目', 'Source page ↔ indicator')}</span><span className="rd-evidence-instruction">{t('向右上方拉开', 'Pull up and right')}<ArrowUpRight size={17}/></span>
-                </motion.button>
-              </motion.div>
-            </div>
-            <AnimatePresence initial={false}>{environmentOpen && <ReadingReveal className="rd-notes-reveal" initial={reduced ? false : { gridTemplateRows: "0fr" }} animate={{ gridTemplateRows: "1fr" }} exit={{ gridTemplateRows: "0fr" }} transition={slowMotion(expansion)}><motion.div id="directions-environment-details" className="rd-environment-notes" initial={reduced ? false : { x: 8, y: -8, opacity: .7 }} animate={{ x: 0, y: 0, opacity: 1 }} exit={{ x: reduced ? 0 : -6, opacity: reduced ? 1 : 0 }} transition={slowMotion(reading)}><p className="rd-question">{t('不同来源的环境与能源数据，怎样变得可追溯、可比较，也能支持分析？', 'How can environmental and energy data from different sources become traceable, comparable and useful for analysis?')}</p><p>{t('我想先梳理数据定义、来源证据与验证规则，再研究 AI 怎样帮助发现关系与异常。能源系统是希望继续拓展的研究兴趣。', 'I want to begin with data definitions, source evidence and validation rules, then study how AI can help identify relationships and anomalies. Energy systems are a research interest I hope to develop further.')}</p><a href="#esg">ESG AI<ArrowUpRight size={16}/></a></motion.div></ReadingReveal>}</AnimatePresence>
-            <button type="button" className="rd-environment-toggle" aria-expanded={environmentOpen} aria-controls="directions-environment-details" onClick={() => setEnvironmentOpen(!environmentOpen)}>{environmentOpen ? t('合上方向笔记', 'Close the direction notes') : t('打开方向笔记', 'Open the direction notes')}{environmentOpen ? <Minus size={15}/> : <ArrowUpRight size={15}/>}</button>
-          </article>
-        </div>
-      </div>
-      <a className="chapter-link rd-next" href="#glimpse">{t('接下来：我的毕业研究', 'Next: my final-year research')}<ArrowDownRight size={19}/></a>
+  const group = useRef<HTMLDivElement>(null);
+  const present = useInView(group);
+  const ready = reduced || present;
+  const expansion = slowMotion({ duration: reduced ? 0 : .36 });
+  return <section id="directions" className={`chapter research-directions${reduced ? ' is-quiet' : ''}`} aria-labelledby="directions-title"><div className="chapter-inner">
+    <header className="rd-heading"><div><p className="chapter-kicker">{t('01 / 研究兴趣', '01 / RESEARCH INTERESTS')}</p><h2 id="directions-title" className="project-title">{t('三个研究方向', 'Three research directions.')}</h2></div><p className="project-summary">{t('大模型应用、驾驶场景感知、环境与能源数据。', 'AI applications, driving perception, and environmental data.')}</p></header>
+    <div className="rd-directions-grid" ref={group}>
+      <article className="rd-agent-scene rd-direction" aria-labelledby="rd-agent-title">
+        <span className="rd-scene-number">01 / AGENTS</span><h3 id="rd-agent-title">{t('大模型智能体应用开发', 'LLM agent application development')}</h3>
+        <p className="rd-interest-summary">{t('把上下文、工具与核验连接为可追踪的应用流程。', 'Context, tools and verification, connected into traceable application workflows.')}</p>
+        <motion.div className="rd-agent-workspace" initial={reduced ? false : { x: -18, opacity: 0 }} animate={{ x: ready ? 0 : -18, opacity: ready ? 1 : 0 }} transition={slowMotion({ duration: reduced ? 0 : .65, ease: [.22, 1, .36, 1] })}>
+          <motion.button className="rd-agent-tape" aria-expanded={agentsOpen} aria-controls="directions-agent-details" drag={reduced ? false : 'x'} dragConstraints={{ left: 0, right: 42 }} dragElastic={.08} dragSnapToOrigin dragTransition={slowDragRelease} onDragEnd={(_, info) => { if (info.offset.x > 18) setAgentsOpen(true); }} onClick={() => setAgentsOpen(!agentsOpen)}>
+            <span className="rd-tape-holes" aria-hidden="true">{Array.from({ length: 10 }, (_, i) => <i key={i}/>)}</span>
+            <svg viewBox="0 0 270 160" aria-hidden="true"><path d="M17 49H71V114H17Z M26 62H59M26 74H62M26 86H49 M200 49H253V114H200Z M211 70L222 82L243 61M210 98H241" stroke="currentColor" fill="none" strokeWidth="2"/><motion.circle cx="135" cy="81" r="28" fill="none" stroke="currentColor" strokeWidth="2" animate={{ pathLength: ready ? 1 : 0, rotate: agentsOpen ? 90 : 0 }} transition={slowMotion({duration: reduced ? 0 : .65})}/><motion.path d="M79 81H99M170 81H190M91 75L99 81L91 87M182 75L190 81L182 87M128 69H142V92H128Z" fill="none" stroke="currentColor" strokeWidth="2" animate={{ pathLength: agentsOpen ? 1 : .3 }} transition={slowMotion({duration: reduced ? 0 : .6})}/><motion.g animate={{opacity: agentsOpen ? 1 : 0, y: agentsOpen ? 0 : 16}} transition={slowMotion({duration: reduced ? 0 : .45})}><path d="M109 132H158M208 132H241" stroke="currentColor" strokeWidth="3"/><path d="M213 137L220 143L235 128" stroke="currentColor" fill="none" strokeWidth="2"/></motion.g></svg>
+            <strong>{t('上下文 → 工具 → 核验', 'Context → tools → checks')}</strong><span className="rd-interaction-label">{agentsOpen ? t('点击合上', 'Click to close') : t('右拉展开工作流', 'Pull right for the workflow')}<ArrowRight size={17}/></span>
+          </motion.button>
+        </motion.div>
+        <AnimatePresence initial={false}>{agentsOpen && <ReadingReveal id="directions-agent-details" className="rd-detail" initial={{ gridTemplateRows: "0fr", opacity: 0 }} animate={{ gridTemplateRows: "1fr", opacity: 1 }} exit={{ gridTemplateRows: "0fr", opacity: 0 }} transition={expansion}><p>{t('将任务拆成输入、执行与检查三个环节，保留工具返回与来源记录；比较流程完成情况和异常处理，而不只比较模型回答。', 'Separate inputs, execution and checks; retain tool responses and source records. Compare task completion and failure handling across workflows, alongside the quality of model responses.')}</p></ReadingReveal>}</AnimatePresence>
+      </article>
+      <article className="rd-spatial-scene rd-direction" aria-labelledby="rd-spatial-title">
+        <span className="rd-scene-number">02 / SPATIAL</span><h3 id="rd-spatial-title">{t('自动驾驶场景中的空间感知', 'Spatial perception for autonomous driving')}</h3>
+        <p className="rd-interest-summary">{t('从图像语义与深度，理解位置、目标和驾驶环境。', 'Connect image semantics and depth to location, objects and driving environments.')}</p>
+        <motion.div className="rd-section-arrival" initial={reduced ? false : { y: 18, opacity: 0 }} animate={{ y: ready ? 0 : 18, opacity: ready ? 1 : 0 }} transition={slowMotion({ duration: reduced ? 0 : .65, delay: reduced ? 0 : .07, ease: [.22, 1, .36, 1] })}><SpatialObservation open={spatialOpen} reduced={reduced} onOpen={() => setSpatialOpen(true)} onClose={() => setSpatialOpen(false)}/></motion.div>
+        <AnimatePresence initial={false}>{spatialOpen && <ReadingReveal id="directions-spatial-details" className="rd-detail" initial={{ gridTemplateRows: "0fr", opacity: 0 }} animate={{ gridTemplateRows: "1fr", opacity: 1 }} exit={{ gridTemplateRows: "0fr", opacity: 0 }} transition={expansion}><p>{t('把图像中的语义线索与深度、地图位置关联；在真实图像和可控仿真中比较失败条件，并检验目标或环境变化带来的影响。', 'Relate image semantics to depth and map position. Compare failure conditions in real images and controlled simulations, then evaluate how changes in targets or environments affect perception.')}</p></ReadingReveal>}</AnimatePresence>
+      </article>
+      <article className="rd-environment-scene rd-direction" aria-labelledby="rd-environment-title">
+        <span className="rd-scene-number">03 / ENVIRONMENT</span><h3 id="rd-environment-title">{t('人工智能在环境与能源系统中的数据分析与应用', 'AI data analysis and applications in environmental and energy systems')}</h3>
+        <p className="rd-interest-summary">{t('保留指标的来源与定义，研究环境和能源数据应用。', 'Trace indicators to their source and definition, for environmental and energy applications.')}</p>
+        <motion.div className="rd-evidence-arrival" initial={reduced ? false : { y: 18, opacity: 0 }} animate={{ y: ready ? 0 : 18, opacity: ready ? 1 : 0 }} transition={slowMotion({ duration: reduced ? 0 : .65, delay: reduced ? 0 : .14, ease: [.22, 1, .36, 1] })}>
+          <motion.button className="rd-evidence-leaf" aria-expanded={environmentOpen} aria-controls="directions-environment-details" drag={!reduced} dragConstraints={{ left: 0, right: 30, top: -30, bottom: 0 }} dragElastic={.08} dragSnapToOrigin dragTransition={slowDragRelease} onDragEnd={(_, info) => { if (info.offset.x > 12 && info.offset.y < -12) setEnvironmentOpen(true); }} onClick={() => setEnvironmentOpen(!environmentOpen)}>
+            <span className="rd-evidence-corner" aria-hidden="true"/><svg viewBox="0 0 270 160" aria-hidden="true"><path d="M21 29H90L112 51V124H21Z M90 29V51H112M35 68H86M35 84H91M35 101H74" fill="none" stroke="currentColor" strokeWidth="2"/><motion.path d="M130 78H158M150 71L158 78L150 85" fill="none" stroke="currentColor" strokeWidth="2" animate={{pathLength: ready ? 1 : 0}} transition={slowMotion({duration: reduced ? 0 : .7})}/><rect x="176" y="51" width="73" height="60" fill="none" stroke="currentColor" strokeWidth="2"/><motion.path d="M188 68H236M188 84H224" stroke="currentColor" fill="none" strokeWidth="2" animate={{pathLength: environmentOpen ? 1 : .2}} transition={slowMotion({duration: reduced ? 0 : .5})}/><motion.path d="M61 111L132 144L214 104" stroke="currentColor" fill="none" strokeWidth="2" strokeDasharray="5 4" animate={{pathLength: environmentOpen ? 1 : 0, opacity: environmentOpen ? 1 : 0}} transition={slowMotion({duration: reduced ? 0 : .7})}/></svg>
+            <strong>{t('来源页 ↔ 数据指标', 'Source page ↔ indicator')}</strong><span className="rd-interaction-label">{environmentOpen ? t('点击合上', 'Click to close') : t('斜拉查看证据链', 'Pull diagonally for the evidence')}<ArrowUpRight size={17}/></span>
+          </motion.button>
+        </motion.div>
+        <AnimatePresence initial={false}>{environmentOpen && <ReadingReveal id="directions-environment-details" className="rd-detail" initial={{ gridTemplateRows: "0fr", opacity: 0 }} animate={{ gridTemplateRows: "1fr", opacity: 1 }} exit={{ gridTemplateRows: "0fr", opacity: 0 }} transition={expansion}><p>{t('保留每个指标的主体、时期、单位与来源位置，先统一定义再进行比较。能源系统是后续研究兴趣，目前实践主要来自环境数据工作。', 'Retain each indicator’s entity, period, unit and source location before comparison. Environmental-data work is my current practical foundation; applications to energy systems remain a future research interest.')}</p></ReadingReveal>}</AnimatePresence>
+      </article>
     </div>
-  </section>
+  </div></section>;
 }

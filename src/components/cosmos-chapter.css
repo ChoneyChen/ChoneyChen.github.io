@@ -37,7 +37,7 @@
 }
 .cosmos-heading {
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
   align-items: end;
   gap: 40px;
   margin-bottom: 46px;
@@ -45,18 +45,20 @@
 .cosmos-project-number {
   color: #dfff57;
   font:
-    14px "IBM Plex Mono",
+    16px "Silkscreen",
     monospace;
   letter-spacing: 0.07em;
   margin: 0 0 15px;
 }
 .cosmos-heading h2 {
   margin: 0;
-  font-family: "Silkscreen", monospace;
-  font-size: clamp(52px, 6.4vw, 92px);
-  font-weight: 400;
-  letter-spacing: -0.095em;
-  line-height: 1.04;
+  font-family: "Space Grotesk", "PingFang SC", sans-serif;
+  font-size: clamp(32px, 3.8vw, 48px);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 1.16;
+  max-width: 18ch;
+  text-wrap: balance;
   color: #fff0d5;
 }
 .cosmos-heading h2 span {
@@ -71,8 +73,8 @@
   letter-spacing: -0.04em;
 }
 .cosmos-introduction > p {
-  font-size: 14px;
-  line-height: 1.9;
+  font-size: 18px;
+  line-height: 1.65;
   color: #d5c8ed;
   max-width: 440px;
 }
@@ -97,6 +99,7 @@
   color: #fff0d5;
   font-weight: 500;
 }
+.cosmos-my-role > span { display: block; }
 .cosmos-record-desk {
   border: 1px solid #aa83de55;
   background: #30204e;
@@ -417,7 +420,7 @@
   margin-bottom: 30px;
 }
 .cosmos-introduction > p {
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.65;
 }
 .cosmos-introduction .cosmos-my-role {
@@ -516,12 +519,12 @@
     margin-bottom: 32px;
   }
   .cosmos-heading h2 {
-    font-size: clamp(58px, 13vw, 92px);
+    font-size: clamp(30px, 7.5vw, 42px);
+    max-width: 22ch;
   }
   .cosmos-heading h2 span {
-    display: inline;
-    font-size: 0.5em;
-    margin-left: 13px;
+    display: block;
+    margin-top: 6px;
   }
   .cosmos-introduction h3 {
     font-size: 23px;
@@ -685,7 +688,6 @@
 }
 .chapter.cosmos-chapter :is(
   .cosmos-date,
-  .cosmos-project-number,
   .cosmos-status,
   .cosmos-my-role,
   .cosmos-record-topline,
@@ -716,3 +718,11 @@
 .chapter.cosmos-chapter .cosmos-cartridge-label > span {
   white-space: normal;
 }
+.chapter.cosmos-chapter .cosmos-reader-contribution {
+  font-size: 16px;
+  line-height: 1.7;
+  max-width: 62ch;
+}
+.cosmos-pose-preview { margin: 0; max-width: 600px; }
+.cosmos-pose-preview svg { display: block; width: 100%; height: auto; }
+.cosmos-pose-preview figcaption { color: #dfff57; margin-top: 14px; font: 14px/1.6 "IBM Plex Mono", monospace; }

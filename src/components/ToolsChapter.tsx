@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useI18n } from "../i18n";
 import "./tools-chapter.css";
+import { QuantPilotWorkflow } from "./QuantPilotWorkflow";
 
 type Translate = (zh: string, en: string) => string;
 const makeToolFiles = (t: Translate) => [
@@ -23,7 +24,7 @@ const makeToolFiles = (t: Translate) => [
     title: t("先留下当时读到的原文。", "Keep the source as it was read."),
     body: t("我的本地文章研究工作流保存原文、图片与发布日期，按内容哈希归档。分析从固定来源开始，而不是反复依赖可能改变的网页。", "My local article-research workflow archives source text, images and publication dates by content hash. Analysis starts from a fixed source rather than a web page that may change."),
     context: t("本地工作流 · 已建立归档脚本", "Local workflow · archive script established"),
-    tags: ["ingest_wechat_article.py", t("原文 / 图片", "Text / images")], color: "#2347AA",
+    tags: ["Python", t("内容哈希", "Content hash")], color: "#2347AA",
   },
   {
     name: t("方法账本", "Method ledger"), cover: ["Method", "Ledger"], label: "VERSIONED METHODS",
@@ -31,7 +32,7 @@ const makeToolFiles = (t: Translate) => [
     title: t("方法变了，也留下它的版本。", "When a method changes, keep its version."),
     body: t("方法账本以仅追加方式保存规则版本。后续理解可以修订方法，但不覆盖以前使用的条件，让研究过程可以回读。", "An append-only method ledger retains rule versions. Later understanding can revise the method without replacing the conditions used earlier, so the research process can be revisited."),
     context: t("本地工作流 · 版本账本已建立", "Local workflow · version ledger established"),
-    tags: ["method_ledger.jsonl", t("仅追加", "Append only")], color: "#15514D",
+    tags: ["JSONL", t("仅追加版本", "Append-only versions")], color: "#15514D",
   },
   {
     name: t("时间边界", "As-of context"), cover: ["As-of", "Context"], label: "TEMPORAL CONTEXT",
@@ -39,32 +40,9 @@ const makeToolFiles = (t: Translate) => [
     title: t("未来的信息，不能改写过去。", "Later information cannot rewrite the past."),
     body: t("上下文脚本核对时间戳，拒绝晚于文章发布时间的市场快照。没有可靠行情时，只解析文章，不把缺失的数据包装成当日判断。", "The context script checks timestamps and rejects market snapshots later than the article’s publication. Without reliable market data, it parses the article without claiming a same-day confirmation."),
     context: t("本地工作流 · 时间检查脚本已建立", "Local workflow · timestamp checks established"),
-    tags: ["prepare_analysis_context.py", "as_of"], color: "#B63D32",
+    tags: ["Python", t("时间戳校验", "Timestamp validation")], color: "#B63D32",
   },
-  {
-    name: t("模型辅助", "Model assistance"), cover: ["Model", "Notes"], label: "ASSISTED READING",
-    action: t("观点、证据与推断分开", "SEPARATE CLAIMS + EVIDENCE"),
-    title: t("让模型帮助阅读，保留检查入口。", "Use models to read, with a path back to evidence."),
-    body: t("我在 Codex 中运行文章读取与报告流程。模型辅助整理观点与依据，引用和条件仍需回到归档材料检查。这是有人参与的研究方式。", "I run article-reading and report workflows in Codex. Models help organise claims and evidence, while references and conditions are checked against the archive. This is a human-involved research practice."),
-    context: t("人工辅助实践 · 持续迭代", "Assisted practice · ongoing iteration"),
-    tags: ["Codex", t("来源回查", "Source checks")], color: "#6C183C",
-  },
-  {
-    name: t("检查修订", "Review"), cover: ["Review", "Revise"], label: "REVIEW & REVISION",
-    action: t("核对条件，修订方法", "CHECK CONDITIONS + REVISE"),
-    title: t("记录判断成立的条件。", "Record the conditions behind a judgement."),
-    body: t("研究报告保留观察、触发、等待与放弃条件。检查来源与时间是否充分后再解释输出；方法调整进入新版本，而不是重写旧结论。", "Reports retain observation, trigger, waiting and abandonment conditions. I check source and timing sufficiency before interpreting output; method changes become new versions rather than rewritten conclusions."),
-    context: t("人工检查环节 · 非无人值守服务", "Human review · not an unattended service"),
-    tags: [t("条件记录", "Condition records"), t("人工复核", "Human review")], color: "#254CC7",
-  },
-  {
-    name: t("证据回读", "Revisit"), cover: ["Evidence", "Revisit"], label: "REPRODUCIBLE HISTORY",
-    action: t("连接文章、方法与报告", "CONNECT SOURCE + METHOD + REPORT"),
-    title: t("知道一次判断怎样得到。", "Recover how a judgement was reached."),
-    body: t("文章、方法账本与日报按时间留下记录，历史报告不覆盖。回读时区分当时的依据和后来的信息；这里展示研究方法，不展示收益或荐股结论。", "Articles, method ledgers and dated reports preserve a history without overwriting earlier reports. Revisiting separates the original evidence from later information. This presents the research method, without returns or stock recommendations."),
-    context: t("归档与人工回读 · 持续完善", "Archive and human review · ongoing development"),
-    tags: ["daily_reports", t("历史不覆盖", "Preserved history")], color: "#F2D169",
-  },
+
 ];
 
 type ToolFile = ReturnType<typeof makeToolFiles>[number];
@@ -727,27 +705,12 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
           <p className="chapter-kicker">08 / MY RESEARCH WORKFLOW</p>
           <span>CHONEY’S RESEARCH DESK</span>
         </div>
-        <header className="tools-heading">
-          <h2 id="tools-title">
-            {t("我的研究，", "My research,")}
-            <br />
-            {t("怎样留下", "with ")}
-            <span>{t("证据。", "a history.")}</span>
-          </h2>
-          <p>
-            {t("一套个人工作流，六个环节。", "One personal workflow. Six components. ")}
-            <br />
-            {t(
-              "从原文归档，到可以回读的研究记录。",
-              "From archived articles to research records I can revisit.",
-            )}
-          </p>
-        </header>
+        <header className="tools-heading"><div><span className="tools-project-label">STOCK / PERSONAL DEVELOPMENT</span><h2 id="tools-title" className="project-title">{t("可追溯的文章研究工作流", "Traceable Article-Research Workflow")}</h2></div><p className="project-summary">{t("用来源、方法与时间记录，让模型辅助研究可回读、可核对。", "Source, method and time records make model-assisted research traceable and checkable.")}</p></header>
         <div className="tools-archive-layout">
           <div className="tools-scene-column">
             <div className="tools-scene-topline">
               <span>PERSONAL TOOL ARCHIVE</span>
-              <span>{String(active + 1).padStart(2, "0")} / 06</span>
+              <span>{String(active + 1).padStart(2, "0")} / {String(toolFiles.length).padStart(2, "0")}</span>
             </div>
             <div className="tools-scene" ref={hostRef}>
               <motion.canvas
@@ -837,7 +800,6 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
                 {opened ? <>
                 <div className="tools-reading-header"><span className="tools-file-label">FILE {String(active + 1).padStart(2, "0")} / {file.label}</span><button type="button" className="tools-close" aria-label={t("合上工作档案", "Close work file")} onClick={() => setOpened(false)}><X size={18}/></button></div>
                 <h3>{file.name}</h3>
-                <h4>{file.title}</h4>
                 <p className="tools-personal-use">{file.body}</p>
                 <div className="tools-use-tags">
                   {file.tags.map((tag) => (
@@ -850,7 +812,7 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
                     {file.context}
                   </span>
                 </div>
-                </> : <div className="tools-closed-intro"><span className="tools-file-label">{t("文章 · 方法 · 时间 · 复核", "SOURCE · METHOD · TIME · REVIEW")}</span><h3>{t("一次研究，怎样被保留下来？", "How does a research process leave a record?")}</h3><p className="tools-personal-use">{t("打开一册，阅读这套工作流中的一个环节，以及它目前的实现状态。", "Open a file to read one workflow component and its current implementation status.")}</p><button type="button" className="tools-open-file" onClick={() => selectFile(active)}>{t("打开这册档案", "Open this file")}<BookOpen size={17}/></button></div>}
+                </> : <div className="tools-closed-intro"><span className="tools-file-label">{t("来源 · 方法 · 时间", "SOURCE · METHOD · TIME")}</span><h3>{t("三个已实现模块", "Three implemented modules")}</h3><p className="tools-personal-use">{t("转动书架，翻开来源、方法或时间记录。", "Rotate the archive. Open a source, method or time record.")}</p><button type="button" className="tools-open-file" onClick={() => selectFile(active)}>{t("打开这册档案", "Open this file")}<BookOpen size={17}/></button></div>}
               </motion.div>
             </AnimatePresence></div>
           </div>
@@ -874,14 +836,8 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
             </button>
           ))}
         </div>
-        <div className="tools-public-repository"><div><span>{t("我的公开代码仓库", "MY PUBLIC REPOSITORY")}</span><h3>QuantPilot</h3><p>{t("Windows 原生的 A 股量化研究智能体与仪表盘。仓库文档涵盖确定性因子、Qwen 人工复核与会话研究记忆。", "A Windows-native A-share research agent and dashboard. Repository documentation covers deterministic factors, manual Qwen review and session research memory.")}</p></div><a href="https://github.com/ChoneyChen/quantpilot-a-share-agent" target="_blank" rel="noreferrer">{t("查看仓库", "View repository")}<ArrowUpRight size={18}/></a></div>
-        <div className="tools-closing">
-          <p>{t("来源固定 · 方法留痕 · 条件可查", "Fixed sources · versioned methods · traceable conditions")}</p>
-          <a className="chapter-link" href="#origins">
-            {t("回到起点：三段早期经历", "The beginnings: three early experiences")}{" "}
-            <ArrowRight size={16} />
-          </a>
-        </div>
+        <article className="tools-public-repository" aria-labelledby="quantpilot-title"><div><span>{t("公开项目 · 代码与文档", "PUBLIC PROJECT · CODE & DOCUMENTATION")}</span><h3 id="quantpilot-title">{t("QuantPilot — A 股研究智能体与仪表盘", "QuantPilot — A-share Research Agent & Dashboard")}</h3><p>{t("连接确定性因子、人工复核与会话记忆的 Windows 原生研究工具。", "A Windows-native research tool connecting deterministic factors, human review and session memory.")}</p><a href="https://github.com/ChoneyChen/quantpilot-a-share-agent" target="_blank" rel="noreferrer">{t("查看公开仓库", "View public repository")}<ArrowUpRight size={18}/></a></div><QuantPilotWorkflow quiet={lowMotion}/></article>
+
       </div>
     </section>
   );

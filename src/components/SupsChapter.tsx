@@ -8,7 +8,7 @@ import {
   motion,
   useReducedMotion,
 } from "motion/react";
-import { ArrowDownRight, Layers3 } from "lucide-react";
+import { Layers3 } from "lucide-react";
 import { useI18n } from "../i18n";
 import "./sups-chapter.css";
 
@@ -34,12 +34,12 @@ const getLayerRecords = (
       "Add semantic identifiers to parking bays.",
     ),
     text: t(
-      "在现有停车场场景中增加可识别的车位编号，为语义地标提取与位置推断提供场景元素。",
-      "Added readable parking-space identifiers to the existing scene, providing landmarks for semantic extraction and position inference.",
+      "在现有停车场场景中增加可识别的车位编号，为后续语义地标提取和车辆位置推断提供可辨识的场景元素。",
+      "Added readable parking-space identifiers to the existing scene. These elements support later work on semantic-landmark extraction and position inference from a vehicle’s visual surroundings.",
     ),
     reason: t(
       "编号与实际位置应当对应，才能讨论它对定位的作用。",
-      "An identifier should correspond to its actual location before we can study its role in localisation.",
+      "Parking identifiers provide location cues only when their labels correspond to the scene’s actual bay positions.",
     ),
     status: t("车位编号已扩展", "Parking identifiers added"),
     color: "#3047b9",
@@ -58,7 +58,7 @@ const getLayerRecords = (
     ),
     reason: t(
       "场景条件可以被控制，环境变化与失败案例才有机会被分别研究。",
-      "Controllable scene conditions make it possible to examine environmental changes and failure cases separately.",
+      "An enclosed structure supports controlled changes to the visual environment when studying perception and localisation failures.",
     ),
     status: t("屋顶结构已扩展", "Roof structure added"),
     color: "#993d2c",
@@ -72,12 +72,12 @@ const getLayerRecords = (
       "Align wayfinding with the actual zones.",
     ),
     text: t(
-      "推进左转、右转和区域导向的开发要求，检查 A/B 分区、道路位置与箭头方向的对应关系。",
-      "Developing requirements for turning and zone guidance, checking the correspondence between A/B zones, road positions and arrow directions.",
+      "推进左转、右转和区域导向的开发要求，核查 A/B 分区、道路位置与箭头方向，使标志语义对应实际布局。",
+      "Developing requirements for left/right turning and zone guidance. Checking A/B zone locations, road positions and arrow directions for agreement between signage and scene geometry.",
     ),
     reason: t(
       "导向语义必须与空间布局一致，才能用于后续定位与场景理解。",
-      "Wayfinding semantics must agree with the layout before they can support localisation and scene understanding.",
+      "Directional labels must agree with the zone layout before they can support localisation and scene understanding.",
     ),
     status: t("导向一致性开发进行中", "Wayfinding consistency in progress"),
     color: "#283783",
@@ -152,14 +152,14 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
   useCollapseOnLeave("sups", () => setSelected(null));
   const reduce = useReducedMotion();
   const still = quiet || Boolean(reduce);
+  const headingRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
-  const headingRef = useRef<HTMLElement>(null);
   const selectorRef = useRef<HTMLDivElement>(null);
+  const headingEntered = useInView(headingRef);
   const stageEntered = useInView(stageRef, { once: false, amount: "some" });
-  const headingEntered = useInView(headingRef, { once: false, amount: "some" });
   const selectorEntered = useInView(selectorRef, { once: false, amount: "some" });
-  const headingReady = still || headingEntered;
   const selectorReady = still || selectorEntered;
+  const headingReady = still || headingEntered;
   const assembled = still || stageEntered;
   const buildDelay = (entry: number, withdrawal: number) =>
     still ? 0 : assembled ? entry : withdrawal;
@@ -183,38 +183,25 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
           </p>
           <span>{t("2026.09 — 至今", "2026.09 — PRESENT")}</span>
         </div>
-        <header className="sups-heading" ref={headingRef}>
+        <div ref={headingRef} className="sups-heading-presence"><motion.header className="sups-heading" initial={still ? false : { opacity: 0, y: 22 }} animate={{ opacity: headingReady ? 1 : 0, y: headingReady ? 0 : 22 }} transition={slowMotion({ duration: still ? 0 : headingReady ? .6 : .35, ease: [.22, 1, .36, 1] })}>
           <div>
             <p className="sups-eyebrow">
               {t(
-                "感知与定位 · 仿真研究环境",
-                "SIMULATION FOR PERCEPTION & LOCALISATION",
+                "SUPS / SVL · 场景与数据工程",
+                "SUPS / SVL · SCENE & DATA ENGINEERING",
               )}
             </p>
-            <motion.h2
-              id="sups-title"
-              initial={still ? false : { clipPath: "inset(0 0 100% 0)" }}
-              animate={{
-                clipPath: headingReady
-                  ? "inset(0 0 0% 0)"
-                  : "inset(0 0 100% 0)",
-              }}
-              transition={slowMotion({
-                duration: still ? 0 : 0.58,
-                ease: [0.22, 1, 0.36, 1],
-              })}
-            >
-              SUPS / SVL
-              <span>{t("仿真场景扩展", "Scene Extensions")}</span>
-            </motion.h2>
+            <h2 id="sups-title" className="project-title">
+              {t("地下停车场仿真", "Underground Car-Park Simulation")}
+              {" "}<span>{t("与合成数据集构建", "& Synthetic Dataset Development")}</span>
+            </h2>
           </div>
           <div className="sups-heading-note">
-            <p>{t("怎样构造语义标识与几何布局一致、可用于感知研究的停车场？", "How can a parking scene keep semantic landmarks aligned with its geometry for perception research?")}</p>
-            <span>{t("我的角色", "MY ROLE")}</span>
-            <strong>{t("仿真开发与场景扩展", "Simulation development & scene extension")}</strong>
-            <small className="sups-project-status">{t("仿真与数据工程进行中", "Simulation and data work in progress")}</small>
+            <p className="project-summary">{t("扩展停车场的编号、屋顶与导向结构，为感知和定位研究提供语义与几何一致的场景。", "Extending parking identifiers, roof structure and wayfinding to create consistent semantic and geometric conditions for perception research.")}</p>
+            <div className="project-role"><span>{t("仿真开发与研究参与者", "SIMULATION DEVELOPER & RESEARCH PARTICIPANT")}</span><strong>{t("场景扩展与语义—几何一致性", "Scene extensions & semantic-geometric consistency")}</strong></div>
+            <small className="sups-project-status">{t("进行中 · 基础仿真链路已跑通", "In progress · baseline simulation running")}</small>
           </div>
-        </header>
+        </motion.header></div>
 
         <div
           className="sups-architecture"
@@ -222,7 +209,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
           data-assembled={assembled}
         >
           <div className="sups-stage-note">
-            <span className="sups-drawing-index">FIG. 02</span>
+
             <span>
               {t("原创场景扩展示意", "Original scene-extension illustration")}
             </span>
@@ -692,7 +679,7 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
             </motion.button>
           ))}
         </div>
-        <p className="sups-operation">{t("向上抽取一层 / 点击 · 再点收回", "Pull a layer upward / click · Click again to close")}</p>
+        <p className="sups-operation">{t("向上抽取或选择一层，查看对应扩展。", "Pull up or select a layer to inspect its extension.")}</p>
         <div id="sups-work-reading" aria-live="polite">
           <AnimatePresence initial={false}>
           {active && <ReadingReveal
@@ -736,18 +723,6 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
           </ReadingReveal>}
           </AnimatePresence>
         </div>
-        <div className="sups-foundation">
-          <span>
-            {t("已跑通：", "Running: ")}
-            <strong>{t("基础仿真链路跑通", "Base simulation running")}</strong>
-          </span>
-          <span>
-            {t("已扩展：", "Added: ")}
-            <strong>
-              {t("车位编号与屋顶结构", "Parking identifiers and roof structure")}
-            </strong>
-          </span>
-        </div>
         <details className="sups-boundary">
           <summary>{t("场景与数据范围", "Scene & data scope")}</summary>
           <p>{t(
@@ -755,22 +730,6 @@ export function SupsChapter({ quiet = false }: { quiet?: boolean }) {
             "The scene extends the existing SUPS / SVL platform with Codex-assisted development. This is a work illustration; complete sample counts, unified annotation and a public dataset release have not been confirmed.",
           )}</p>
         </details>
-        <footer className="sups-exits">
-          <a className="chapter-link" href="#avpc">
-            {t(
-              "下一项目：AVPC 协同感知",
-              "Next: AVPC collaborative perception",
-            )}{" "}
-            <ArrowDownRight size={16} />
-          </a>
-          <a className="chapter-link" href="#glimpse">
-            {t(
-              "相关毕业研究：U-IMPROVE",
-              "Related final-year research: U-IMPROVE",
-            )}{" "}
-            <ArrowDownRight size={16} />
-          </a>
-        </footer>
       </div>
     </section>
   );

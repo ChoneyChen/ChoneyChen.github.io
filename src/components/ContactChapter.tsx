@@ -32,7 +32,7 @@ export function ContactChapter({ quiet = false }: { quiet?: boolean }) {
     >
       <div className="chapter-inner contact-inner">
         <div className="contact-intro">
-          <p className="chapter-kicker">13 / A NOTE TO ME</p>
+          <p className="chapter-kicker">11 / CONTACT</p>
           <h2 id="contact-title">
             {t("故事还在继续。", "The conversation")}
             <br />
@@ -52,26 +52,7 @@ export function ContactChapter({ quiet = false }: { quiet?: boolean }) {
             <strong>CC</strong>
             <span>PERSONAL CORRESPONDENCE</span>
           </div>
-        <div className="contact-websites">
-          <span>{t("个人主页", "THIS HOMEPAGE")}</span>
-          <a
-            href="https://choney-between-states.vercel.app"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Vercel <ArrowUpRight size={13} />
-          </a>
-          <a
-            href="https://choneychen.github.io/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            GitHub Pages <ArrowUpRight size={13} />
-          </a>
-          <a href="#home">
-            {t("回到开始", "Back to the beginning")} <ArrowUpRight size={13} />
-          </a>
-        </div>
+
         </div>
         <div className="contact-envelope" ref={letter}>
           <div className="contact-envelope-lining" aria-hidden="true" />

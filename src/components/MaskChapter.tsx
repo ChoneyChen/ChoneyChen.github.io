@@ -2,20 +2,18 @@ import { ReadingReveal } from "./ReadingReveal";
 import { slowMotion } from "../lib/motionTiming";
 import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
 import { useScenePresence as useInView } from "../hooks/useScenePresence";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   AnimatePresence,
   motion,
   useMotionValueEvent,
   useReducedMotion,
   useScroll,
-  useTransform,
 } from "motion/react";
 import {
   ArrowDown,
   ArrowUpRight,
   Check,
-  Layers3,
   Plus,
   Radio,
   ScanLine,
@@ -30,15 +28,12 @@ type Translate = (zh: string, en: string) => string;
 const makeStages = (t: Translate) => [
   {
     number: "01",
-    title: t(
-      "视觉，进入控制链路。",
-      "Vision into control.",
-    ),
+    title: t("视觉分析与本地软件", "Vision & local software"),
     short: t("视觉与软件", "Vision & software"),
     icon: ScanLine,
     text: t(
-      "参与摄像头采集、视觉模型与控制参数转换，将分析结果连接到触屏界面、FastAPI 后端及 SQLite 本地记录。",
-      "Helped connect camera input and visual-model analysis to structured control parameters, a touchscreen interface, the FastAPI backend and SQLite records.",
+      "参与摄像头采集、视觉模型与控制参数转换，并参与触屏界面、FastAPI 后端和 SQLite 本地记录的开发，连接视觉分析与本地软件。",
+      "Helped connect camera input and visual-model analysis to structured control parameters. Contributed to the touchscreen interface, FastAPI backend and SQLite records supporting the local software.",
     ),
     detail: t(
       "视觉分析 → 结构化参数 → 本地软件",
@@ -48,12 +43,12 @@ const makeStages = (t: Translate) => [
   },
   {
     number: "02",
-    title: t("软件，接上硬件。", "Software meets hardware."),
+    title: t("无线通信与嵌入式控制", "Wireless & embedded control"),
     short: t("无线与嵌入式", "Wireless & embedded"),
     icon: Radio,
     text: t(
-      "参与主控制器与无线设备的通信及跨模块联调，连接光源和加热模块的控制逻辑。",
-      "Contributed to controller-to-device communication and integration across modules, connecting light and heating control logic.",
+      "参与 Raspberry Pi 与 ESP32-S3 的通信及跨模块联调，将本地软件连接到光源和加热设备的控制逻辑。",
+      "Contributed to communication between Raspberry Pi and ESP32-S3. Helped connect local software to wireless devices and integrate LED and heating control logic across modules.",
     ),
     detail: t(
       "Raspberry Pi → ESP32-S3 → LED / 加热",
@@ -64,14 +59,14 @@ const makeStages = (t: Translate) => [
   {
     number: "03",
     title: t(
-      "反馈，闭合控制回路。",
-      "Feedback closes the loop.",
+      "传感反馈与停止条件",
+      "Feedback & stopping conditions",
     ),
     short: t("控制与反馈", "Control & feedback"),
     icon: Thermometer,
     text: t(
-      "参与 HC-SR04 距离传感器、DS18B20 温度传感器与设备状态的联调，检查异常检测及停止条件。",
-      "Helped integrate HC-SR04 distance sensing, DS18B20 temperature sensing and device-status feedback, checking fault detection and stopping conditions.",
+      "参与 HC-SR04 距离传感器、DS18B20 温度传感器和设备状态反馈的联调，在跨模块测试中检查异常检测与停止条件。",
+      "Helped integrate HC-SR04 distance sensing, DS18B20 temperature sensing and device-status feedback. Checked fault detection and stopping conditions during cross-module testing of the team prototype.",
     ),
     detail: t(
       "传感数据 → 状态检查 → 停止条件",
@@ -81,7 +76,7 @@ const makeStages = (t: Translate) => [
   },
   {
     number: "04",
-    title: t("团队，共同交付原型。", "The team’s working prototype."),
+    title: t("团队统筹与原型交付", "Coordination & prototype delivery"),
     short: t("统筹与交付", "Coordination & delivery"),
     icon: Workflow,
     text: t(
@@ -144,31 +139,41 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
   const storyRef = useRef<HTMLDivElement>(null);
   const entered = useInView(storyRef, { once: false, amount: "some" });
   const [active, setActive] = useState(0);
+  const activeRef = useRef(active);
+  activeRef.current = active;
   const [expanded, setExpanded] = useState(false);
-  useCollapseOnLeave("mask", () => setExpanded(false));
-  const { scrollYProgress } = useScroll({
-    target: storyRef,
-    offset: ["start 70%", "end 65%"],
-  });
-  const y = useTransform(scrollYProgress, [0, 1], [7, -7]);
-
-  useMotionValueEvent(scrollYProgress, "change", (value) => {
-    if (expanded) return;
-    const next = Math.max(
-      0,
-      Math.min(stages.length - 1, Math.floor(value * stages.length)),
-    );
-    setActive((previous) => (previous === next ? previous : next));
-  });
+  useCollapseOnLeave("mask", () => { setExpanded(false); setActive(0); });
 
   const CurrentIcon = stages[active].icon;
   const drawn = entered || lowMotion;
-  const interfacePaths = [
-    "M240 82H360 M465 124V137Q465 150 452 150H345V162",
-    "M300 241V249Q300 263 286 263H150V282 M240 316H360",
-    "M465 361V370Q465 384 451 384H345V389 M162 426H38Q24 426 24 412V213Q24 199 38 199H162",
-    "M240 82H360 M465 124V137Q465 150 452 150H345V162 M300 241V249Q300 263 286 263H150V282 M240 316H360 M465 361V370Q465 384 451 384H345V389",
+  const connectionPaths = [
+    "M240 82H360",
+    "M465 124V137Q465 150 452 150H345V162",
+    "M300 241V249Q300 263 286 263H150V282",
+    "M240 316H360",
+    "M465 361V370Q465 384 451 384H345V389",
+    "M162 426H38Q24 426 24 412V213Q24 199 38 199H162",
   ];
+  const pathStages = [0, 0, 1, 1, 2, 2];
+  const { scrollYProgress } = useScroll({ target: storyRef, offset: ["start 70%", "end 65%"] });
+  const scrollStage = (progress: number) => Math.min(stages.length - 1, Math.max(0, Math.floor(progress * stages.length)));
+  // Read native scroll only. React changes at the four semantic boundaries,
+  // never to animate a scroll position or override an open reading layer.
+  useMotionValueEvent(scrollYProgress, "change", (progress) => {
+    if (expanded || lowMotion || !drawn) return;
+    const next = scrollStage(progress);
+    if (activeRef.current === next) return;
+    activeRef.current = next;
+    setActive(next);
+  });
+  useEffect(() => {
+    if (!drawn) { setActive(0); return; }
+    if (expanded || lowMotion) return;
+    const next = scrollStage(scrollYProgress.get());
+    if (activeRef.current === next) return;
+    activeRef.current = next;
+    setActive(next);
+  }, [expanded, drawn, lowMotion, scrollYProgress]);
 
   return (
     <section
@@ -179,28 +184,27 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
     >
       <div className="chapter-inner mask-inner">
         <header className="mask-heading">
-          <p className="chapter-kicker">{t("06 / 从模块到系统", "06 / BUILDING A SYSTEM")}</p>
+          <p className="chapter-kicker">{t("06 / 智能光疗面罩系统", "06 / INTELLIGENT PHOTOTHERAPY MASK SYSTEM")}</p>
           <p className="mask-eyebrow">
             {t(
-              "工程原型 · MEC202 · 2026.03 — 2026.07",
-              "ENGINEERING PROTOTYPE · MEC202 · 2026.03 — 2026.07",
+              "工程原型 · 2026.03 — 2026.07",
+              "ENGINEERING PROTOTYPE · 2026.03 — 2026.07",
             )}
           </p>
-          <h2 id="mask-title">
-            {t("智能光疗", "Intelligent")}
-            <br />
-            <span>{t("面罩系统", "Phototherapy Mask")}</span>
+          <h2 id="mask-title" className="project-title">
+            {t("基于视觉模型的", "Vision-Model-Based Intelligent")}
+            {" "}<span>{t("智能光疗面罩系统", "Phototherapy Mask System")}</span>
           </h2>
           <div className="mask-introduction">
-            <p>
+            <p className="project-summary">
               {t(
-                "怎样将面部视觉分析，接入带传感反馈的硬件控制？",
-                "How can facial visual analysis become hardware control with sensor feedback?",
+                "将视觉分析、本地软件与传感反馈连接起来，交付可演示的软硬件系统原型。",
+                "Connecting visual analysis, local software and sensor feedback in a demonstrable system prototype spanning software and embedded hardware.",
               )}
             </p>
-            <span className="mask-role-mark">
+            <span className="mask-role-mark project-role">
               <span />
-              {t("团队组长 · 系统整合 · 原型已交付", "Team leader · system integration · prototype delivered")}
+              {t("团队组长 · 软件、嵌入式与系统整合", "Team leader · software, embedded systems & integration")}
             </span>
           </div>
         </header>
@@ -217,7 +221,6 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
               <div className="mask-connection-visual">
                 <motion.div
                   className={`mask-connection-board${active === 3 ? " is-integrating" : ""}`}
-                  style={{ y: lowMotion ? 0 : y }}
                 >
                   <svg
                     className="mask-connection-lines"
@@ -237,14 +240,7 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
                         <path d="M0 0L6 3L0 6" fill="#9eafd2" />
                       </marker>
                     </defs>
-                    {[
-                      "M240 82H360",
-                      "M465 124V137Q465 150 452 150H345V162",
-                      "M300 241V249Q300 263 286 263H150V282",
-                      "M240 316H360",
-                      "M465 361V370Q465 384 451 384H345V389",
-                      "M162 426H38Q24 426 24 412V213Q24 199 38 199H162",
-                    ].map((path, index) => (
+                    {connectionPaths.map((path, index) => (
                       <motion.path
                         key={path}
                         d={path}
@@ -265,24 +261,10 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
                         })}
                       />
                     ))}
-                    {drawn && !lowMotion && (
-                      <motion.path
-                        d={interfacePaths[active]}
-                        className="mask-interface-pulse"
-                        initial={{ pathLength: 0, pathOffset: 0, opacity: 0 }}
-                        animate={{
-                          pathLength: [0, 0.22, 0.22, 0],
-                          pathOffset: [0, 0.2, 0.75, 1],
-                          opacity: [0, 1, 1, 0],
-                        }}
-                        transition={slowMotion({
-                          duration: 1.05,
-                          delay: 0.12,
-                          ease: "easeInOut",
-                          times: [0, 0.25, 0.8, 1],
-                        })}
-                      />
-                    )}
+                    {connectionPaths.map((path, index) => {
+                      const current = drawn && (active === 3 || pathStages[index] === active);
+                      return <motion.path key={`stage-${index}`} d={path} className="mask-interface-pulse" initial={lowMotion ? false : { pathLength: 0, opacity: 0 }} animate={{ pathLength: current ? 1 : 0, opacity: current ? 1 : 0 }} transition={slowMotion({ duration: lowMotion ? 0 : current ? .7 : .35, delay: lowMotion || !current ? 0 : (active === 3 ? index : index % 2) * .05, ease: [.22, 1, .36, 1] })}/>;
+                    })}
                   </svg>
                   {connections.map((connection, index) => (
                     <motion.button
@@ -328,12 +310,6 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
                     {t("反馈回到软件", "Feedback to software")}
                   </span>
                 </motion.div>
-                <p className="mask-diagram-note">
-                  {t(
-                    "软件、控制与反馈的连接示意",
-                    "Software, control and feedback connections",
-                  )}
-                </p>
               </div>
 
               <div className="mask-system-header">
@@ -363,30 +339,6 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
                     exit={{ gridTemplateRows: "0fr", opacity: 0 }}
                     transition={slowMotion({ duration: lowMotion ? 0 : 0.5, ease: [0.22, 1, 0.36, 1] })}
                   >
-                    <p className="mask-chain-caption">
-                      <Layers3 size={14} />
-                      {t(
-                        "选择环节，查看本人工作",
-                        "Choose a stage to read my work",
-                      )}
-                    </p>
-                    <div className="mask-chain-nodes">
-                      {stages.map((stage, index) => {
-                        const Icon = stage.icon;
-                        return (
-                          <button
-                            key={stage.number}
-                            type="button"
-                            aria-pressed={active === index}
-                            onClick={() => setActive(index)}
-                          >
-                            <Icon size={22} strokeWidth={1.4} />
-                            <span>{stage.short}</span>
-                            <small>{stage.number}</small>
-                          </button>
-                        );
-                      })}
-                    </div>
                     <div className="mask-chain-work" aria-live="polite">
                       <strong>{stages[active].detail}</strong>
                       <p>{stages[active].text}</p>
@@ -414,6 +366,7 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
                 key={stage.number}
                 aria-expanded={expanded && active === index}
                 aria-controls="mask-system-chain"
+                aria-label={`${stage.title} — ${expanded && active === index ? t("合上工作记录", "Close work record") : t("展开工作记录", "Open work record")}`}
                 onClick={() => {
                   setActive(index);
                   setExpanded((current) => active === index ? !current : true);
@@ -422,20 +375,13 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
                 <span className="mask-step-number">{stage.number}</span>
                 <strong className="mask-step-title">{stage.title}</strong>
                 <div className="mask-step-label">{stage.label}</div>
-                <span className="mask-step-action">{expanded && active === index ? t("收起", "Close") : t("我的工作", "My work")} <ArrowUpRight size={13} /></span>
+                <span className="mask-step-action" aria-hidden="true">{expanded && active === index ? <X size={16} /> : <Plus size={16} />}</span>
               </button>
             ))}
           </div>
         </div>
 
         <div className="mask-outcomes">
-          <div className="mask-outcome-grade">
-            <span>{t("MEC202 / 课程成绩", "MEC202 / COURSE GRADE")}</span>
-            <strong>79</strong>
-            <p>
-              {t("工程课程项目", "Engineering course project")}
-            </p>
-          </div>
           <div className="mask-outcome-award">
             <span>
               {t("2026 / 团队竞赛成果", "2026 / TEAM COMPETITION RESULT")}
@@ -453,13 +399,13 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
             </p>
           </div>
           <div className="mask-outcome-reflection">
-            <span>{t("课程后的推进", "AFTER THE COURSE")}</span>
+            {" "}<span>{t("实际交付", "DELIVERED WORK")}</span>
             <p>
-              {t("继续完善原型，", "Refine the prototype.")}
+              {t("可演示的系统原型", "Demonstrable system prototype")}
               <br />
               {t(
-                "准备竞赛展示。",
-                "Prepare the competition demo.",
+                "完成系统整合与测试，持续完善竞赛展示。",
+                "Integrated, tested and refined for the competition demonstration.",
               )}
             </p>
             <details className="mask-project-scope">
@@ -480,10 +426,6 @@ export function MaskChapter({ quiet = false }: { quiet?: boolean }) {
           >
             {t("查看项目公开代码", "View the project code")}{" "}
             <ArrowUpRight size={17} />
-          </a>
-          <a className="chapter-link" href="#esg">
-            {t("下一段实践：环境 AI 与数据", "Next: environmental AI & data")}{" "}
-            <ArrowDown size={17} />
           </a>
         </footer>
       </div>

@@ -9,7 +9,6 @@ import {
   useReducedMotion,
 } from "motion/react";
 import {
-  ArrowDown,
   ArrowUpRight,
   Check,
   ChevronDown,
@@ -30,12 +29,12 @@ const makeDocuments = (t: Translate) => [
     small: t("文本 / 表格 / 文档结构", "TEXT / TABLES / DOCUMENT STRUCTURE"),
     icon: ScanText,
     teaser: t(
-      "识别扫描页、文字与复杂表格。",
-      "Recover text and tables from inconsistent PDF layouts.",
+      "恢复扫描页、文字与复杂表格的结构。",
+      "Recover structure from scanned pages, text and tables.",
     ),
     body: t(
-      "参与搭建分阶段的 PDF 处理链路，并关注数万份报告的批量处理与本地部署。",
-      "Helped build a staged PDF-processing workflow, considering batch processing and local deployment for a large report collection.",
+      "参与分阶段 PDF 处理链路，整合 OCR 与文档理解；关注批量吞吐、本地部署及各阶段的计算资源安排。",
+      "Helped build a staged PDF workflow integrating OCR and document understanding. Considered batch throughput, local deployment and compute allocation across the processing stages.",
     ),
     work: [
       t(
@@ -43,12 +42,12 @@ const makeDocuments = (t: Translate) => [
         "OCR and visual document understanding",
       ),
       t(
-        "分配不同处理阶段的计算资源",
-        "Consider compute allocation across processing stages",
+        "分阶段计算资源安排",
+        "Compute allocation across processing stages",
       ),
       t(
-        "关注处理吞吐量与扩展性",
-        "Assess throughput and scalability requirements",
+        "批量吞吐与扩展性",
+        "Batch throughput and scalability",
       ),
     ],
   },
@@ -56,15 +55,15 @@ const makeDocuments = (t: Translate) => [
     number: "02",
     title: t("抽取环境指标。", "Extract environmental indicators."),
     name: t("抽取与匹配", "Extraction & matching"),
-    small: "NuExtract3 / OCR-VL / Embedding",
+    small: "NuExtract3 / PaddleOCR-VL / Qwen3-Embedding",
     icon: FileText,
     teaser: t(
       "将报告内容对应到可分析的字段。",
       "Map report content to fields for analysis.",
     ),
     body: t(
-      "参与文档理解、结构化抽取与语义匹配模块的整合，处理不同报告对环境指标的不同表达。",
-      "Helped integrate document-understanding, structured-extraction and semantic-matching modules to handle differing descriptions of environmental indicators.",
+      "参与整合 NuExtract3、PaddleOCR-VL 和 Qwen3-Embedding，将报告中的不同指标表达映射为可分析的结构化字段。",
+      "Helped integrate NuExtract3, PaddleOCR-VL and Qwen3-Embedding for extraction, document understanding and semantic matching, mapping differing environmental-indicator descriptions to structured fields for analysis.",
     ),
     work: [
       t(
@@ -89,62 +88,132 @@ const makeDocuments = (t: Translate) => [
       "Standardise definitions and link source PDF evidence.",
     ),
     body: t(
-      "参与指标清洗、数据库及分析平台建设，使抽取结果进入可审核的数据记录。",
-      "Contributed to indicator cleaning, database development and analytics-platform work, bringing extracted results into reviewable records.",
+      "参与指标清洗、口径标准化及数据库与分析平台建设，关联来源和版本，使记录可审核并支持企业对标。",
+      "Contributed to indicator cleaning, standardisation, database and analytics-platform development. Linked sources and versions so records could be reviewed before use in company comparisons.",
     ),
     work: [
       t(
-        "统一主体、期间、单位与统计边界",
-        "Standardise entity, period, units and reporting scope",
+        "主体、期间、单位与统计边界",
+        "Entity, period, units and reporting scope",
       ),
       t(
-        "关联原始文字、表格与数据版本",
-        "Link source text, tables and data versions",
+        "原始文字、表格与数据版本",
+        "Source text, tables and data versions",
       ),
-      t("探索企业对标及 ESG 与财务表现的统计关联", "Explore company comparisons and statistical links between ESG and financial performance"),
+      t("企业对标与探索性关联分析", "Company comparisons and exploratory association analysis"),
     ],
   },
 ];
 
-const makeModels = (t: Translate) => [
-  {
-    name: "NuExtract3",
-    task: t("结构化抽取", "Structured extraction"),
-    description: t(
-      "在流程中提取字段与结构化信息。",
-      "Extracts fields and structured information in the workflow.",
-    ),
-  },
-  {
-    name: "PaddleOCR-VL",
-    task: t("文档理解", "Document understanding"),
-    description: t(
-      "理解 PDF 版面、扫描文字及复杂表格。",
-      "Supports PDF layout, scanned-text and complex-table understanding.",
-    ),
-  },
-  {
-    name: "Qwen3-Embedding",
-    task: t("语义匹配", "Semantic matching"),
-    description: t(
-      "提供文本向量表示，用于指标与报告表述的语义匹配。",
-      "Provides text embeddings for semantic matching between indicators and report language.",
-    ),
-  },
-];
+function ESGProcessDiagram({
+  present,
+  lowMotion,
+  t,
+}: {
+  present: boolean;
+  lowMotion: boolean;
+  t: Translate;
+}) {
+  const labels = [
+    t("企业报告 PDF", "Company report PDF"),
+    t("结构化环境指标", "Structured indicators"),
+    t("关联来源证据", "Linked source evidence"),
+  ];
+  return (
+    <figure className="esg-process-diagram">
+      <figcaption>{t("处理链路示意", "WORKFLOW SCHEMATIC")}</figcaption>
+      <ol>
+        {labels.map((label, index) => (
+          <li key={index}>
+            <svg viewBox="0 0 160 88" aria-hidden="true">
+              <motion.g
+                initial={lowMotion ? false : { opacity: 0, x: -8 }}
+                animate={{ opacity: present ? 1 : 0, x: present ? 0 : -8 }}
+                transition={slowMotion({
+                  duration: lowMotion ? 0 : 0.48,
+                  delay: lowMotion ? 0 : present ? index * 0.12 : (2 - index) * 0.06,
+                  ease: [0.22, 1, 0.36, 1],
+                })}
+              >
+                {index === 0 && (
+                  <>
+                    <path className="esg-process-paper" d="M44 9H100L116 25V79H44Z" />
+                    <path className="esg-process-line" d="M100 9V25H116M56 25H87M56 35H102M56 64H103M56 71H90" />
+                    <rect className="esg-process-highlight" x="55" y="43" width="48" height="13" rx="2" />
+                    <path className="esg-process-ink" d="M61 49H96" />
+                  </>
+                )}
+                {index === 1 && (
+                  <>
+                    <rect className="esg-process-paper" x="22" y="17" width="116" height="56" rx="3" />
+                    {[0, 1, 2].map((row) => (
+                      <motion.g
+                        key={row}
+                        initial={lowMotion ? false : { opacity: 0, x: -6 }}
+                        animate={{ opacity: present ? 1 : 0, x: present ? 0 : -6 }}
+                        transition={slowMotion({
+                          duration: lowMotion ? 0 : 0.36,
+                          delay: lowMotion ? 0 : present ? 0.16 + row * 0.06 : (2 - row) * 0.04,
+                          ease: [0.22, 1, 0.36, 1],
+                        })}
+                      >
+                        <rect className="esg-process-field-key" x="30" y={25 + row * 15} width="29" height="7" rx="2" />
+                        <rect className={row === 1 ? "esg-process-highlight" : "esg-process-field-value"} x="67" y={25 + row * 15} width={row === 2 ? 40 : 61} height="7" rx="2" />
+                      </motion.g>
+                    ))}
+                  </>
+                )}
+                {index === 2 && (
+                  <>
+                    <path className="esg-process-paper" d="M15 20H52L62 30V69H15Z" />
+                    <path className="esg-process-line" d="M52 20V30H62M23 34H45M23 60H51" />
+                    <rect className="esg-process-highlight" x="22" y="42" width="32" height="10" rx="2" />
+                    <rect className="esg-process-paper" x="96" y="27" width="48" height="34" rx="3" />
+                    <path className="esg-process-line" d="M105 36H134M105 52H126" />
+                    <path className="esg-process-ink" d="M105 44H134" />
+                    <motion.path
+                      className="esg-process-link"
+                      d="M58 47H72C79 47 78 44 85 44H96"
+                      initial={lowMotion ? false : { pathLength: 0, opacity: 0 }}
+                      animate={{ pathLength: present ? 1 : 0, opacity: present ? 1 : 0 }}
+                      transition={slowMotion({ duration: lowMotion ? 0 : 0.48, delay: lowMotion ? 0 : present ? 0.32 : 0 })}
+                    />
+                    <circle className="esg-process-anchor" cx="58" cy="47" r="2.5" />
+                    <circle className="esg-process-anchor" cx="96" cy="44" r="2.5" />
+                  </>
+                )}
+              </motion.g>
+            </svg>
+            <span>{label}</span>
+            {index < 2 && (
+              <svg className="esg-process-connector" viewBox="0 0 28 16" aria-hidden="true">
+                <motion.path
+                  d="M2 8H24M19 3L24 8L19 13"
+                  initial={lowMotion ? false : { pathLength: 0, opacity: 0 }}
+                  animate={{ pathLength: present ? 1 : 0, opacity: present ? 1 : 0 }}
+                  transition={slowMotion({ duration: lowMotion ? 0 : 0.4, delay: lowMotion ? 0 : present ? 0.12 + index * 0.12 : 0 })}
+                />
+              </svg>
+            )}
+          </li>
+        ))}
+      </ol>
+    </figure>
+  );
+}
 
 export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
   const { t, language } = useI18n();
   const documents = makeDocuments(t);
-  const models = makeModels(t);
   const prefersQuiet = useReducedMotion();
   const lowMotion = quiet || Boolean(prefersQuiet);
   const folderRef = useRef<HTMLDivElement>(null);
+  const pipelineRef = useRef<HTMLDivElement>(null);
   const entered = useInView(folderRef, { once: false, amount: "some" });
+  const pipelineEntered = useInView(pipelineRef, { once: false });
   const revealed = entered || lowMotion;
   const [openPage, setOpenPage] = useState<number | null>(null);
-  const [model, setModel] = useState<number | null>(null);
-  useCollapseOnLeave("esg", () => { setOpenPage(null); setModel(null); });
+  useCollapseOnLeave("esg", () => setOpenPage(null));
   const transition = {
     duration: lowMotion ? 0 : 0.55,
     ease: [0.22, 1, 0.36, 1] as const,
@@ -164,11 +233,10 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
         </div>
         <header className="esg-heading">
           <div>
-            <p className="esg-project-category">{t("环境 AI · 数据工程", "ENVIRONMENTAL AI · DATA ENGINEERING")}</p>
-            <h2 id="esg-title">
-              {t("ESG 环境", "ESG Data")}
-              <br />
-              <span>{t("数据平台", "Platform")}</span>
+            <p className="esg-project-category">ESG AI</p>
+            <h2 id="esg-title" className="project-title">
+              {t("文档智能与", "Document Intelligence &")}
+              <span>{t("环境数据分析平台", "Environmental Data Analytics Platform")}</span>
             </h2>
             <p className="esg-institution">
               {t(
@@ -176,7 +244,7 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
                 "Research Institute for Environmental Innovation, Suzhou, Tsinghua University",
               )}
               <br />
-              <span>
+              <span className="project-role">
                 {t("人工智能与数据分析实习生 · 进行中", "Artificial Intelligence & Data Analytics Intern · ongoing")}
               </span>
             </p>
@@ -188,20 +256,22 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
               20,000<span>+</span>
             </strong>
             <div>{t("任务面对的报告规模", "Reports in the task scope")}</div>
-            <small>
-              {t("处理范围，非已完成解析量", "Task scope, not reports already parsed")}
-            </small>
+            <small>{t("待处理范围，非已完成解析量", "Processing scope, not completed reports")}</small>
           </div>
         </header>
 
         <div className="esg-brief">
-          <span className="esg-brief-mark">{t("核心问题", "CORE QUESTION")}</span>
-          <p>
+          <span className="esg-brief-mark">{t("本人工作", "MY WORK")}</span>
+          <p className="project-summary">
             {t(
-              "扫描页、复杂表格与不同统计口径，怎样成为可核对的环境数据？",
-              "How can scanned pages, complex tables and differing reporting definitions become environmental data we can verify?",
+              "参与报告解析、环境指标标准化与证据关联，支持数据核对、比较及分析。",
+              "Connecting report parsing, environmental indicators and source evidence so company records can be checked before comparison and analysis.",
             )}
           </p>
+        </div>
+
+        <div ref={pipelineRef} className="esg-process-scene" data-entry-state={pipelineEntered || lowMotion ? "present" : "reset"}>
+          <ESGProcessDiagram present={pipelineEntered || lowMotion} lowMotion={lowMotion} t={t} />
         </div>
 
         <div className="esg-folder" ref={folderRef} data-entry-state={revealed ? "present" : "reset"}>
@@ -216,9 +286,7 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
                 "MY ENGINEERING WORK / IN PROGRESS",
               )}
             </span>
-            <span>
-              {t("展开折页，读我的工作", "Unfold a page to read my work")}
-            </span>
+            {" "}<span>{t("三段处理链路", "THREE PROCESSING STAGES")}</span>
           </div>
           <div className="esg-folded-pages">
             {documents.map((document, index) => {
@@ -328,51 +396,6 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
                             </li>
                           ))}
                         </ul>
-                        {index === 1 && (
-                          <div className="esg-model-index">
-                            <p>
-                              {t(
-                                "选择模块，查看在流程中的作用",
-                                "Choose a module to see its role",
-                              )}
-                            </p>
-                            <div
-                              className="esg-model-buttons"
-                              aria-label={t(
-                                "查看我参与整合的模型模块",
-                                "Explore the model modules I helped integrate",
-                              )}
-                            >
-                              {models.map((item, modelIndex) => (
-                                <button
-                                  key={item.name}
-                                  type="button"
-                                  aria-pressed={model === modelIndex}
-                                  onClick={() => setModel((current) => current === modelIndex ? null : modelIndex)}
-                                  aria-expanded={model === modelIndex}
-                                  aria-controls="esg-model-detail"
-                                >
-                                  {item.name}
-                                  <ArrowUpRight size={11} />
-                                </button>
-                              ))}
-                            </div>
-                            <AnimatePresence initial={false}>
-                            {model !== null && <ReadingReveal
-                              className="esg-model-detail"
-                              id="esg-model-detail"
-                              aria-live="polite"
-                              initial={{ gridTemplateRows: "0fr", opacity: 0 }}
-                              animate={{ gridTemplateRows: "1fr", opacity: 1 }}
-                              exit={{ gridTemplateRows: "0fr", opacity: 0 }}
-                              transition={slowMotion({ duration: lowMotion ? 0 : 0.35 })}
-                            >
-                              <span>{models[model].task}</span>
-                              <p>{models[model].description}</p>
-                            </ReadingReveal>}
-                            </AnimatePresence>
-                          </div>
-                        )}
                         {index === 2 && (
                           <div
                             className="esg-source-chain"
@@ -390,10 +413,6 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
                             </span>
                           </div>
                         )}
-                        <div className="esg-paper-signature">
-                          <span>MY CONTRIBUTION</span>
-                          <span>C. CHEN</span>
-                        </div>
                       </ReadingReveal>
                     )}
                   </AnimatePresence>
@@ -406,12 +425,7 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
         <div className="esg-afterword">
           <div className="esg-project-state">
             <span className="esg-status-dot" />
-            <strong>
-              {t(
-                "平台建设与实习进行中",
-                "Platform development & internship in progress",
-              )}
-            </strong>
+            <strong>{t("真实质量评测与发布闭环待推进", "Real-data evaluation & release workflow remain in development")}</strong>
             <details className="esg-project-scope">
               <summary>{t("当前阶段", "Current stage")}</summary>
               <p>{t(
@@ -433,10 +447,6 @@ export function ESGChapter({ quiet = false }: { quiet?: boolean }) {
               "View the environmental data platform code",
             )}{" "}
             <ArrowUpRight size={17} />
-          </a>
-          <a className="chapter-link" href="#tools">
-            {t("下一部分：我的技术工具", "Next: my technical toolkit")}{" "}
-            <ArrowDown size={17} />
           </a>
         </footer>
       </div>

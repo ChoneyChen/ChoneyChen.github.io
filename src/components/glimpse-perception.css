@@ -83,3 +83,22 @@
 .gp-journey-milestones small {font:14px "IBM Plex Mono",monospace;opacity:.65;}
 .gp-journey-milestones .is-current {color:#253d8a;font-weight:500;}
 @media(max-width:600px) {.gp-journey-label {font-size:14px;}.gp-journey-milestones {font-size:14px;gap:8px;}.gp-journey-milestones span {gap:5px;}.gp-journey-milestones small {font-size:14px;}}
+
+/* On narrow screens, show readable task images with labels beside each image. */
+@media(max-width:600px) {
+ .gp-stage {height:370px;}
+ .gp-view {width:100%;height:106px;top:12px;padding:0;display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1fr);grid-template-rows:auto 1fr;gap:6px 14px;}
+ .gp-view-1 {top:128px;}
+ .gp-view-2 {top:244px;}
+ .gp-view>.gp-image {grid-column:1;grid-row:1/3;align-self:center;}
+ .gp-view-label {grid-column:2;grid-row:1;flex-direction:row;flex-wrap:wrap;gap:6px;margin:0;font-size:16px;}
+ .gp-view-caption {grid-column:2;grid-row:2;margin:0;font-size:14px;line-height:1.5;}
+ .gp-fusion {top:78px;}
+ .gp-input-scene {width:85px;}
+ .gp-journey-milestones span {display:block;text-align:left;}
+ .gp-journey-milestones small {display:block;margin-bottom:5px;}
+ .gp-journey-milestones span:nth-child(2),.gp-journey-milestones span:last-child {text-align:left;}
+ .gp-topline>span:last-child {display:none;}
+}
+.gp-context,.gp-journey-label {font-size:16px;line-height:1.6;}
+.gp-strip-story>p strong {font-size:16px;line-height:1.5;}
