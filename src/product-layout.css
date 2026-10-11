@@ -92,3 +92,13 @@
 .personal-site .hero-prototype-ticket {position:absolute;bottom:0;margin:0;}
 .personal-site .hero-system-icon:after {content:none;}
 @media(max-width:600px){.personal-site .identity-underleaf{inset:45px -4px 154px;}}
+/* Keep the fixed-header controls usable on narrow screens. */
+@media(max-width:480px){
+ .personal-site .site-header{padding-inline:16px;gap:10px;}
+ .personal-site .site-wordmark{flex-shrink:0;white-space:nowrap;}
+ .personal-site .site-wordmark span{display:none;}
+ .personal-site .header-actions{gap:8px;flex-shrink:0;}
+ .personal-site .header-actions button{flex-shrink:0;white-space:nowrap;min-height:44px;}
+ .personal-site .header-actions button svg{flex-shrink:0;}
+ .personal-site .quiet-toggle{min-width:44px;justify-content:center;}
+}

@@ -10,7 +10,8 @@ import "./quantpilot-workflow.css";
 
 export function QuantPilotWorkflow({ quiet }: { quiet: boolean }) {
   const { t } = useI18n();
-  const reduced = quiet || Boolean(useReducedMotion());
+  const systemReduced = useReducedMotion();
+  const reduced = quiet || Boolean(systemReduced);
   const surface = useRef<HTMLDivElement>(null);
   const present = useScenePresence(surface);
   const ready = reduced || present;

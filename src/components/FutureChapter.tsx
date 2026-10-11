@@ -108,6 +108,7 @@ function CollaborativeResearch({ quiet }: { quiet: boolean }) {
 }
 
 export function FutureChapter({ quiet = false, part }: { quiet?: boolean; part: "perception" | "collaboration" }) {
-  const reduced = quiet || Boolean(useReducedMotion());
+  const systemReduced = useReducedMotion();
+  const reduced = quiet || Boolean(systemReduced);
   return part === "perception" ? <PerceptionResearch quiet={reduced}/> : <CollaborativeResearch quiet={reduced}/>;
 }
