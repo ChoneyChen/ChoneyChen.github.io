@@ -10,6 +10,12 @@ import App from "./App";
 import { LocaleProvider } from "./i18n";
 import "./styles.css";
 import "./product-layout.css";
+import "./visual-alignment.css";
+import "./components/alignment-research.css";
+import "./components/alignment-projects.css";
+import "./components/alignment-records.css";
+import "./components/alignment-skills.css";
+import "./components/alignment-foundation-icons.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

@@ -8,7 +8,10 @@ import {
   ArrowLeft,
   ArrowRight,
   ArrowUpRight,
-  BookOpen,
+  Table2,
+  Piano,
+  Music2,
+  Dribbble,
   MoveHorizontal,
   X,
 } from "lucide-react";
@@ -19,30 +22,33 @@ import { QuantPilotWorkflow } from "./QuantPilotWorkflow";
 type Translate = (zh: string, en: string) => string;
 const makeToolFiles = (t: Translate) => [
   {
-    name: t("来源归档", "Sources"), cover: ["Source", "Archive"], label: "SOURCE ARCHIVE",
-    action: t("固定原文与发布时间", "PRESERVE SOURCE + DATE"),
-    title: t("先留下当时读到的原文。", "Keep the source as it was read."),
-    body: t("我的本地文章研究工作流保存原文、图片与发布日期，按内容哈希归档。分析从固定来源开始，而不是反复依赖可能改变的网页。", "My local article-research workflow archives source text, images and publication dates by content hash. Analysis starts from a fixed source rather than a web page that may change."),
-    context: t("本地工作流 · 已建立归档脚本", "Local workflow · archive script established"),
-    tags: ["Python", t("内容哈希", "Content hash")], color: "#2347AA",
+    kind: "excel" as const, name: t("IT 技能", "IT skills"), label: t("办公工具", "OFFICE TOOL"),
+    action: "EXCEL",
+    body: t("Excel 是我的 IT 技能之一。", "Excel is part of my IT skill set."),
+    context: t("技能 · 办公工具", "Skill · office tool"),
+    tags: ["Excel", t("IT 技能", "IT skill")], color: "#237F58",
   },
   {
-    name: t("方法账本", "Method ledger"), cover: ["Method", "Ledger"], label: "VERSIONED METHODS",
-    action: t("保留每次规则修改", "APPEND RULE VERSIONS"),
-    title: t("方法变了，也留下它的版本。", "When a method changes, keep its version."),
-    body: t("方法账本以仅追加方式保存规则版本。后续理解可以修订方法，但不覆盖以前使用的条件，让研究过程可以回读。", "An append-only method ledger retains rule versions. Later understanding can revise the method without replacing the conditions used earlier, so the research process can be revisited."),
-    context: t("本地工作流 · 版本账本已建立", "Local workflow · version ledger established"),
-    tags: ["JSONL", t("仅追加版本", "Append-only versions")], color: "#15514D",
+    kind: "piano" as const, name: t("钢琴", "Piano"), label: t("音乐", "MUSIC"),
+    action: t("钢琴十级", "PIANO · LEVEL 10"),
+    body: t("钢琴十级。音乐是我的个人兴趣之一。", "Piano · Level 10. Music is one of my personal interests."),
+    context: t("个人兴趣 · 音乐", "Personal interest · music"),
+    tags: [t("钢琴十级", "Level 10"), t("音乐", "Music")], color: "#28313C",
   },
   {
-    name: t("时间边界", "As-of context"), cover: ["As-of", "Context"], label: "TEMPORAL CONTEXT",
-    action: t("只看当时可获得的信息", "USE INFORMATION AVAILABLE THEN"),
-    title: t("未来的信息，不能改写过去。", "Later information cannot rewrite the past."),
-    body: t("上下文脚本核对时间戳，拒绝晚于文章发布时间的市场快照。没有可靠行情时，只解析文章，不把缺失的数据包装成当日判断。", "The context script checks timestamps and rejects market snapshots later than the article’s publication. Without reliable market data, it parses the article without claiming a same-day confirmation."),
-    context: t("本地工作流 · 时间检查脚本已建立", "Local workflow · timestamp checks established"),
-    tags: ["Python", t("时间戳校验", "Timestamp validation")], color: "#B63D32",
+    kind: "media" as const, name: t("自媒体运营", "Self-media"), label: t("个人实践", "PERSONAL PRACTICE"),
+    action: t("自媒体运营", "SELF-MEDIA OPERATION"),
+    body: t("自媒体运营是我的个人实践之一。", "Self-media operation is part of my personal practice."),
+    context: t("个人实践 · 自媒体运营", "Personal practice · self-media operation"),
+    tags: [t("自媒体运营", "Self-media operation")], color: "#E45165",
   },
-
+  {
+    kind: "basketball" as const, name: t("篮球", "Basketball"), label: t("运动", "SPORT"),
+    action: t("篮球", "BASKETBALL"),
+    body: t("篮球是我的个人兴趣之一。", "Basketball is one of my personal interests."),
+    context: t("个人兴趣 · 运动", "Personal interest · sport"),
+    tags: [t("篮球", "Basketball"), t("运动", "Sport")], color: "#CA713A",
+  },
 ];
 
 type ToolFile = ReturnType<typeof makeToolFiles>[number];
@@ -50,100 +56,150 @@ type ToolFile = ReturnType<typeof makeToolFiles>[number];
 type ArchiveControl = {
   select: (index: number) => void;
   setQuiet: (quiet: boolean) => void;
-  updateFiles: (files: ToolFile[]) => void;
 };
 
-// Interaction references: Three.js r180 Raycaster and rendering-on-demand manual.
-// All book geometry and cover artwork below are original; no external models are loaded.
-function paintBookCover(
-  surface: HTMLCanvasElement,
-  index: number,
-  file: ToolFile,
-) {
+// Original code-native object artwork. The familiar rotating archive remains a
+// rendering-on-demand turntable; the four silhouettes carry the actual facts.
+function paintWorksheet(surface: HTMLCanvasElement) {
   const context = surface.getContext("2d")!;
-  const coverColors = [
-    {
-      paper: "#FFF4D7",
-      ink: "#2347AA",
-      grid: "#2347AA26",
-      footerInk: "#FFF4D7",
-    },
-    {
-      paper: "#F2D169",
-      ink: "#103338",
-      grid: "#10333826",
-      footerInk: "#FFF4D7",
-    },
-    {
-      paper: "#2347AA",
-      ink: "#FFF4D7",
-      grid: "#FFF4D726",
-      footerInk: "#FFF4D7",
-    },
-    {
-      paper: "#DDF3E4",
-      ink: "#6C183C",
-      grid: "#6C183C26",
-      footerInk: "#FFF4D7",
-    },
-    {
-      paper: "#F2D169",
-      ink: "#103338",
-      grid: "#254CC726",
-      footerInk: "#FFF4D7",
-    },
-    {
-      paper: "#103338",
-      ink: "#FFF4D7",
-      grid: "#FFF4D726",
-      footerInk: "#103338",
-    },
-  ][index];
-  context.fillStyle = coverColors.paper;
+  context.fillStyle = "#F3F7E9";
   context.fillRect(0, 0, 512, 768);
-  context.fillStyle = file.color;
-  context.fillRect(0, 0, 22, 768);
-  context.strokeStyle = coverColors.grid;
-  context.lineWidth = 1;
-  for (let x = 62; x <= 450; x += 97) {
-    context.beginPath();
-    context.moveTo(x, 156);
-    context.lineTo(x, 580);
-    context.stroke();
+  context.fillStyle = "#237F58";
+  context.fillRect(0, 0, 512, 166);
+  context.fillStyle = "#FFF9E8";
+  context.font = '600 102px "Space Grotesk", sans-serif';
+  context.fillText("X", 32, 119);
+  context.font = '500 48px "Space Grotesk", sans-serif';
+  context.fillText("Excel", 153, 107);
+  const left = 36, top = 214, cellWidth = 110, cellHeight = 68;
+  for (let row = 0; row < 7; row++) {
+    for (let column = 0; column < 4; column++) {
+      context.fillStyle = row === 0 || column === 0 ? "#D6E9D4" : row % 2 ? "#F9FCF0" : "#EAF1DF";
+      context.fillRect(left + column * cellWidth, top + row * cellHeight, cellWidth, cellHeight);
+      context.strokeStyle = "#AAC6A7";
+      context.lineWidth = 2;
+      context.strokeRect(left + column * cellWidth, top + row * cellHeight, cellWidth, cellHeight);
+    }
   }
-  context.fillStyle = coverColors.ink;
-  context.font = '23px "IBM Plex Mono", monospace';
-  context.fillText("CHONEY / WORK FILE", 53, 66);
-  context.font = '50px "Space Grotesk", sans-serif';
-  context.fillText(String(index + 1).padStart(2, "0"), 402, 116);
-  context.fillRect(53, 138, 397, 2);
-  context.font = '600 73px "Space Grotesk", sans-serif';
-  file.cover.forEach((line, lineIndex) => {
-    const size = line.length > 8 ? 56 : 73;
-    context.font = `600 ${size}px "Space Grotesk", sans-serif`;
-    context.fillText(line, 48, 292 + lineIndex * 94, 410);
-  });
-  context.font = '20px "IBM Plex Mono", monospace';
-  context.fillText(file.label, 52, 491, 409);
-  context.fillStyle = file.color;
-  context.fillRect(0, 600, 512, 168);
-  context.fillStyle = coverColors.footerInk;
-  context.font = '30px "Space Grotesk", "PingFang SC", sans-serif';
-  context.fillText(file.action, 45, 661, 420);
-  context.font = '20px "IBM Plex Mono", monospace';
-  context.fillText("TOOLS WITH A CONTEXT", 45, 721);
+  context.strokeStyle = "#237F58";
+  context.lineWidth = 9;
+  context.strokeRect(left + cellWidth * 2, top + cellHeight * 3, cellWidth, cellHeight);
+  context.fillStyle = "#237F58";
+  context.fillRect(left + cellWidth * 3 - 7, top + cellHeight * 4 - 7, 14, 14);
 }
 
-function makeBookTexture(THREE: typeof Three, index: number, file: ToolFile) {
+function makeWorksheetTexture(THREE: typeof Three) {
   const surface = document.createElement("canvas");
   surface.width = 512;
   surface.height = 768;
-  paintBookCover(surface, index, file);
+  paintWorksheet(surface);
   const texture = new THREE.CanvasTexture(surface);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.anisotropy = 2;
   return texture;
 }
+
+function makeInterestObject(
+  THREE: typeof Three,
+  kind: ToolFile["kind"],
+  geometries: Three.BufferGeometry[],
+  materials: Three.Material[],
+  textures: Three.CanvasTexture[],
+) {
+  const object = new THREE.Group();
+  const material = (color: string, roughness = .55, metalness = .08) => {
+    const result = new THREE.MeshStandardMaterial({ color, roughness, metalness });
+    materials.push(result);
+    return result;
+  };
+  const mesh = (geometry: Three.BufferGeometry, appearance: Three.Material, x = 0, y = 0, z = 0) => {
+    geometries.push(geometry);
+    const result = new THREE.Mesh(geometry, appearance);
+    result.position.set(x, y, z);
+    object.add(result);
+    return result;
+  };
+  if (kind === "excel") {
+    const green = material("#237F58", .43, .12);
+    const edge = material("#B8D4BC", .55);
+    mesh(new THREE.BoxGeometry(1.12, 1.66, .16), green);
+    const texture = makeWorksheetTexture(THREE);
+    textures.push(texture);
+    const worksheet = new THREE.MeshStandardMaterial({ map: texture, roughness: .78 });
+    materials.push(worksheet);
+    mesh(new THREE.PlaneGeometry(1, 1.5), worksheet, 0, 0, .081);
+    mesh(new THREE.BoxGeometry(.58, .07, .38), edge, 0, -.855, -.035);
+  } else if (kind === "piano") {
+    const casing = material("#25303A", .42, .2);
+    const white = material("#FFF9E8", .42);
+    const black = material("#171E25", .38);
+    const accent = material("#85B8C5", .38, .25);
+    mesh(new THREE.BoxGeometry(.78, 1.82, .24), casing);
+    mesh(new THREE.BoxGeometry(.53, .12, .03), accent, 0, .74, .135);
+    const whiteKey = new THREE.BoxGeometry(.58, .099, .045);
+    const blackKey = new THREE.BoxGeometry(.32, .05, .08);
+    geometries.push(whiteKey, blackKey);
+    for (let index = 0; index < 14; index++) {
+      const y = -.72 + index * .102;
+      const key = new THREE.Mesh(whiteKey, white);
+      key.position.set(0, y, .139);
+      object.add(key);
+      if (index < 13 && index % 7 !== 2 && index % 7 !== 6) {
+        const sharp = new THREE.Mesh(blackKey, black);
+        sharp.position.set(.13, y + .051, .2);
+        object.add(sharp);
+      }
+    }
+    mesh(new THREE.BoxGeometry(.6, .07, .4), casing, 0, -.94, -.03);
+  } else if (kind === "media") {
+    const note = new THREE.Shape();
+    note.moveTo(.05, .78); note.lineTo(.28, .78);
+    note.bezierCurveTo(.31, .47, .46, .36, .64, .34); note.lineTo(.64, .1);
+    note.bezierCurveTo(.47, .11, .35, .18, .28, .27); note.lineTo(.28, -.33);
+    note.bezierCurveTo(.28, -.63, .05, -.8, -.2, -.8);
+    note.bezierCurveTo(-.47, -.8, -.63, -.61, -.61, -.39);
+    note.bezierCurveTo(-.61, -.14, -.39, .04, -.08, .03); note.lineTo(-.08, -.22);
+    note.bezierCurveTo(-.39, -.14, -.45, -.51, -.2, -.52);
+    note.bezierCurveTo(-.03, -.52, .05, -.44, .05, -.3); note.lineTo(.05, .78);
+    const extrusion = new THREE.ExtrudeGeometry(note, { depth: .09, bevelEnabled: true, bevelSegments: 2, steps: 1, bevelSize: .02, bevelThickness: .02, curveSegments: 14 });
+    geometries.push(extrusion);
+    for (const [color, x, y, z] of [["#46D4D4", -.065, .055, -.105], ["#EA4F69", .065, -.055, -.055], ["#1C2631", 0, 0, 0]] as const) {
+      const layer = new THREE.Mesh(extrusion, material(color, .36, .13));
+      layer.position.set(x - .045, y, z);
+      object.add(layer);
+    }
+  } else {
+    const surface = document.createElement("canvas");
+    surface.width = surface.height = 128;
+    const context = surface.getContext("2d")!;
+    context.fillStyle = "#CA713A"; context.fillRect(0, 0, 128, 128);
+    context.fillStyle = "#A550272E";
+    for (let row = 0; row < 21; row++) for (let column = 0; column < 21; column++) {
+      context.beginPath(); context.arc(column * 6 + (row % 2) * 3, row * 6, 1.4, 0, Math.PI * 2); context.fill();
+    }
+    const texture = new THREE.CanvasTexture(surface);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    textures.push(texture);
+    const rubber = new THREE.MeshStandardMaterial({ map: texture, roughness: .9 });
+    materials.push(rubber);
+    mesh(new THREE.SphereGeometry(.68, 40, 28), rubber, 0, -.15, 0);
+    const seam = material("#342F2A", .92, 0);
+    const seamGeometry = new THREE.TorusGeometry(.682, .013, 6, 80);
+    geometries.push(seamGeometry);
+    for (const [x, y] of [[0, 0], [Math.PI / 2, 0], [0, Math.PI / 2]]) {
+      const ring = new THREE.Mesh(seamGeometry, seam);
+      ring.position.y = -.15;
+      ring.rotation.set(x, y, .15);
+      object.add(ring);
+    }
+  }
+  // Each silhouette rests on the same turntable plane before the selected lift.
+  const floorOffset = kind === "piano" ? .13 : kind === "excel" ? .045 : 0;
+  object.children.forEach(child => { child.position.y += floorOffset; });
+  return object;
+}
+
+const objectIcons = { excel: Table2, piano: Piano, media: Music2, basketball: Dribbble };
 
 export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
   const { t, language } = useI18n();
@@ -177,9 +233,6 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
   useEffect(() => {
     controlsRef.current?.setQuiet(lowMotion);
   }, [lowMotion]);
-  useEffect(() => {
-    controlsRef.current?.updateFiles(filesRef.current);
-  }, [language]);
 
   useEffect(() => {
     const host = hostRef.current;
@@ -237,43 +290,14 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
 
       const carousel = new THREE.Group();
       scene.add(carousel);
-      const books: Three.Mesh<
-        Three.BoxGeometry,
-        Three.MeshStandardMaterial[]
-      >[] = [];
+      const books: Three.Group[] = [];
       const coverTextures: Three.CanvasTexture[] = [];
       const geometries: Three.BufferGeometry[] = [];
       const materials: Three.Material[] = [];
       const radius = 1.46;
       const turn = (Math.PI * 2) / toolFiles.length;
-      const bookGeometry = new THREE.BoxGeometry(1.06, 1.62, 0.22);
-      geometries.push(bookGeometry);
       filesRef.current.forEach((file, index) => {
-        const texture = makeBookTexture(THREE, index, file);
-        coverTextures.push(texture);
-        const side = new THREE.MeshStandardMaterial({
-          color: "#FFF4D7",
-          roughness: 0.83,
-        });
-        const binding = new THREE.MeshStandardMaterial({
-          color: file.color,
-          roughness: 0.66,
-          metalness: 0.16,
-        });
-        const cover = new THREE.MeshStandardMaterial({
-          map: texture,
-          roughness: 0.82,
-          metalness: 0.03,
-        });
-        materials.push(side, binding, cover);
-        const book = new THREE.Mesh(bookGeometry, [
-          side,
-          binding,
-          side,
-          side,
-          cover,
-          binding,
-        ]);
+        const book = makeInterestObject(THREE, file.kind, geometries, materials, coverTextures);
         const angle = index * turn;
         const initialRadius = quietRef.current ? radius : radius * 0.72;
         book.position.set(
@@ -284,6 +308,7 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
         book.rotation.y = angle + (quietRef.current ? 0 : 0.22);
         book.visible = quietRef.current || index === 0;
         book.userData.fileIndex = index;
+        book.userData.kind = file.kind;
         carousel.add(book);
         books.push(book);
       });
@@ -533,8 +558,10 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
         );
         scene.updateMatrixWorld(true);
         raycaster.setFromCamera(pointer, camera);
-        const hit = raycaster.intersectObjects(books, false)[0];
-        return hit ? (hit.object.userData.fileIndex as number) : null;
+        const hit = raycaster.intersectObjects(books, true)[0];
+        let object: Three.Object3D | null = hit?.object ?? null;
+        while (object && typeof object.userData.fileIndex !== "number") object = object.parent;
+        return object ? object.userData.fileIndex as number : null;
       }
       function pointerDown(event: PointerEvent) {
         if (event.button !== 0 || contextLost) return;
@@ -614,14 +641,6 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
           if (value) velocity = 0;
           schedule();
         },
-        updateFiles(files) {
-          files.forEach((file, index) => {
-            const texture = coverTextures[index];
-            paintBookCover(texture.image as HTMLCanvasElement, index, file);
-            texture.needsUpdate = true;
-          });
-          schedule();
-        },
       };
       requestDraw = schedule;
       stopDraw = stop;
@@ -693,6 +712,7 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
   }, []);
 
   const file = toolFiles[active];
+  const ActiveIcon = objectIcons[file.kind];
   return (
     <section
       id="tools"
@@ -702,14 +722,14 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
     >
       <div className="chapter-inner tools-inner">
         <div className="tools-heading-line">
-          <p className="chapter-kicker">08 / MY RESEARCH WORKFLOW</p>
-          <span>CHONEY’S RESEARCH DESK</span>
+          <p className="chapter-kicker">{t("08 / 技能与个人兴趣", "08 / SKILLS & PERSONAL INTERESTS")}</p>
+          <span>CHONEY’S PERSONAL OBJECTS</span>
         </div>
-        <header className="tools-heading"><div><span className="tools-project-label">STOCK / PERSONAL DEVELOPMENT</span><h2 id="tools-title" className="project-title">{t("可追溯的文章研究工作流", "Traceable Article-Research Workflow")}</h2></div><p className="project-summary">{t("用来源、方法与时间记录，让模型辅助研究可回读、可核对。", "Source, method and time records make model-assisted research traceable and checkable.")}</p></header>
+        <header className="tools-heading"><div><span className="tools-project-label">{t("IT · 音乐 · 自媒体 · 运动", "IT · MUSIC · MEDIA · SPORT")}</span><h2 id="tools-title" className="project-title">{t("技能与个人兴趣", "Skills & personal interests")}</h2></div><p className="project-summary">{t("办公工具、钢琴十级、自媒体运营与篮球。", "Excel, piano at Level 10, self-media operation and basketball.")}</p></header>
         <div className="tools-archive-layout">
           <div className="tools-scene-column">
             <div className="tools-scene-topline">
-              <span>PERSONAL TOOL ARCHIVE</span>
+              <span>{t("四件个人物品", "FOUR PERSONAL OBJECTS")}</span>
               <span>{String(active + 1).padStart(2, "0")} / {String(toolFiles.length).padStart(2, "0")}</span>
             </div>
             <div className="tools-scene" ref={hostRef}>
@@ -723,8 +743,8 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
                 tabIndex={0}
                 role="group"
                 aria-label={t(
-                  "我的三维工具档案，水平拖动旋转，点击书册阅读，左右方向键选择档案",
-                  "My 3D tool archive. Drag horizontally to rotate, click a book to read, or use the left and right arrow keys to choose a file.",
+                  "我的三维技能与兴趣转盘，水平拖动旋转，点击物品查看，左右方向键选择",
+                  "My 3D skills and interests. Drag to rotate, click an object to read, or choose with the arrow keys.",
                 )}
                 aria-describedby="tools-interaction-hint"
                 onKeyDown={(event) => {
@@ -738,6 +758,7 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
                     event.preventDefault();
                     selectFile(0);
                   }
+                  if (event.key === "End") { event.preventDefault(); selectFile(toolFiles.length - 1); }
                   if (event.key === "Enter" || event.key === " ") {
                     event.preventDefault();
                     setOpened(!opened);
@@ -747,16 +768,16 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
               />
               {mode !== "webgl" && (
                 <motion.div className="tools-flat-file" initial={lowMotion ? false : { opacity: 0 }} animate={{ opacity: sceneReady ? 1 : 0 }} transition={slowMotion({ duration: lowMotion ? 0 : 0.35 })}>
-                  <BookOpen size={35} strokeWidth={1} />
-                  <span>{String(active + 1).padStart(2, "0")} / WORK FILE</span>
+                  <ActiveIcon size={35} strokeWidth={1} />
+                  <span>{String(active + 1).padStart(2, "0")} / PERSONAL OBJECT</span>
                   <strong>{file.name}</strong>
                   <p>{file.action}</p>
                   <small>
                     {mode === "pending"
-                      ? t("正在打开我的工具档案", "Opening my tool archive")
+                      ? t("正在载入个人物品", "Loading my personal objects")
                       : t(
-                          "选择下方档案，继续阅读",
-                          "Choose a file below to keep reading",
+                          "选择下方条目，查看技能与兴趣",
+                          "Choose an item below to read about my skills and interests",
                         )}
                   </small>
                 </motion.div>
@@ -766,22 +787,22 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
               <p id="tools-interaction-hint">
                 <MoveHorizontal size={15} />
                 {t(
-                  "水平拖动旋转 · 点书册阅读",
-                  "Drag to rotate · click a book to read",
+                  "水平拖动旋转 · 点击物品查看",
+                  "Drag to rotate · click an object to read",
                 )}
               </p>
               <div>
                 <button
                   type="button"
                   onClick={() => selectFile(active - 1)}
-                  aria-label={t("上一册工具档案", "Previous tool file")}
+                  aria-label={t("上一件物品", "Previous object")}
                 >
                   <ArrowLeft size={17} />
                 </button>
                 <button
                   type="button"
                   onClick={() => selectFile(active + 1)}
-                  aria-label={t("下一册工具档案", "Next tool file")}
+                  aria-label={t("下一件物品", "Next object")}
                 >
                   <ArrowRight size={17} />
                 </button>
@@ -798,7 +819,7 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
                 transition={slowMotion({ duration: lowMotion ? 0 : 0.2 })}
               >
                 {opened ? <>
-                <div className="tools-reading-header"><span className="tools-file-label">FILE {String(active + 1).padStart(2, "0")} / {file.label}</span><button type="button" className="tools-close" aria-label={t("合上工作档案", "Close work file")} onClick={() => setOpened(false)}><X size={18}/></button></div>
+                <div className="tools-reading-header"><span className="tools-file-label">0{active + 1} / {file.label}</span><button type="button" className="tools-close" aria-label={t("收起技能与兴趣说明", "Close skill or interest notes")} onClick={() => setOpened(false)}><X size={18}/></button></div>
                 <h3>{file.name}</h3>
                 <p className="tools-personal-use">{file.body}</p>
                 <div className="tools-use-tags">
@@ -806,20 +827,14 @@ export function ToolsChapter({ quiet = false }: { quiet?: boolean }) {
                     <span key={tag}>{tag}</span>
                   ))}
                 </div>
-                <div className="tools-context-link">
-                  <span>
-                    <small>{t("实现与使用状态", "IMPLEMENTATION & USE")}</small>
-                    {file.context}
-                  </span>
-                </div>
-                </> : <div className="tools-closed-intro"><span className="tools-file-label">{t("来源 · 方法 · 时间", "SOURCE · METHOD · TIME")}</span><h3>{t("三个已实现模块", "Three implemented modules")}</h3><p className="tools-personal-use">{t("转动书架，翻开来源、方法或时间记录。", "Rotate the archive. Open a source, method or time record.")}</p><button type="button" className="tools-open-file" onClick={() => selectFile(active)}>{t("打开这册档案", "Open this file")}<BookOpen size={17}/></button></div>}
+                </> : <div className="tools-closed-intro"><span className="tools-file-label">{t("技能 · 实践 · 兴趣", "SKILLS · PRACTICE · INTERESTS")}</span><h3>{t("选择一件物品", "Choose an object")}</h3><p className="tools-personal-use">{t("转动转盘，查看我的技能与兴趣。", "Rotate the turntable to explore my skills and interests.")}</p><button type="button" className="tools-open-file" onClick={() => selectFile(active)}>{t("查看这件物品", "Read about this object")}<ActiveIcon size={17}/></button></div>}
               </motion.div>
             </AnimatePresence></div>
           </div>
         </div>
         <div
           className="tools-file-index"
-          aria-label={t("选择研究工作流环节", "Choose a research-workflow component")}
+          aria-label={t("选择技能或个人兴趣", "Choose a skill or personal interest")}
         >
           {toolFiles.map((item, index) => (
             <button

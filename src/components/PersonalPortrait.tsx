@@ -20,19 +20,19 @@ const getPersonalFacets = (t: (zh: string, en: string) => string) =>
     {
       id: "space",
       index: "01",
-      label: t("十堰 → 苏州", "Shiyan → Suzhou"),
-      subtitle: t("家乡与现在", "Home and now"),
-      title: t("家乡在十堰，日常在苏州。", "From Shiyan, based in Suzhou."),
+      label: t("视觉与空间", "Vision & space"),
+      subtitle: t("研究关注", "Research focus"),
+      title: t("探索视觉与空间感知。", "Exploring visual and spatial perception."),
       facts: [
-        t("我的家乡是湖北十堰。", "My hometown is Shiyan, Hubei."),
-        t("现在我常居江苏苏州。", "I am now based in Suzhou, Jiangsu."),
+        t("我的研究关注图像观测与空间理解。", "My research focuses on image observations and spatial understanding."),
+        t("目前正在推进生成式感知的毕业研究。", "I am developing my dissertation on generative perception."),
       ],
       question: t(
-        "下一段学习与生活里，我想保留怎样的日常？",
-        "What everyday routines do I want to make room for in the next stage of life and learning?",
+        "怎样从图像观测建立可检查的空间理解？",
+        "How can image observations support spatial understanding we can examine?",
       ),
-      href: "#origins",
-      link: t("回到我的来路", "Follow my journey"),
+      href: "#directions",
+      link: t("阅读研究方向", "Explore research directions"),
     },
     {
       id: "systems",
@@ -436,8 +436,8 @@ export function PersonalPortrait({ quiet = false }: PersonalPortraitProps) {
         <div className="portrait-bottom">
           <span>
             {t(
-              "从十堰到苏州。从好奇到下一步。",
-              "From Shiyan to Suzhou. From curiosity to the next step.",
+              "视觉、空间，与接下来的研究。",
+              "Vision, space and the research ahead.",
             )}
           </span>
           <a

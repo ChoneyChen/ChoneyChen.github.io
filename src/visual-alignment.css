@@ -1,0 +1,178 @@
+/* Shared reading rails and spacing; chapter artwork retains its own composition. */
+:root {
+  --alignment-gutter: clamp(24px, 5vw, 72px);
+  --alignment-gap: clamp(28px, 4vw, 56px);
+  --alignment-section-space: clamp(64px, 7vw, 100px);
+  --alignment-stack: 24px;
+}
+
+.personal-site .chapter-inner {
+  max-width: var(--content-width);
+  margin-inline: auto;
+  padding: var(--alignment-section-space) var(--alignment-gutter);
+}
+.personal-site .site-header {
+  padding-inline: max(var(--alignment-gutter), calc((100% - var(--content-width)) / 2 + var(--alignment-gutter)));
+}
+.personal-site .chapter-kicker {
+  margin: 0 0 var(--alignment-stack);
+  line-height: 1.6;
+}
+.personal-site .project-title {
+  text-wrap: balance;
+  line-height: 1.22;
+}
+.personal-site .project-summary {
+  margin: 0;
+  line-height: 1.65;
+  max-inline-size: 56ch;
+  text-wrap: pretty;
+}
+html[data-language="zh"] .personal-site .project-title {
+  letter-spacing: -.018em;
+  line-height: 1.3;
+}
+.personal-site :is(button, a) > svg { flex-shrink: 0; }
+.personal-site :is(input[type="range"], .chapter-kicker, .project-role) {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Profile: align the headline and paper as two deliberate visual columns. */
+.personal-site .hero-grid {
+  max-width: var(--content-width);
+  padding: var(--alignment-section-space) var(--alignment-gutter) 56px;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+  gap: var(--alignment-gap);
+  align-items: start;
+  min-height: 0;
+}
+.personal-site .hero-copy { align-self: start; min-width: 0; }
+.personal-site .hero-kicker { margin: 0 0 28px; line-height: 1.6; }
+.personal-site .hero-copy h1 { margin: 0; }
+.personal-site .hero-name-en { margin-left: -.035em; }
+.personal-site .hero-statement { margin: 28px 0 0; }
+.personal-site .hero-bio { margin: 20px 0 0; max-inline-size: 42ch; }
+.personal-site .hero-basic-facts { margin: 20px 0 0; display: flex; flex-wrap: wrap; gap: 6px 16px; }
+.personal-site .hero-basic-facts span { padding: 0; border: 0; }
+.personal-site .hero-start { margin-top: 28px; padding-block: 0 12px; }
+.personal-site .identity-fold { --identity-reading-space: 22rem; margin-top: -12px; max-width: 450px; padding-bottom: 28px; }
+html[data-language="en"] .personal-site .identity-fold { --identity-reading-space: 27rem; }
+.personal-site .identity-underleaf { inset: 45px -8px 28px; }
+.personal-site .identity-tabs { left: 0; right: 0; }
+.personal-site .identity-tabs button { flex: 1; min-width: 0; padding-inline: 10px; }
+.personal-site .identity-tabs button > span { margin-right: 8px; }
+.personal-site .identity-paper { padding: 28px 32px; }
+.personal-site .identity-paper-top { gap: 8px 20px; padding-bottom: 16px; }
+.personal-site .identity-page { padding-top: 28px; min-height: var(--identity-reading-space); }
+.personal-site .identity-page h2 { max-width: 32ch; }
+.personal-site .identity-page ul { max-width: none; margin-bottom: 4px; }
+.personal-site .identity-close { top: 25px; right: 0; }
+.personal-site .hero-foot {
+  width: calc(100% - var(--alignment-gutter) - var(--alignment-gutter));
+  max-width: calc(var(--content-width) - var(--alignment-gutter) - var(--alignment-gutter));
+  margin-inline: auto;
+  padding: 24px 0 32px;
+  gap: 16px 32px;
+  flex-wrap: wrap;
+}
+.personal-site .hero-foot > span:last-child { margin-left: auto; }
+
+/* Contact: a clear typographic column beside an aligned address sheet. */
+.personal-site .contact-chapter .contact-inner {
+  grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr);
+  gap: var(--alignment-gap);
+  align-items: start;
+}
+.personal-site .contact-intro { padding-top: 28px; min-width: 0; }
+.personal-site .contact-intro h2 {
+  font-size: clamp(40px, 4vw, 58px);
+  line-height: 1.14;
+  margin: 0 0 28px;
+  text-wrap: balance;
+}
+.personal-site .contact-intro > p:not(.chapter-kicker) {
+  font-size: 17px;
+  line-height: 1.7;
+  max-width: 34ch;
+  margin: 0;
+}
+.personal-site .contact-signature { margin-top: 40px; margin-left: -.035em; }
+.personal-site .contact-signature > span { margin-top: 12px; }
+.personal-site .contact-envelope { min-width: 0; padding: 24px 18px 48px; }
+.personal-site .contact-letter { padding: 28px 28px 24px; }
+.personal-site .contact-letter-head { line-height: 1.6; gap: 16px; flex-wrap: wrap; padding-bottom: 20px; }
+.personal-site .contact-channel {
+  grid-template-columns: 96px minmax(0, 1fr) 44px;
+  gap: 16px;
+  min-height: 96px;
+  padding: 18px 0;
+}
+.personal-site .contact-channel-kind { line-height: 1.5; white-space: nowrap; }
+.personal-site .contact-address { font-size: clamp(16px, 1.35vw, 20px); line-height: 1.5; }
+.personal-site .contact-channel > svg { justify-self: center; }
+.personal-site .contact-wechat button { width: 44px; min-height: 44px; justify-content: center; }
+.personal-site .contact-copy-status { min-height: 0; margin-top: 16px; }
+.personal-site .contact-copy-status:empty { margin: 0; }
+.personal-site .contact-envelope-front { height: 48px; padding: 22px 22px 8px; }
+.personal-site .contact-envelope-front > span { letter-spacing: .04em; line-height: 1.4; }
+.personal-site .portfolio-footer {
+  padding-inline: max(var(--alignment-gutter), calc((100% - var(--content-width)) / 2 + var(--alignment-gutter)));
+  gap: 20px;
+}
+
+/* Directory cells use a fixed number rail and aligned text/arrow columns. */
+.personal-site .site-directory { padding-inline: max(var(--alignment-gutter), calc((100% - var(--content-width)) / 2 + var(--alignment-gutter))); }
+.personal-site .site-directory nav a { display: grid; grid-template-columns: 16px 24px minmax(0, 1fr) 20px; gap: 16px; align-items: center; }
+.personal-site .site-directory nav a > svg { margin: 0; }
+.personal-site .site-directory nav small { margin-top: 6px; }
+
+@media (max-width: 1050px) {
+  .personal-site .quiet-toggle span { display: none; }
+  .personal-site .quiet-toggle { min-width: 44px; justify-content: center; }
+  .personal-site .header-actions { gap: 18px; }
+  .personal-site .hero-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .personal-site .identity-tabs button > span { display: none; }
+  .personal-site .identity-paper { padding-inline: 24px; }
+  .personal-site .contact-chapter .contact-inner { grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); }
+  .personal-site .contact-letter { padding-inline: 20px; }
+  .personal-site .contact-channel { grid-template-columns: 80px minmax(0, 1fr) 36px; gap: 12px; }
+}
+@media (max-width: 800px) {
+  .personal-site .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 44px; padding-bottom: 48px; }
+  .personal-site .hero-copy { width: 100%; }
+  .personal-site .identity-fold { margin: 0 auto; }
+  .personal-site .contact-chapter .contact-inner { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .personal-site .contact-intro { padding-top: 0; }
+  .personal-site .contact-envelope { margin-top: 0; width: 100%; max-width: 620px; }
+  .personal-site .contact-signature { margin-top: 28px; }
+}
+@media (max-width: 600px) {
+  .personal-site .hero-grid { padding-top: 40px; }
+  .personal-site .hero-kicker { margin-bottom: 24px; }
+  .personal-site .hero-statement { margin-top: 24px; }
+  .personal-site .hero-name-en { margin-left: -.035em; }
+  .personal-site .identity-paper { padding: 24px; }
+  .personal-site .identity-underleaf { inset: 45px -4px 28px; }
+  .personal-site .identity-fold { --identity-reading-space: 21rem; }
+  html[data-language="en"] .personal-site .identity-fold { --identity-reading-space: 26rem; }
+  .personal-site .identity-tabs button { padding-inline: 7px; }
+  .personal-site .hero-foot > span:last-child { display: flex; }
+  .personal-site .contact-intro h2 { font-size: clamp(34px, 9.5vw, 44px); }
+  .personal-site .contact-envelope { padding: 20px 12px 48px; }
+  .personal-site .contact-letter { padding: 24px 20px; }
+  .personal-site .contact-channel { grid-template-columns: minmax(0, 1fr) 44px; gap: 8px 12px; padding: 18px 0; min-height: 120px; }
+  .personal-site .contact-channel-kind { grid-column: 1 / -1; font-size: 14px; }
+  .personal-site .contact-channel > div { grid-column: 1; grid-row: 2; }
+  .personal-site .contact-channel > :is(svg, button) { grid-column: 2; grid-row: 2; }
+  .personal-site .contact-address { font-size: 16px; }
+  .personal-site .contact-envelope-front > span { font-size: 14px; letter-spacing: 0; }
+  .personal-site .site-directory nav a { gap: 12px; }
+}
+@media (max-width: 480px) {
+  .personal-site .site-header { padding-inline: 16px; }
+  .personal-site .header-actions { gap: 8px; }
+}
+@media (max-width: 370px) {
+  .personal-site .identity-fold { --identity-reading-space: 24rem; }
+  html[data-language="en"] .personal-site .identity-fold { --identity-reading-space: 31rem; }
+}

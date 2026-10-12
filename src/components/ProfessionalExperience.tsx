@@ -140,7 +140,7 @@ function KaidingExperience({ reduced }: { reduced: boolean }) {
   }}>
     <header className="pe-record-heading"><span className="pe-record-kicker">{t("01 / 企业实习", "01 / INDUSTRY INTERNSHIP")}</span><h3 id="pe-kaiding-title">{t("十堰凯鼎动力科技有限公司", "Shiyan Kaiding Power Technology Co., Ltd.")}</h3><div className="pe-record-meta"><span>{t("2024 年夏", "Summer 2024")}</span><span>{t("信息部门 · IT 实习生", "Information Department · IT intern")}</span></div></header>
     <p className="pe-summary">{t("参与汽车零部件生产管理软件的开发、联调与测试。", "Contributed to the development, integration and testing of automotive-parts production-management software.")}</p>
-    <div className="pe-machine-console"><MechanicalDrawing ready={ready} reduced={reduced} active={open ? selected : null} /><MechanicalSelector contributions={contributions} selected={selected} open={open} reduced={reduced} select={select} toggle={toggle} trigger={trigger} /></div>
+    <div className="pe-machine-console pe-record-scene"><MechanicalDrawing ready={ready} reduced={reduced} active={open ? selected : null} /><MechanicalSelector contributions={contributions} selected={selected} open={open} reduced={reduced} select={select} toggle={toggle} trigger={trigger} /></div>
     <AnimatePresence initial={false}>{open && <ContributionPanel id="pe-kaiding-contribution" labelledBy={`pe-kaiding-choice-${selected}`} contribution={contributions[selected]} reduced={reduced} close={close} />}</AnimatePresence>
   </article>;
 }
@@ -180,12 +180,12 @@ function SurfExperience({ reduced }: { reduced: boolean }) {
   }}>
     <header className="pe-record-heading"><span className="pe-record-kicker">{t("02 / SURF 本科研究", "02 / SURF UNDERGRADUATE RESEARCH")}</span><h3 id="pe-surf-title">{t("帕金森监测研究中的可穿戴数据采集", "Wearable Data Collection for Parkinson’s Monitoring Research")}</h3><div className="pe-record-meta"><span>2025.06–09</span><span>{t("西交利物浦大学", "Xi’an Jiaotong-Liverpool University")}</span><span>{t("研究参与者 · 采集与质量保证", "Research participant · acquisition and quality assurance")}</span></div></header>
     <p className="pe-summary">{t("参与运动与电生理数据采集，检查设备运行与信号质量，为后续研究提供原始数据。", "Contributed to motion and electrophysiological data acquisition, checking devices and signal quality to provide original data for subsequent research.")}</p>
-    <figure className="pe-acquisition-scene"><AcquisitionDrawing ready={reduced || present} reduced={reduced} active={open ? selected : null} /><figcaption>{t("Shimmer3 IMU / ExG · 采集流程示意", "Shimmer3 IMU / ExG · acquisition workflow illustration")}</figcaption></figure>
+    <div className="pe-record-scene pe-research-scene"><figure className="pe-acquisition-scene"><AcquisitionDrawing ready={reduced || present} reduced={reduced} active={open ? selected : null} /><figcaption>{t("Shimmer3 IMU / ExG · 采集流程示意", "Shimmer3 IMU / ExG · acquisition workflow illustration")}</figcaption></figure>
     <div className="pe-acquisition-nodes" role="group" aria-label={t("查看采集流程中的个人工作", "Explore my work in the acquisition workflow")}>
       {contributions.map((contribution, index) => <button type="button" id={`pe-surf-choice-${index}`} className={`pe-acquisition-node${open && selected === index ? " is-selected" : ""}`} key={index} aria-expanded={open && selected === index} aria-controls="pe-surf-contribution" onClick={event => { trigger.current = event.currentTarget; setOpen(previous => selected === index ? !previous : true); setSelected(index); }}>
         <span className="pe-node-mark">0{index + 1}</span><strong>{contribution.label}</strong>{open && selected === index ? <Minus size={16} aria-hidden="true" /> : <Plus size={16} aria-hidden="true" />}
       </button>)}
-    </div>
+    </div></div>
     <AnimatePresence initial={false}>{open && <ContributionPanel id="pe-surf-contribution" labelledBy={`pe-surf-choice-${selected}`} contribution={contributions[selected]} reduced={reduced} close={close} />}</AnimatePresence>
   </article>;
 }

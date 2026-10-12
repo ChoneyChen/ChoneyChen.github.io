@@ -1,9 +1,11 @@
 import { useScenePresence as useInView } from "../hooks/useScenePresence";
 import { slowMotion } from "../lib/motionTiming";
-import { useRef, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
-import { ArrowUpRight, Check, Copy, Github, Mail, Phone } from "lucide-react";
+import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
+import { useCallback, useRef, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { ArrowUpRight, QrCode, Github, Mail, Phone } from "lucide-react";
 import { useI18n } from "../i18n";
+import { WeChatQrDialog } from "./WeChatQrDialog";
 import "./contact-chapter.css";
 
 export function ContactChapter({ quiet = false }: { quiet?: boolean }) {
@@ -12,17 +14,10 @@ export function ContactChapter({ quiet = false }: { quiet?: boolean }) {
   const reduced = quiet || Boolean(systemQuiet);
   const letter = useRef<HTMLDivElement>(null);
   const entered = useInView(letter, { once: false, amount: 0.2 });
-  const [copied, setCopied] = useState(false);
-  const [copyError, setCopyError] = useState(false);
-  async function copyWeChat() {
-    try {
-      await navigator.clipboard.writeText("Choney1110");
-      setCopied(true);
-      setCopyError(false);
-    } catch {
-      setCopyError(true);
-    }
-  }
+  const [qrOpen, setQrOpen] = useState(false);
+  const qrTrigger = useRef<HTMLButtonElement>(null);
+  const closeQr = useCallback(() => setQrOpen(false), []);
+  useCollapseOnLeave("contact", closeQr);
   const ready = reduced || entered;
   return (
     <section
@@ -47,12 +42,6 @@ export function ContactChapter({ quiet = false }: { quiet?: boolean }) {
           <div className="contact-signature" aria-label="Choney Chen">
             Choney Chen<span>TIANYI CHEN</span>
           </div>
-          <div className="contact-postmark" aria-hidden="true">
-            <span>SHIYAN → SUZHOU</span>
-            <strong>CC</strong>
-            <span>PERSONAL CORRESPONDENCE</span>
-          </div>
-
         </div>
         <div className="contact-envelope" ref={letter}>
           <div className="contact-envelope-lining" aria-hidden="true" />
@@ -80,16 +69,19 @@ export function ContactChapter({ quiet = false }: { quiet?: boolean }) {
                 <span className="contact-address">Choney1110</span>
               </div>
               <button
-                onClick={copyWeChat}
+                ref={qrTrigger}
+                onClick={() => setQrOpen(true)}
+                aria-haspopup="dialog"
+                aria-expanded={qrOpen}
                 aria-label={t(
-                  "复制微信号 Choney1110",
-                  "Copy WeChat ID Choney1110",
+                  "打开 Choney1110 的微信二维码",
+                  "Open WeChat QR code for Choney1110",
                 )}
-                title={t("复制微信号", "Copy WeChat ID")}
+                title={t("微信二维码", "WeChat QR code")}
               >
-                {copied ? <Check size={18} /> : <Copy size={17} />}
+                <QrCode size={19}/>
                 <span>
-                  {copied ? t("已复制", "Copied") : t("复制", "Copy")}
+                  {t("二维码", "QR")}
                 </span>
               </button>
             </div>
@@ -139,19 +131,6 @@ export function ContactChapter({ quiet = false }: { quiet?: boolean }) {
               </div>
               <ArrowUpRight size={19} />
             </a>
-            <p className="contact-copy-status" role="status" aria-live="polite">
-              {copyError
-                ? t(
-                    "请选中并复制微信号：Choney1110。",
-                    "Please select and copy the ID: Choney1110.",
-                  )
-                : copied
-                  ? t(
-                      "微信号已复制，可以在微信中搜索。",
-                      "WeChat ID copied. You can search for it in WeChat.",
-                    )
-                  : ""}
-            </p>
           </motion.div>
           <motion.div
             className="contact-envelope-front"
@@ -168,6 +147,7 @@ export function ContactChapter({ quiet = false }: { quiet?: boolean }) {
           </motion.div>
         </div>
       </div>
+      <AnimatePresence>{qrOpen && <WeChatQrDialog close={closeQr} trigger={qrTrigger} quiet={reduced}/>}</AnimatePresence>
     </section>
   );
 }

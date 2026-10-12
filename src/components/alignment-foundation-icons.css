@@ -1,0 +1,11 @@
+/* Technology symbols replace the classical column drawings, keeping shared tracks. */
+.personal-site .academic-archive .aa-icon-illustration { height: 180px; max-width: 180px; margin-top: 16px; }
+.personal-site .academic-archive .aa-icon-illustration .aa-capital-position { position: absolute; inset: 0; height: 100%; }
+.personal-site .academic-archive .aa-icon-illustration .aa-capital-control { height: 100%; border-radius: 30px; touch-action: pan-y; }
+.personal-site .academic-archive .aa-icon-illustration .aa-capital-control > svg { height: 100%; width: 100%; overflow: visible; }
+.personal-site .academic-archive .aa-icon-illustration .aa-capital-control:hover { background: transparent; filter: brightness(1.04); }
+.personal-site .academic-archive .aa-icon-illustration .aa-capital-control:focus-visible { outline-offset: 6px; border-radius: 30px; }
+.personal-site .aa-pillar-stage { padding-top: 4px; }
+.personal-site .aa-pillar-preview { margin-top: 22px; }
+@media(max-width:800px){ .personal-site .academic-archive .aa-icon-illustration { max-width: 170px; height: 170px; } }
+@media(max-width:480px){ .personal-site .academic-archive .aa-icon-illustration { max-width: 142px; height: 142px; } }

@@ -1,0 +1,786 @@
+/* Project compositions share baselines and spacing, while retaining their own scenes. */
+.personal-site :is(.cosmos-masthead, .sups-masthead) {
+  align-items: baseline;
+  gap: 16px 28px;
+  margin-bottom: 36px;
+}
+.personal-site :is(.cosmos-masthead, .sups-masthead) .chapter-kicker {
+  margin: 0;
+  max-width: none;
+}
+.personal-site :is(.cosmos-date, .sups-masthead > span) {
+  flex-shrink: 0;
+  line-height: 1.65;
+}
+.personal-site :is(.cosmos-heading, .sups-heading) {
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  align-items: start;
+  gap: var(--alignment-gap, clamp(28px, 4vw, 56px));
+  margin-bottom: 36px;
+}
+.personal-site :is(.cosmos-heading, .sups-heading) > div {
+  min-width: 0;
+}
+.personal-site .sups-heading {
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+}
+.personal-site :is(.cosmos-heading, .sups-heading) .project-title {
+  max-width: 28ch;
+}
+.personal-site :is(.cosmos-project-number, .sups-eyebrow) {
+  margin: 0 0 16px;
+  line-height: 1.65;
+}
+.personal-site :is(.cosmos-introduction, .sups-heading-note) {
+  max-width: none;
+  margin: 0;
+}
+.personal-site :is(.cosmos-introduction, .sups-heading-note) .project-summary {
+  max-width: 42ch;
+  margin: 12px 0 20px;
+}
+.personal-site .sups-heading-note .project-summary {
+  margin-top: 0;
+}
+.personal-site :is(.cosmos-my-role, .sups-heading-note .project-role) {
+  margin: 0;
+}
+.personal-site :is(.cosmos-my-role, .sups-heading-note .project-role) > strong {
+  margin-top: 5px;
+  font-size: 16px;
+  line-height: 1.55;
+}
+.personal-site .sups-project-status {
+  display: block;
+  margin-top: 12px;
+  line-height: 1.65;
+}
+
+/* The arcade cabinet: a centred explanation, followed by four equally usable handles. */
+.personal-site .cosmos-record-desk {
+  padding: 24px 28px;
+}
+.personal-site .cosmos-record-topline {
+  align-items: baseline;
+  padding-bottom: 18px;
+}
+.personal-site .cosmos-reader {
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 28px;
+  padding-block: 26px;
+}
+.personal-site .cosmos-reader-index {
+  align-self: center;
+}
+.personal-site .cosmos-reader-index > span {
+  font-size: 54px;
+}
+.personal-site .cosmos-reader-copy {
+  padding-right: 40px;
+}
+.personal-site .cosmos-pose-preview {
+  max-width: 680px;
+  margin-inline: auto;
+}
+.personal-site .cosmos-pose-preview figcaption {
+  margin-top: 12px;
+}
+.personal-site .cosmos-cartridge-rack {
+  align-items: stretch;
+  gap: 16px;
+  padding-top: 18px;
+}
+.personal-site .cosmos-cartridge-label {
+  min-height: 94px;
+  gap: 4px;
+}
+.personal-site .cosmos-chapter .cosmos-cartridge-label strong {
+  font-size: 16px;
+  line-height: 1.45;
+}
+.personal-site .cosmos-cartridge-label > span {
+  margin-top: auto;
+}
+.personal-site .cosmos-operation {
+  margin-top: 18px;
+}
+.personal-site .cosmos-team-results {
+  grid-template-columns: minmax(0, 1.2fr) repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 24px;
+  margin: 40px 0 24px;
+}
+.personal-site .cosmos-result {
+  min-width: 0;
+  padding-left: 24px;
+}
+.personal-site .cosmos-result strong {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.personal-site .cosmos-result > span {
+  margin-top: 12px;
+}
+.personal-site .cosmos-boundary {
+  margin-bottom: 0;
+}
+
+/* The architectural drawing gets a clear caption strip, without floating labels over the roof. */
+.personal-site .sups-architecture {
+  margin: 0 0 24px;
+}
+.personal-site .sups-stage-note {
+  position: static;
+  display: block;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.65;
+}
+.personal-site .sups-scene {
+  width: min(100%, 790px);
+  max-width: 790px;
+  margin: 8px auto 0;
+}
+.personal-site .sups-chapter .sups-scene-side-note {
+  position: static;
+  justify-content: flex-end;
+  width: auto;
+  max-width: none;
+  margin: -38px 0 0;
+  font-size: 14px;
+}
+.personal-site .sups-layer-selector {
+  align-items: stretch;
+}
+.personal-site .sups-layer-selector button {
+  min-width: 0;
+  gap: 16px;
+  padding-block: 22px;
+}
+.personal-site .sups-chapter .sups-layer-selector button strong {
+  font-size: 16px;
+  line-height: 1.45;
+  margin-bottom: 6px;
+}
+.personal-site .sups-layer-selector button small {
+  line-height: 1.6;
+}
+.personal-site .sups-layer-button-number {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+.personal-site .sups-operation {
+  margin: 18px 0 24px;
+}
+.personal-site .sups-work-grid {
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: var(--alignment-gap, clamp(28px, 4vw, 56px));
+  padding-block: 24px;
+}
+.personal-site .sups-work-description > p {
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* The Apple-like system chapter keeps its centred headline and precise 2D connection board. */
+.personal-site .mask-heading {
+  max-width: 960px;
+}
+.personal-site .mask-heading .chapter-kicker {
+  margin: 0;
+}
+.personal-site .mask-eyebrow {
+  margin: 28px 0 16px;
+  line-height: 1.65;
+}
+.personal-site .mask-heading .project-title {
+  max-width: 30ch;
+  margin-inline: auto;
+}
+.personal-site .mask-introduction {
+  max-width: 720px;
+  margin: 24px auto 44px;
+}
+.personal-site .mask-role-mark {
+  margin-top: 18px;
+  line-height: 1.65;
+}
+.personal-site .mask-story-layout {
+  grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr);
+  align-items: start;
+  gap: var(--alignment-gap, clamp(28px, 4vw, 56px));
+}
+.personal-site .mask-stage-topline {
+  align-items: baseline;
+  padding-block: 18px;
+  line-height: 1.6;
+}
+.personal-site .mask-chapter .mask-connection-node > strong {
+  font-size: 16px;
+  line-height: 1.45;
+}
+.personal-site .mask-narrative {
+  padding: 18px 0 0;
+}
+.personal-site .mask-narrative-intro {
+  min-height: 44px;
+  padding-bottom: 20px;
+  line-height: 1.6;
+}
+.personal-site .mask-story-step {
+  min-height: 110px;
+  padding: 18px 38px 20px 24px;
+}
+.personal-site .mask-story-step::before {
+  top: 24px;
+}
+.personal-site .mask-step-title {
+  font-size: clamp(20px, 1.8vw, 24px);
+  line-height: 1.35;
+  margin: 10px 0 0;
+  text-wrap: pretty;
+}
+.personal-site .mask-step-label {
+  display: none;
+}
+.personal-site .mask-step-action {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  margin: 0;
+  transform: translateY(-50%);
+}
+.personal-site .mask-outcomes {
+  align-items: start;
+  gap: var(--alignment-gap, clamp(28px, 4vw, 56px));
+  margin-top: 40px;
+  padding-top: 28px;
+}
+.personal-site .mask-outcomes > div > span {
+  display: block;
+  line-height: 1.6;
+}
+.personal-site .mask-outcome-reflection > p {
+  margin-top: 16px;
+}
+.personal-site .mask-footer {
+  margin-top: 32px;
+  padding-top: 22px;
+}
+
+/* The source-evidence illustration follows the same column as the personal-work summary. */
+.personal-site .esg-filing-line {
+  align-items: baseline;
+  gap: 16px 28px;
+  padding-top: 20px;
+}
+.personal-site .esg-filing-line .chapter-kicker {
+  margin: 0;
+}
+.personal-site .esg-filing-line > span {
+  flex-shrink: 0;
+  line-height: 1.65;
+}
+.personal-site .esg-heading {
+  grid-template-columns: minmax(0, 1fr) 240px;
+  align-items: center;
+  gap: var(--alignment-gap, clamp(28px, 4vw, 56px));
+  padding: 36px 0;
+}
+.personal-site .esg-heading .project-title {
+  max-width: 29ch;
+}
+.personal-site .esg-institution {
+  max-width: 54ch;
+  margin-top: 24px;
+  line-height: 1.7;
+}
+.personal-site .esg-scale-note {
+  justify-self: center;
+  width: 224px;
+  margin: 0;
+}
+.personal-site .esg-brief {
+  grid-template-columns: 144px minmax(0, 1fr);
+  gap: 24px;
+  padding: 0 0 28px;
+}
+.personal-site .esg-brief-mark {
+  padding-top: 4px;
+  line-height: 1.65;
+}
+.personal-site .esg-brief > .project-summary {
+  max-width: 66ch;
+  margin: 0;
+}
+.personal-site .esg-process-scene {
+  max-width: 780px;
+  margin: 0 0 58px 168px;
+}
+.personal-site .esg-process-diagram figcaption {
+  margin-bottom: 12px;
+  line-height: 1.65;
+}
+.personal-site .esg-process-diagram > ol {
+  gap: 36px;
+}
+.personal-site .esg-process-diagram li > span {
+  min-height: 42px;
+  line-height: 1.5;
+}
+.personal-site .esg-folder {
+  margin-top: 34px;
+  padding: 26px 24px 20px;
+}
+.personal-site .esg-folder-topline {
+  align-items: baseline;
+  flex-wrap: wrap;
+  padding-bottom: 22px;
+  line-height: 1.6;
+}
+.personal-site .esg-folded-pages {
+  align-items: flex-start;
+  padding-bottom: 12px;
+}
+.personal-site .esg-paper {
+  flex: 1;
+  padding: 24px 24px;
+  border-inline: 1px solid #BBAF81;
+}
+.personal-site .esg-paper.is-open {
+  flex: 1;
+  margin-top: 0;
+}
+.personal-site .esg-paper-registration {
+  padding-bottom: 20px;
+  line-height: 1.6;
+}
+.personal-site .esg-paper-heading > svg {
+  margin-bottom: 16px;
+}
+.personal-site .esg-paper-heading > span {
+  width: 100%;
+  padding-right: 0;
+}
+.personal-site .esg-paper-heading > span > small {
+  min-height: 44px;
+  padding-bottom: 10px;
+  line-height: 1.6;
+}
+.personal-site .esg-paper-heading > span > strong {
+  min-height: 2.7em;
+  font-size: clamp(20px, 1.75vw, 25px);
+  line-height: 1.35;
+  text-wrap: pretty;
+  overflow-wrap: normal;
+}
+.personal-site .esg-chapter .esg-paper-teaser {
+  min-height: 54px;
+  margin: 18px 0 16px;
+  font-size: 16px;
+  line-height: 1.65;
+}
+.personal-site .esg-paper-topic {
+  overflow-wrap: anywhere;
+}
+.personal-site .esg-afterword {
+  padding-block: 28px;
+}
+.personal-site .esg-footer {
+  padding-top: 22px;
+}
+.personal-site :is(.cosmos-chapter .cosmos-boundary, .sups-chapter .sups-work-reason, .sups-chapter .sups-boundary, .mask-chapter .mask-project-scope, .esg-chapter .esg-project-scope) p {
+  font-size: 16px;
+  line-height: 1.7;
+  max-width: 66ch;
+}
+
+/* Peer reading stages reserve the longest verified alternative, while remaining intrinsic. */
+.personal-site .cosmos-chapter { --cosmos-reading-size: 284px; }
+.personal-site .sups-chapter { --sups-reading-size: 240px; }
+.personal-site .mask-chapter { --mask-reading-size: 160px; }
+.personal-site .esg-chapter { --esg-reading-size: 508px; }
+html[data-language="zh"] .personal-site .cosmos-chapter { --cosmos-reading-size: 272px; }
+html[data-language="zh"] .personal-site .sups-chapter { --sups-reading-size: 208px; }
+html[data-language="zh"] .personal-site .mask-chapter { --mask-reading-size: 132px; }
+html[data-language="zh"] .personal-site .esg-chapter { --esg-reading-size: 304px; }
+.personal-site .cosmos-reader[data-open="true"] { min-block-size: var(--cosmos-reading-size); }
+.personal-site .sups-work-grid { min-block-size: var(--sups-reading-size); }
+.personal-site .mask-chain-work { min-block-size: var(--mask-reading-size); }
+.personal-site .esg-paper-details { min-block-size: var(--esg-reading-size); }
+.personal-site .esg-paper-topic { min-block-size: 45px; }
+.personal-site .mask-system-header { min-block-size: 65px; }
+
+@media (max-width: 1050px) {
+  .personal-site .cosmos-chapter { --cosmos-reading-size: 284px; }
+  .personal-site .sups-chapter { --sups-reading-size: 272px; }
+  .personal-site .mask-chapter { --mask-reading-size: 160px; }
+  .personal-site .esg-chapter { --esg-reading-size: 304px; }
+  html[data-language="zh"] .personal-site .cosmos-chapter { --cosmos-reading-size: 272px; }
+  html[data-language="zh"] .personal-site .sups-chapter { --sups-reading-size: 216px; }
+  html[data-language="zh"] .personal-site .mask-chapter { --mask-reading-size: 132px; }
+  html[data-language="zh"] .personal-site .esg-chapter { --esg-reading-size: 276px; }
+  .personal-site :is(.cosmos-heading, .sups-heading) {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .personal-site :is(.cosmos-heading, .sups-heading) .project-title {
+    max-width: 31ch;
+  }
+  .personal-site :is(.cosmos-introduction, .sups-heading-note) .project-summary {
+    max-width: 64ch;
+  }
+  .personal-site .cosmos-reader {
+    gap: 24px;
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+  .personal-site .cosmos-cartridge-label > span {
+    display: none;
+  }
+  .personal-site .cosmos-cartridge-label {
+    min-height: 92px;
+  }
+  .personal-site .sups-chapter .sups-scene-side-note {
+    margin-top: -24px;
+  }
+  .personal-site .esg-heading {
+    grid-template-columns: minmax(0, 1fr) 224px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .personal-site .esg-chapter { --esg-reading-size: 304px; }
+  html[data-language="zh"] .personal-site .esg-chapter { --esg-reading-size: 276px; }
+  .personal-site .esg-folded-pages {
+    flex-direction: column;
+  }
+  .personal-site .esg-paper,
+  .personal-site .esg-paper.is-open {
+    flex: auto;
+    width: 100%;
+    min-height: 0;
+    margin-top: 0;
+  }
+  .personal-site .esg-paper-heading {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    align-items: start;
+    gap: 16px;
+    padding-right: 30px;
+  }
+  .personal-site .esg-paper-heading > svg {
+    margin: 3px 0 0;
+  }
+  .personal-site .esg-paper-heading > span > small,
+  .personal-site .esg-paper-heading > span > strong,
+  .personal-site .esg-paper-teaser {
+    min-height: 0;
+  }
+  .personal-site .esg-paper-heading > span > strong {
+    font-size: 23px;
+    min-block-size: 1.35em;
+  }
+  .personal-site .esg-paper-heading .esg-paper-arrow {
+    top: 12px;
+  }
+  .personal-site .esg-chapter .esg-paper-teaser {
+    min-block-size: 26.4px;
+    margin-block: 16px 12px;
+  }
+  .personal-site .esg-paper-topic { min-block-size: 23px; }
+}
+
+@media (min-width: 721px) and (max-width: 800px) {
+  .personal-site .sups-chapter { --sups-reading-size: 328px; }
+  html[data-language="zh"] .personal-site .sups-chapter { --sups-reading-size: 256px; }
+}
+
+@media (max-width: 960px) {
+  .personal-site .mask-story-layout {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .personal-site .mask-product-stage {
+    position: relative;
+    top: auto;
+  }
+  .personal-site .mask-chapter .mask-connection-board {
+    height: 470px;
+  }
+  .personal-site .mask-narrative {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 24px;
+    padding: 0;
+  }
+  .personal-site .mask-narrative-intro {
+    grid-column: 1 / -1;
+    padding-bottom: 20px;
+  }
+  .personal-site .mask-story-step {
+    min-height: 118px;
+    padding: 20px 32px 24px 0;
+    border-left: 0;
+    border-top: 1px solid #ccd8ee;
+  }
+  .personal-site .mask-story-step::before {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .personal-site .cosmos-chapter { --cosmos-reading-size: 480px; }
+  .personal-site .sups-chapter { --sups-reading-size: 400px; }
+  .personal-site .mask-chapter { --mask-reading-size: 264px; }
+  .personal-site .esg-chapter { --esg-reading-size: 528px; }
+  html[data-language="zh"] .personal-site .cosmos-chapter { --cosmos-reading-size: 304px; }
+  html[data-language="zh"] .personal-site .sups-chapter { --sups-reading-size: 312px; }
+  html[data-language="zh"] .personal-site .mask-chapter { --mask-reading-size: 160px; }
+  html[data-language="zh"] .personal-site .esg-chapter { --esg-reading-size: 296px; }
+  .personal-site :is(.cosmos-masthead, .sups-masthead) {
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+    gap: 8px 20px;
+  }
+  .personal-site :is(.cosmos-heading, .sups-heading) {
+    gap: 24px;
+    margin-bottom: 28px;
+  }
+  .personal-site :is(.cosmos-heading, .sups-heading) .project-title {
+    max-width: none;
+  }
+  .personal-site .cosmos-record-desk {
+    padding: 20px 16px;
+  }
+  .personal-site .cosmos-reader {
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 14px;
+    padding-block: 24px;
+  }
+  .personal-site .cosmos-reader-index > span {
+    font-size: 32px;
+  }
+  .personal-site .cosmos-reader-copy {
+    padding-right: 22px;
+  }
+  .personal-site .cosmos-cartridge-rack {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 12px;
+    padding-top: 12px;
+  }
+  .personal-site .cosmos-cartridge {
+    padding: 12px 8px 10px;
+  }
+  .personal-site .cosmos-cartridge-label {
+    min-height: 94px;
+    padding: 10px 8px;
+    gap: 8px;
+  }
+  .personal-site .cosmos-chapter .cosmos-cartridge-label strong {
+    font-size: 16px;
+    line-height: 1.45;
+    overflow-wrap: normal;
+  }
+  .personal-site .cosmos-team-results {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px 12px;
+    margin-top: 32px;
+  }
+  .personal-site .cosmos-results-label {
+    grid-column: 1 / -1;
+    margin-bottom: 0;
+  }
+  .personal-site .cosmos-result {
+    padding-left: 10px;
+  }
+  .personal-site .cosmos-result strong {
+    font-size: clamp(23px, 6.4vw, 32px);
+  }
+  .personal-site .sups-architecture {
+    margin-bottom: 22px;
+  }
+  .personal-site .sups-scene {
+    width: calc(100% + 24px);
+    max-width: none;
+    margin: 12px -12px 0;
+  }
+  .personal-site .sups-chapter .sups-scene-side-note {
+    display: none;
+  }
+  .personal-site .sups-layer-selector button {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 18px 12px;
+  }
+  .personal-site .sups-layer-selector button:first-child {
+    padding-left: 0;
+  }
+  .personal-site .sups-chapter .sups-layer-selector button strong {
+    font-size: 16px;
+    white-space: normal;
+    margin: 0;
+  }
+  .personal-site .sups-layer-button-number {
+    font-size: 28px;
+  }
+  .personal-site .sups-work-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .personal-site .mask-heading,
+  .personal-site .mask-chapter .mask-heading .project-title {
+    margin-inline: 0;
+  }
+  .personal-site .mask-heading .project-title {
+    font-size: clamp(28px, 7.4vw, 34px);
+  }
+  .personal-site .mask-eyebrow {
+    margin-top: 24px;
+  }
+  .personal-site .mask-introduction {
+    margin: 24px 0 32px;
+  }
+  .personal-site .mask-role-mark {
+    align-items: baseline;
+    letter-spacing: 0;
+  }
+  .personal-site .mask-role-mark > span {
+    flex-shrink: 0;
+  }
+  .personal-site .mask-stage-topline {
+    gap: 8px 20px;
+  }
+  .personal-site .mask-system-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(24px, auto) minmax(44px, auto);
+    gap: 14px;
+    padding-block: 18px;
+  }
+  .personal-site .mask-system-header > button {
+    justify-self: start;
+    min-height: 44px;
+    text-align: left;
+  }
+  .personal-site .mask-chapter .mask-connection-board {
+    height: 540px;
+  }
+  .personal-site .mask-narrative {
+    gap: 0 20px;
+  }
+  .personal-site .mask-step-title {
+    font-size: 19px;
+  }
+  .personal-site .mask-outcomes {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .personal-site .esg-filing-line {
+    align-items: start;
+  }
+  .personal-site .esg-heading {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding-block: 28px;
+  }
+  .personal-site .esg-scale-note {
+    justify-self: end;
+    width: min(260px, 88%);
+    margin-right: 6px;
+  }
+  .personal-site .esg-brief {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding-bottom: 24px;
+  }
+  .personal-site .esg-process-scene {
+    max-width: none;
+    margin: 0 0 52px;
+  }
+  .personal-site .esg-process-diagram > ol {
+    gap: 20px;
+  }
+  .personal-site .esg-folder {
+    padding: 24px 14px 18px;
+  }
+  .personal-site .esg-paper {
+    padding: 20px;
+  }
+  .personal-site .esg-paper-heading {
+    gap: 12px;
+    padding-right: 24px;
+  }
+  .personal-site .esg-paper-heading > span > strong {
+    font-size: 21px;
+    min-block-size: 4.05em;
+  }
+  html[data-language="zh"] .personal-site .esg-paper-heading > span > strong { min-block-size: 2.7em; }
+  .personal-site .esg-chapter .esg-paper-teaser { min-block-size: 52.8px; }
+  .personal-site .esg-paper-topic {
+    display: none;
+  }
+  .personal-site .esg-afterword {
+    padding-block: 28px;
+  }
+}
+
+@media (max-width: 380px) {
+  .personal-site .cosmos-chapter { --cosmos-reading-size: 520px; }
+  .personal-site .sups-chapter { --sups-reading-size: 456px; }
+  .personal-site .mask-chapter { --mask-reading-size: 296px; }
+  .personal-site .esg-chapter { --esg-reading-size: 612px; }
+  html[data-language="zh"] .personal-site .cosmos-chapter { --cosmos-reading-size: 384px; }
+  html[data-language="zh"] .personal-site .sups-chapter { --sups-reading-size: 352px; }
+  html[data-language="zh"] .personal-site .mask-chapter { --mask-reading-size: 192px; }
+  html[data-language="zh"] .personal-site .esg-chapter { --esg-reading-size: 440px; }
+  .personal-site .cosmos-reader {
+    grid-template-columns: 1fr;
+  }
+  .personal-site .cosmos-reader .cosmos-reader-index {
+    display: none;
+  }
+  .personal-site .mask-chapter .mask-connection-board {
+    height: 690px;
+  }
+  .personal-site .mask-connection-node {
+    padding-inline: 8px;
+  }
+  .personal-site .mask-chapter .mask-connection-node > strong {
+    font-size: 16px;
+  }
+  .personal-site .mask-narrative {
+    grid-template-columns: 1fr;
+  }
+  .personal-site .mask-story-step {
+    min-height: 96px;
+  }
+  .personal-site .esg-paper {
+    padding-inline: 16px;
+  }
+  .personal-site .esg-paper-heading {
+    grid-template-columns: 22px minmax(0, 1fr);
+    gap: 10px;
+  }
+  .personal-site .esg-paper-heading > svg {
+    width: 22px;
+  }
+  .personal-site .esg-chapter .esg-paper-heading > span > small { min-block-size: 56px; }
+  .personal-site .esg-chapter .esg-paper-teaser { min-block-size: 79.2px; }
+  html[data-language="zh"] .personal-site .esg-chapter .esg-paper-teaser { min-block-size: 52.8px; }
+}
+
+@media (max-width: 560px) {
+  .personal-site .sups-layer-selector button {
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    min-height: 72px;
+    padding: 18px 14px;
+  }
+  .personal-site .sups-layer-selector button:first-child { padding-left: 14px; }
+  .personal-site .sups-layer-selector button + button {
+    border-left: 0;
+    border-top: 1px solid #3b426422;
+  }
+}

@@ -1,0 +1,474 @@
+/* Shared reading edges; each research scene keeps its own illustration language. */
+.personal-site .rd-heading {
+  display:grid;
+  grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);
+  gap:var(--alignment-gap,48px);
+  align-items:end;
+  margin-bottom:40px;
+}
+.personal-site .rd-heading .project-summary {
+  max-width:none;
+  margin:0;
+}
+.personal-site .rd-directions-grid {
+  column-gap:28px;
+  row-gap:28px;
+}
+.personal-site .rd-direction {
+  padding:32px;
+}
+.personal-site .rd-direction h3 {
+  line-height:1.3;
+  text-wrap:balance;
+  margin:18px 0 16px;
+}
+.personal-site .rd-interest-summary {
+  margin:0 0 24px;
+  line-height:1.65;
+}
+.personal-site .rd-agent-scene {
+  gap:24px var(--alignment-gap,48px);
+}
+.personal-site .rd-agent-intro {
+  grid-column:1;
+  min-width:0;
+}
+.personal-site .rd-agent-intro .rd-interest-summary {
+  margin-bottom:0;
+}
+.personal-site .rd-agent-scene>.rd-agent-workspace {
+  grid-column:2;
+  grid-row:auto;
+  min-width:0;
+}
+.personal-site .rd-agent-tape {
+  width:calc(100% - 10px);
+  margin:8px 0;
+  padding:24px 20px 18px;
+}
+.personal-site .rd-agent-scene>[data-reading-reveal] {
+  grid-column:1/-1;
+}
+.personal-site .rd-spatial-scene,
+.personal-site .rd-environment-scene {
+  display:grid;
+  grid-row:span 5;
+  grid-template-rows:subgrid;
+  row-gap:0;
+}
+.personal-site .rd-spatial-scene>.rd-section-arrival,
+.personal-site .rd-environment-scene>.rd-evidence-arrival {
+  align-self:start;
+  min-width:0;
+}
+.personal-site .rd-environment-scene {
+  border-top-left-radius:72px;
+}
+.personal-site .rd-spatial-observation {
+  padding-top:0;
+}
+.personal-site .rd-evidence-leaf {
+  width:calc(100% - 14px);
+  margin:18px 0 14px;
+  padding:24px 18px 20px;
+}
+.personal-site .rd-observation-handle {
+  padding:12px 14px;
+  min-height:48px;
+}
+.personal-site .rd-spatial-legend {
+  gap:6px;
+  line-height:1.6;
+  margin-top:12px;
+}
+.personal-site .rd-detail {
+  margin-top:24px;
+}
+
+/* The opening strip, formal title and method stage use one common page grid. */
+.personal-site .fg-heading-row,
+.personal-site .fa-heading-row {
+  align-items:baseline;
+  gap:16px 24px;
+}
+.personal-site .fg-heading-row .chapter-kicker,
+.personal-site .fa-heading-row .chapter-kicker {
+  margin:0;
+}
+.personal-site .fg-introduction,
+.personal-site .fa-introduction {
+  gap:var(--alignment-gap,48px);
+  margin:32px 0 40px;
+}
+.personal-site .fg-introduction>div,
+.personal-site .fa-introduction>div {
+  min-width:0;
+}
+.personal-site .fg-introduction .project-title,
+.personal-site .fa-introduction .project-title {
+  line-height:1.24;
+  text-wrap:pretty;
+}
+.personal-site .fg-personal,
+.personal-site .fa-introduction>div:last-child {
+  max-width:none;
+}
+.personal-site .fg-personal .project-summary,
+.personal-site .fa-introduction .project-summary {
+  margin:0;
+}
+.personal-site .fg-role,
+.personal-site .fa-role {
+  margin:20px 0 12px;
+}
+.personal-site .fg-protocol-bar {
+  gap:24px;
+  padding:24px 0;
+  margin-top:8px;
+  align-items:center;
+}
+.personal-site .fg-protocol-bar .future-reading-toggle {
+  border-bottom:0;
+  padding-block:12px;
+}
+.personal-site .fg-protocol-expanded {
+  gap:var(--alignment-gap,48px);
+  padding-top:8px;
+}
+.personal-site .fg-protocol-expanded h4 {
+  margin:0 0 16px;
+}
+.personal-site .fg-protocol-expanded p+h4 {
+  margin-top:28px;
+}
+.personal-site .fg-route-switch {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  max-width:440px;
+  margin:0 0 18px;
+}
+.personal-site .fg-route-switch button {
+  min-width:0;
+  min-height:48px;
+}
+.personal-site .fg-route-copy,
+.personal-site .fa-work-stack {
+  display:grid;
+  min-width:0;
+}
+.personal-site .fg-route-copy>p,
+.personal-site .fa-work-panel {
+  grid-area:1/1;
+  visibility:hidden;
+  pointer-events:none;
+}
+.personal-site .fg-route-copy>p.is-current,
+.personal-site .fa-work-panel.is-current {
+  visibility:visible;
+  pointer-events:auto;
+}
+.personal-site .fg-route-copy+h4 {
+  margin-top:28px;
+}
+.personal-site .fg-evaluation {
+  padding-block:28px;
+}
+.personal-site .fg-evaluation>div {
+  column-gap:var(--alignment-gap,48px);
+}
+.personal-site .fg-evaluation>div>span {
+  min-width:0;
+}
+.personal-site .fg-evaluation strong {
+  line-height:1.2;
+}
+.personal-site .avpc-evidence-scene {
+  max-width:none;
+  margin:0;
+  padding:28px;
+}
+.personal-site .avpc-scene-heading {
+  align-items:baseline;
+}
+.personal-site .avpc-scene-heading strong {
+  line-height:1.4;
+}
+.personal-site .avpc-map {
+  max-height:none;
+  margin-block:12px 8px;
+}
+.personal-site .avpc-map-legend {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px 24px;
+  padding:16px 0;
+}
+.personal-site .avpc-map-legend>span {
+  align-items:baseline;
+  min-width:0;
+}
+.personal-site .avpc-map-legend i {
+  flex-shrink:0;
+}
+.personal-site .avpc-scene-stage {
+  align-items:baseline;
+  gap:20px;
+  padding-top:20px;
+  line-height:1.4;
+}
+.personal-site .fa-controls {
+  margin-top:28px;
+}
+.personal-site .fa-reading-toggle {
+  margin-top:16px;
+}
+.personal-site .fa-work-reading {
+  margin:28px 0;
+  gap:24px;
+}
+.personal-site .fa-current-boundary {
+  grid-template-columns:120px minmax(0,1fr);
+  gap:24px;
+  padding-top:24px;
+}
+.personal-site .fa-current-boundary p {
+  font-size:16px;
+  line-height:1.7;
+}
+
+/* Optical image tilts remain intentional; labels and controls align to the card grid. */
+.personal-site .gp-story {
+  padding:28px;
+  margin:0 0 24px;
+}
+.personal-site .gp-topline {
+  line-height:1.6;
+  align-items:baseline;
+}
+.personal-site .gp-story>h3 {
+  margin:24px 0 12px;
+  line-height:1.3;
+  text-wrap:pretty;
+}
+.personal-site .gp-input-story {
+  gap:24px;
+  padding:20px 0 12px;
+}
+.personal-site .gp-strip-story>p {
+  line-height:1.6;
+}
+.personal-site .gp-strip-story button {
+  min-height:40px;
+  padding:8px 12px;
+}
+.personal-site .gp-strip-story>div {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+}
+.personal-site .gp-strip-story button {
+  justify-content:center;
+  min-width:0;
+}
+.personal-site .gp-stage {
+  margin-inline:-12px;
+}
+.personal-site .gp-view-label {
+  align-items:baseline;
+  line-height:1.5;
+}
+.personal-site .gp-view-label strong {
+  font-size:16px;
+}
+.personal-site .gp-view-caption {
+  line-height:1.6;
+}
+.personal-site .gp-journey {
+  padding-top:20px;
+}
+.personal-site .gp-context {
+  margin:20px 0 0;
+}
+.personal-site .gp-demo-note {
+  margin:8px 0 0;
+}
+
+@media(max-width:900px) {
+  .personal-site .rd-heading,
+  .personal-site .fg-introduction,
+  .personal-site .fa-introduction {
+    grid-template-columns:1fr;
+    gap:24px;
+  }
+  .personal-site .rd-heading .project-summary {
+    max-width:640px;
+  }
+  .personal-site .rd-directions-grid {
+    grid-template-columns:1fr;
+    gap:24px;
+  }
+  .personal-site .rd-agent-scene,
+  .personal-site .rd-spatial-scene,
+  .personal-site .rd-environment-scene {
+    display:block;
+    grid-row:auto;
+  }
+  .personal-site .rd-agent-workspace,
+  .personal-site .rd-spatial-observation,
+  .personal-site .rd-evidence-arrival {
+    max-width:540px;
+  }
+  .personal-site .rd-agent-tape {
+    margin-top:24px;
+  }
+  .personal-site .rd-evidence-leaf {
+    margin-top:26px;
+  }
+  .personal-site .fg-personal .project-summary,
+  .personal-site .fa-introduction .project-summary {
+    max-width:720px;
+  }
+  .personal-site .avpc-map-legend {
+    column-gap:16px;
+  }
+}
+@media(max-width:600px) {
+  .personal-site .rd-direction {
+    padding:28px 24px;
+  }
+  .personal-site .rd-direction h3 {
+    font-size:26px;
+  }
+  .personal-site .rd-environment-scene {
+    border-top-left-radius:56px;
+  }
+  .personal-site .rd-agent-tape,
+  .personal-site .rd-evidence-leaf {
+    padding-inline:16px;
+  }
+  .personal-site .rd-spatial-legend {
+    align-items:baseline;
+  }
+  .personal-site .fg-introduction,
+  .personal-site .fa-introduction {
+    margin:28px 0 32px;
+  }
+  .personal-site .fg-heading-row,
+  .personal-site .fa-heading-row {
+    gap:10px;
+  }
+  .personal-site .fg-protocol-bar {
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    gap:12px;
+  }
+  .personal-site .fg-protocol-bar .future-reading-toggle {
+    margin:0;
+  }
+  .personal-site .fg-protocol-expanded {
+    grid-template-columns:1fr;
+    gap:28px;
+  }
+  .personal-site .fg-evaluation>div>span {
+    grid-template-columns:120px minmax(0,1fr);
+    gap:18px;
+  }
+  .personal-site .avpc-evidence-scene {
+    padding:20px;
+    border-radius:18px;
+  }
+  .personal-site .avpc-map-legend {
+    grid-template-columns:1fr;
+    gap:8px;
+    padding:12px 0 16px;
+  }
+  .personal-site .avpc-scene-stage {
+    gap:14px;
+    padding-top:16px;
+  }
+  .personal-site .fa-controls {
+    margin-top:24px;
+  }
+  .personal-site .fa-current-boundary {
+    grid-template-columns:1fr;
+    gap:8px;
+  }
+  .personal-site .gp-story {
+    padding:22px 20px;
+    border-radius:18px;
+  }
+  .personal-site .gp-story>h3 {
+    font-size:25px;
+    margin-top:20px;
+  }
+  .personal-site .gp-input-story {
+    display:grid;
+    grid-template-columns:76px minmax(0,1fr);
+    gap:16px;
+    padding:16px 0 10px;
+    align-items:start;
+  }
+  .personal-site .gp-input-scene {
+    width:76px;
+  }
+  .personal-site .gp-strip-story button {
+    padding:8px 6px;
+    min-height:44px;
+  }
+  .personal-site .gp-strip-story {
+    display:contents;
+  }
+  .personal-site .gp-strip-story>p {
+    grid-column:2;
+    margin:0;
+  }
+  .personal-site .gp-strip-story>div,
+  .personal-site .gp-strip-story>small {
+    grid-column:1/-1;
+    margin:0;
+  }
+  .personal-site .gp-stage {
+    margin-inline:0;
+  }
+  .personal-site .gp-view {
+    column-gap:14px;
+  }
+  .personal-site .gp-journey-milestones {
+    gap:12px;
+  }
+  .personal-site .gp-orbit-controls {
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:center;
+  }
+  .personal-site .gp-orbit-controls>span {
+    flex-basis:100%;
+  }
+}
+@media(max-width:370px) {
+  .personal-site .rd-direction {
+    padding-inline:20px;
+  }
+  .personal-site .rd-direction h3 {
+    font-size:24px;
+  }
+  .personal-site .gp-story {
+    padding-inline:16px;
+  }
+  .personal-site .gp-input-story {
+    gap:18px;
+  }
+  .personal-site .gp-input-scene {
+    width:76px;
+  }
+  .personal-site .gp-strip-story button {
+    flex-direction:column;
+    padding:7px 4px;
+    gap:5px;
+    min-height:54px;
+  }
+  .personal-site .gp-view {
+    grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);
+    gap:6px 12px;
+  }
+}

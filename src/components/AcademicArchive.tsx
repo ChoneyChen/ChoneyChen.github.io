@@ -7,6 +7,7 @@ import { useContent } from "../data/use-content";
 import { useI18n } from "../i18n";
 import { slowMotion } from "../lib/motionTiming";
 import { ReadingReveal } from "./ReadingReveal";
+import { TechnicalSymbol } from "./TechnicalSymbol";
 import "./academic-archive.css";
 
 const getTechnicalGroups = (t: (zh: string, en: string) => string) => [
@@ -46,7 +47,7 @@ const getTechnicalGroups = (t: (zh: string, en: string) => string) => [
 
 type TechnicalGroup = ReturnType<typeof getTechnicalGroups>[number];
 
-function TechnologyPillar({ group, index, selected, ready, reduced, onSelect, onToggle }: {
+function TechnologyIcon({ group, index, selected, ready, reduced, onSelect, onToggle }: {
   group: TechnicalGroup;
   index: number;
   selected: boolean;
@@ -75,20 +76,7 @@ function TechnologyPillar({ group, index, selected, ready, reduced, onSelect, on
   });
   return <article className={"aa-pillar aa-pillar-" + group.id + (selected ? " is-selected" : "")}>
     <h4 id={"aa-group-" + group.id}>{group.title}</h4>
-    <div className="aa-pillar-illustration">
-      <svg className="aa-pillar-shaft" viewBox="0 0 160 240" aria-hidden="true">
-        <motion.g initial={false} animate={{ opacity: ready ? 1 : 0, y: ready ? 0 : 25 }} transition={timing(.35, ready ? index * .04 : .16)}>
-          <path d="M30 216H130V226H30Z M20 227H140V235H20Z" fill="#dac4a0" stroke="#947254"/>
-          <path d="M45 204H115V215H45Z" fill="#eee0c1" stroke="#947254"/>
-        </motion.g>
-        {[0, 1, 2].map(drum => <motion.g key={drum} initial={false}
-          animate={{ opacity: ready ? 1 : 0, y: ready ? selected ? -(2 - drum) * 7 : 0 : 26 }}
-          transition={timing(.4, ready ? .07 + (2 - drum) * .07 + index * .04 : drum * .06)}>
-          <path d={"M" + (50 - drum) + " " + (69 + drum * 45) + "H" + (110 + drum) + "L" + (108 + drum) + " " + (111 + drum * 45) + "H" + (52 - drum) + "Z"} fill={selected ? "#f8efd9" : "#ece0c5"} stroke="#947254"/>
-          {[0, 1, 2, 3, 4].map(flute => <path key={flute} d={"M" + (58 + flute * 11) + " " + (74 + drum * 45) + "V" + (106 + drum * 45)} stroke="#b29972" fill="none"/>)}
-          <path d={"M" + (50 - drum) + " " + (111 + drum * 45) + "H" + (110 + drum)} stroke="#947254"/>
-        </motion.g>)}
-      </svg>
+    <div className="aa-pillar-illustration aa-icon-illustration">
       <motion.div className="aa-capital-position" initial={false} animate={{ opacity: ready ? 1 : 0, y: ready ? selected && (!dragging || startSelected.current) ? -20 : 0 : 23 }}
         transition={timing(.4, ready ? .28 + index * .04 : 0)}>
         <motion.button type="button" className="aa-capital-control" style={{ y: pull }}
@@ -102,13 +90,8 @@ function TechnologyPillar({ group, index, selected, ready, reduced, onSelect, on
           }}
           onClick={event => { if (event.detail === 0 || Math.abs(pull.get()) < 5) onToggle(); }}
           aria-expanded={selected} aria-controls="aa-project-mapping"
-          aria-label={t("拉开或点击柱头，查看" + group.title + "的技术实践", "Pull or click the capital to view " + group.title + " in practice")}>
-          <svg viewBox="0 0 160 80" aria-hidden="true">
-            <path d="M25 19H135V29H25Z M43 60H117V69H43Z" fill="#d8c09b" stroke="#947254"/>
-            <path d="M34 34C26 21 49 25 54 40C57 55 43 58 37 49C32 39 46 31 49 42M126 34C134 21 111 25 106 40C103 55 117 58 123 49C128 39 114 31 111 42" fill="none" stroke="#947254" strokeWidth="2"/>
-            <path d="M51 41L61 52L70 37L80 55L90 37L99 52L109 41L105 60H55Z" fill={selected ? "#b48755" : "#e4cfab"} stroke="#947254"/>
-            <path d="M70 13L80 7L90 13" fill="none" stroke="#795344" strokeWidth="2"/>
-          </svg>
+          aria-label={t("抬起或点击图标，查看" + group.title + "的技术实践", "Lift or select the icon to view " + group.title + " in practice")}>
+          <TechnicalSymbol kind={group.id} index={index} ready={ready} reduced={reduced} selected={selected}/>
         </motion.button>
       </motion.div>
     </div>
@@ -149,9 +132,9 @@ export function PersonalArchive({ quiet = false }: { quiet?: boolean }) {
           <div><dt>{t("当前阶段", "Current stage")}</dt><dd>Stage 4 <span>{t("本科最后一年 · 在读", "Final-year undergraduate · enrolled")}</span></dd></div>
         </dl>
       </article>
-      <div className="aa-stack-heading"><h3>{t("技术基础", "Technical foundation")}</h3><p>{t("上拉或点击柱头，展开对应技术与实践。", "Pull up or click a capital to reveal the skills and their use.")}</p></div>
+      <div className="aa-stack-heading"><h3>{t("技术基础", "Technical foundation")}</h3><p>{t("抬起或点击图标，展开对应技术与实践。", "Lift or select an icon to reveal the skills and their use.")}</p></div>
       <div className="aa-pillar-stage" ref={scene}>
-        {groups.map((group, index) => <TechnologyPillar key={group.id} group={group} index={index} ready={ready} reduced={reduced} selected={selected === index} onSelect={() => setSelected(index)} onToggle={() => setSelected(current => current === index ? null : index)}/>)}
+        {groups.map((group, index) => <TechnologyIcon key={group.id} group={group} index={index} ready={ready} reduced={reduced} selected={selected === index} onSelect={() => setSelected(index)} onToggle={() => setSelected(current => current === index ? null : index)}/>)}
       </div>
       <AnimatePresence initial={false}>{active && <ReadingReveal id="aa-project-mapping" role="region" aria-labelledby={"aa-group-" + active.id} className={"aa-project-mapping aa-mapping-" + active.id}
         initial={reduced ? false : { gridTemplateRows: "0fr", opacity: 0 }} animate={{ gridTemplateRows: "1fr", opacity: 1 }} exit={{ gridTemplateRows: "0fr", opacity: 0 }}

@@ -93,8 +93,9 @@ export function ResearchDirections({ quiet = false }: ResearchDirectionsProps) {
     <header className="rd-heading"><div><p className="chapter-kicker">{t('01 / 研究兴趣', '01 / RESEARCH INTERESTS')}</p><h2 id="directions-title" className="project-title">{t('三个研究方向', 'Three research directions.')}</h2></div><p className="project-summary">{t('大模型应用、驾驶场景感知、环境与能源数据。', 'AI applications, driving perception, and environmental data.')}</p></header>
     <div className="rd-directions-grid" ref={group}>
       <article className="rd-agent-scene rd-direction" aria-labelledby="rd-agent-title">
-        <span className="rd-scene-number">01 / AGENTS</span><h3 id="rd-agent-title">{t('大模型智能体应用开发', 'LLM agent application development')}</h3>
+        <div className="rd-agent-intro"><span className="rd-scene-number">01 / AGENTS</span><h3 id="rd-agent-title">{t('大模型智能体应用开发', 'LLM agent application development')}</h3>
         <p className="rd-interest-summary">{t('把上下文、工具与核验连接为可追踪的应用流程。', 'Context, tools and verification, connected into traceable application workflows.')}</p>
+        </div>
         <motion.div className="rd-agent-workspace" initial={reduced ? false : { x: -18, opacity: 0 }} animate={{ x: ready ? 0 : -18, opacity: ready ? 1 : 0 }} transition={slowMotion({ duration: reduced ? 0 : .65, ease: [.22, 1, .36, 1] })}>
           <motion.button className="rd-agent-tape" aria-expanded={agentsOpen} aria-controls="directions-agent-details" drag={reduced ? false : 'x'} dragConstraints={{ left: 0, right: 42 }} dragElastic={.08} dragSnapToOrigin dragTransition={slowDragRelease} onDragEnd={(_, info) => { if (info.offset.x > 18) setAgentsOpen(true); }} onClick={() => setAgentsOpen(!agentsOpen)}>
             <span className="rd-tape-holes" aria-hidden="true">{Array.from({ length: 10 }, (_, i) => <i key={i}/>)}</span>

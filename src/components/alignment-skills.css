@@ -1,0 +1,18 @@
+/* Four personal objects share a quiet reading card and equally sized controls. */
+.personal-site .tools-file-index { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.personal-site .tools-file-index > button { min-height: 72px; }
+.personal-site .tools-chapter, html[data-language="zh"] .personal-site .tools-chapter { --tools-open-min: 304px; }
+.personal-site .tools-reading-column { min-block-size: 304px; }
+.personal-site .tools-reading-column h3 { line-height: 1.35; }
+.personal-site .tools-personal-use { max-width: 34ch; }
+.personal-site .tools-use-tags { margin-top: 24px; }
+@media (max-width: 1050px) { .personal-site .tools-file-index { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) {
+ .personal-site .tools-chapter, html[data-language="zh"] .personal-site .tools-chapter { --tools-open-min: 304px; }
+ .personal-site .tools-file-index > button { padding: 16px 12px; gap: 8px; grid-template-columns: 20px minmax(0, 1fr) 14px; }
+ .personal-site .tools-file-index > button > strong { font-size: 16px; }
+}
+@media (max-width: 370px) {
+ .personal-site .tools-chapter, html[data-language="zh"] .personal-site .tools-chapter { --tools-open-min: 352px; }
+ .personal-site .tools-reading-column { min-block-size: 352px; }
+}

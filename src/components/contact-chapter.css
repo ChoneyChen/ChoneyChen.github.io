@@ -47,40 +47,6 @@
   margin-top: 8px;
   letter-spacing: 0.16em;
 }
-.contact-postmark {
-  width: 112px;
-  height: 112px;
-  border: 1px solid #ac98715c;
-  border-radius: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  margin: 0;
-  transform: rotate(-14deg);
-  color: #b5a17c;
-  position: absolute;
-  right: 0;
-  bottom: 90px;
-}
-.contact-postmark:after {
-  content: "";
-  border: 1px solid #ac987133;
-  border-radius: 50%;
-  position: absolute;
-  inset: 7px;
-}
-.contact-postmark span {
-  font: 14px var(--mono);
-  letter-spacing: 0.07em;
-}
-.contact-postmark strong {
-  font:
-    42px/1 Georgia,
-    serif;
-  font-weight: 400;
-}
 .contact-envelope {
   position: relative;
   padding: 24px 18px 46px;
@@ -262,20 +228,6 @@
   }
   .contact-signature {
     font-size: 52px;
-  }
-  .contact-postmark {
-    position: absolute;
-    width: 103px;
-    height: 103px;
-    right: 35px;
-    top: 190px;
-    bottom: auto;
-  }
-  .contact-postmark strong {
-    font-size: 29px;
-  }
-  .contact-postmark span {
-    font-size: 14px;
   }
   .contact-envelope {
     margin-top: 45px;

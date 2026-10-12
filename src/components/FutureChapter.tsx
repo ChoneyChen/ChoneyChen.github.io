@@ -35,7 +35,7 @@ function PerceptionResearch({ quiet }: { quiet: boolean }) {
   const [route, setRoute] = useState<GenerationRoute>("diffusion");
   const [open, setOpen] = useState(false);
   useCollapseOnLeave("glimpse", () => setOpen(false));
-  const copy = getRoutes(t)[route];
+  const routes = getRoutes(t);
   const headingRef = useRef<HTMLDivElement>(null);
   const present = useScenePresence(headingRef);
   return <section id="glimpse" className={`chapter future-glimpse${quiet ? " is-quiet" : ""}`} aria-labelledby="glimpse-title">
@@ -50,7 +50,7 @@ function PerceptionResearch({ quiet }: { quiet: boolean }) {
         <div className="fg-protocol-expanded"><div><h4>{t("拟比较的生成路线", "Generation routes to compare")}</h4><div className="fg-route-switch" role="group" aria-label={t("选择生成路线", "Choose a generation route")}>
           <button aria-pressed={route === "diffusion"} className={route === "diffusion" ? "is-selected" : ""} onClick={() => setRoute("diffusion")}>{t("扩散式", "Diffusion")}</button>
           <button aria-pressed={route === "autoregressive"} className={route === "autoregressive" ? "is-selected" : ""} onClick={() => setRoute("autoregressive")}>{t("自回归式", "Autoregressive")}</button>
-        </div><p>{copy.text}</p><h4>{t("三维抬升的条件", "Conditions for 3D lifting")}</h4><p>{t("度量深度与相机内参 K 恢复三维点并附加查询语义；多帧融合等属于后续扩展。", "Metric depth and camera intrinsics K recover 3D points with query semantics. Multi-frame fusion and other spatial representations remain later extensions.")}</p></div><div><h4>{t("训练与查询设置", "Training and query conditions")}</h4><p>{t("对比单任务、联合与专项微调；控制环境与类别划分，检验正／负查询。检测框由掩码导出，完整实验待验证。", "Compare single, joint and specialised tuning across controlled environment/category splits and positive/negative queries. Derive boxes from masks; complete experiments remain pending.")}</p></div></div>
+        </div><div className="fg-route-copy">{(Object.keys(routes) as GenerationRoute[]).map(key => <p key={key} className={route === key ? "is-current" : ""} aria-hidden={route !== key} inert={route !== key}>{routes[key].text}</p>)}</div><h4>{t("三维抬升的条件", "Conditions for 3D lifting")}</h4><p>{t("度量深度与相机内参 K 恢复三维点并附加查询语义；多帧融合等属于后续扩展。", "Metric depth and camera intrinsics K recover 3D points with query semantics. Multi-frame fusion and other spatial representations remain later extensions.")}</p></div><div><h4>{t("训练与查询设置", "Training and query conditions")}</h4><p>{t("对比单任务、联合与专项微调；控制环境与类别划分，检验正／负查询。检测框由掩码导出，完整实验待验证。", "Compare single, joint and specialised tuning across controlled environment/category splits and positive/negative queries. Derive boxes from masks; complete experiments remain pending.")}</p></div></div>
         <figure className="fg-framework-figure"><img src="/research/u-improve-framework.png" loading="lazy" alt={t("U-IMPROVE 拟议框架：任务图像生成、确定性解码与语义几何融合。", "Proposed U-IMPROVE framework: task-image generation, deterministic decoding and semantic–geometric fusion.")}/><figcaption>{t("本人研究方案图 · 尚待训练与实验验证", "My proposed research framework · training and validation pending")}</figcaption></figure>
       </ReadingReveal>}</AnimatePresence>
       <div className="fg-evaluation" aria-label={t("计划评估指标", "Planned evaluation metrics")}><p>{t("评估计划 · 最终实验结果待验证", "EVALUATION PLAN · FINAL RESULTS PENDING")}</p><div><span><strong>FPR ↓</strong><small>{t("不存在目标的误报", "False positives on absent targets")}</small></span><span><strong>IoU ↑</strong><small>{t("分割掩码重叠", "Segmentation mask overlap")}</small></span><span><strong>AbsRel ↓</strong><small>{t("度量深度误差", "Metric-depth error")}</small></span></div></div>
@@ -69,7 +69,8 @@ function CollaborativeResearch({ quiet }: { quiet: boolean }) {
   const scenePresent = useScenePresence(scene);
   useCollapseOnLeave("avpc", () => { setAlignment(0); setOpen(false); });
   const focus = alignment < 34 ? 0 : alignment < 70 ? 1 : 2;
-  const copy = getCollaboration(t)[focus];
+  const collaboration = getCollaboration(t);
+  const copy = collaboration[focus];
   const shared = Math.min(1, alignment / 55);
   const conflict = Math.max(0, (alignment - 70) / 30);
   function move(_: unknown, info: PanInfo) { setAlignment(Math.max(0, Math.min(100, dragStart.current + info.offset.x / 3))); if (Math.abs(info.offset.x) > 12) setOpen(true); }
@@ -100,7 +101,7 @@ function CollaborativeResearch({ quiet }: { quiet: boolean }) {
       <div className="fa-controls"><label htmlFor="avpc-alignment">{t("拖动图或滑条，查看视角如何关联", "Drag the diagram or slider to connect the views")}<MoveHorizontal size={18}/></label><input id="avpc-alignment" className="fa-range" type="range" min="0" max="100" value={alignment} aria-valuetext={copy.title} onChange={event => { setAlignment(Number(event.target.value)); setOpen(true); }} aria-expanded={open} aria-controls="avpc-work-details"/></div>
 
       <button className="future-reading-toggle fa-reading-toggle" aria-expanded={open} aria-controls="avpc-work-details" onClick={() => setOpen(!open)}>{open ? t("合上工作记录", "Close work notes") : t("阅读我的参与工作", "Read my contribution")}{open ? <Minus size={16}/> : <Plus size={16}/>}</button>
-      <AnimatePresence initial={false}>{open && <ReadingReveal id="avpc-work-details" className="fa-work-reading" initial={{ gridTemplateRows: "0fr", opacity: 0 }} animate={{ gridTemplateRows: "1fr", opacity: 1 }} exit={{ gridTemplateRows: "0fr", opacity: 0 }} transition={slowMotion({ duration: quiet ? 0 : .32 })}><span className="fa-work-number">0{focus+1}</span><div><h3>{copy.title}</h3><p>{copy.text}</p><div className="fa-keywords">{copy.tags.map(tag => <span key={tag}>{tag}</span>)}</div></div></ReadingReveal>}</AnimatePresence>
+      <AnimatePresence initial={false}>{open && <ReadingReveal id="avpc-work-details" className="fa-work-reading" initial={{ gridTemplateRows: "0fr", opacity: 0 }} animate={{ gridTemplateRows: "1fr", opacity: 1 }} exit={{ gridTemplateRows: "0fr", opacity: 0 }} transition={slowMotion({ duration: quiet ? 0 : .32 })}><span className="fa-work-number">0{focus+1}</span><div className="fa-work-stack">{collaboration.map((entry,index) => <div key={index} className={`fa-work-panel${focus === index ? " is-current" : ""}`} aria-hidden={focus !== index} inert={focus !== index}><h3>{entry.title}</h3><p>{entry.text}</p><div className="fa-keywords">{entry.tags.map(tag => <span key={tag}>{tag}</span>)}</div></div>)}</div></ReadingReveal>}</AnimatePresence>
       <div className="fa-current-boundary"><span>{t("当前阶段", "Current stage")}</span><p>{t("团队框架与仿真探索 · 方法示意，非已验证定位结果。", "Team framework and simulation exploration · method illustration; localisation results remain unvalidated.")}</p></div>
 
     </div>

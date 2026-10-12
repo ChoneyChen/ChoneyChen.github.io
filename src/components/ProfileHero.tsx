@@ -1,6 +1,6 @@
 import { useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowDown, ArrowUpRight, Workflow, X } from "lucide-react";
+import { ArrowDown, X } from "lucide-react";
 import { useScenePresence as useInView } from "../hooks/useScenePresence";
 import { useCollapseOnLeave } from "../hooks/useCollapseOnLeave";
 import { slowMotion, slowDragRelease } from "../lib/motionTiming";
@@ -18,7 +18,6 @@ function getIdentities(t: (zh: string, en: string) => string) {
         "Computer Science and Technology · BEng",
       ),
       note: t("2023.09 — 2027.06（预计）", "2023.09 — 2027.06 (expected)"),
-      stamp: "STAGE 4",
       lines: [
         t(
           "本科最后一年，正在推进毕业研究。",
@@ -42,7 +41,6 @@ function getIdentities(t: (zh: string, en: string) => string) {
         "Gordon Owusu Boateng’s research team",
       ),
       note: t("视觉定位 / 生成式感知", "Visual localisation / generative perception"),
-      stamp: "IN PROGRESS",
       lines: [
         t(
           "参与 Qwen 训练、控制变量实验与视觉定位。",
@@ -72,7 +70,6 @@ function getIdentities(t: (zh: string, en: string) => string) {
         "工程原型 / 团队协作 / 数据平台",
         "Engineering prototypes / Teams / Data platforms",
       ),
-      stamp: "HANDS ON",
       lines: [
         t(
           "参与本地软件、设备通信与传感反馈联调。",
@@ -207,34 +204,7 @@ function IdentityFold({ quiet, entered }: { quiet: boolean; entered: boolean }) 
             <span>{t("点击标签或左右拖动纸页。", "Choose a tab or drag the paper sideways.")}</span>
           </motion.div>}
         </AnimatePresence></div>
-        <span className="identity-stamp">{page?.stamp ?? "PERSONAL INDEX"}</span>
-        <div className="identity-paper-bottom">
-          <span>FROM SHIYAN</span>
-          <span>BASED IN SUZHOU</span>
-        </div>
       </motion.div>
-      <button className="hero-pixel-ticket" aria-expanded={identity === 1} aria-controls="identity-page" onClick={() => setIdentity(identity === 1 ? null : 1)}>
-        <span className="ticket-pixel" aria-hidden="true">
-          ↗
-        </span>
-        <span>
-          QWEN / LoRA
-          <br />
-          <b>{t("翻开研究身份", "Open research role")}</b>
-        </span>
-        <ArrowUpRight size={16} />
-      </button>
-      <button className="hero-prototype-ticket" aria-expanded={identity === 2} aria-controls="identity-page" onClick={() => setIdentity(identity === 2 ? null : 2)}>
-        <span className="hero-system-icon" aria-hidden="true">
-          <Workflow size={42} strokeWidth={1} />
-        </span>
-        <span>
-          SYSTEM INTEGRATION.
-          <br />
-          <b>{t("翻开工程身份", "Open engineering role")}</b>
-        </span>
-        <ArrowUpRight size={16} />
-      </button>
     </motion.div>
   );
 }
@@ -322,11 +292,6 @@ export function ProfileHero({ quiet }: { quiet: boolean }) {
         <IdentityFold quiet={quiet} entered={entered} />
       </div>
       <div className="hero-foot">
-        <span>
-          {t("湖北 · 十堰", "SHIYAN · HUBEI")}
-          <span className="journey-line" />{" "}
-          {t("江苏 · 苏州", "SUZHOU · JIANGSU")}
-        </span>
         <span>RESEARCH / SYSTEMS / ENVIRONMENT</span>
         <span>
           {t("向下探索", "SCROLL TO EXPLORE")} <ArrowDown size={16} />
@@ -335,4 +300,3 @@ export function ProfileHero({ quiet }: { quiet: boolean }) {
     </section>
   );
 }
-

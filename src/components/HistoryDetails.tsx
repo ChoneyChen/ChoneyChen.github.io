@@ -120,7 +120,7 @@ export function SteampunkWork({ quiet = false }: HistoryDetailProps) {
       <div className="steam-rivet steam-rivet-three" aria-hidden="true" />
       <div className="steam-rivet steam-rivet-four" aria-hidden="true" />
       <div className="steam-header">
-        <span>MY WORK RECORD / SHIYAN</span>
+        <span>MY WORK RECORD</span>
         <h3 id="kaiding-work-title" className="steam-title">
           {t("凯鼎动力 · IT 实习", "Kaiding Power / IT internship")}
         </h3>
